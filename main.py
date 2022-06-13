@@ -3,6 +3,7 @@ from pptx.util import Inches
 from pptx.enum.shapes import MSO_SHAPE_TYPE
 from pptx.enum.dml import MSO_THEME_COLOR_INDEX
 
+# For testing fetch function
 
 def generate_slide_trials():
     pr1 = Presentation()
