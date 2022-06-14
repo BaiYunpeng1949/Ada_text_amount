@@ -7,10 +7,8 @@ from pptx.enum.chart import XL_CHART_TYPE
 from pptx.enum.chart import XL_TICK_MARK
 from pptx.util import Pt
 
+from Ada_display_prototype import PptxGenerate
 
-# For testing fetch function
-# I made a new comment
-# 14 June 2022
 
 def generate_slide_trials():
     pr1 = Presentation()
@@ -173,4 +171,9 @@ def generate_slide_trials():
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    generate_slide_trials()
+    # generate_slide_trials()
+    ada_generator = PptxGenerate(start_pos="on_OHMD", time_off=5, time_on=5, amount_text=50,
+                                 num_shifts=10, subtask_type="default", name_ppt="trial.pptx",
+                                 text="lalalalalalalala")
+    ada_generator.generate_slides()
+    ada_generator.set_transition_time()
