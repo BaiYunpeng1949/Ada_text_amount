@@ -6,6 +6,7 @@ from pptx.util import Inches
 
 # For testing fetch function
 # I made a new comment
+# 14 June 2022
 
 def generate_slide_trials():
     pr1 = Presentation()
@@ -90,7 +91,6 @@ def generate_slide_trials():
 
     # Rotate the shape
     shape2.rotation = 90
-
 
     pr1.save("trial_slides.pptx")
 
