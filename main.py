@@ -1,10 +1,11 @@
+import pygame
 from pptx import Presentation
-from pptx.enum.dml import MSO_THEME_COLOR_INDEX
-from pptx.enum.shapes import MSO_SHAPE_TYPE
-from pptx.util import Inches
 from pptx.chart.data import CategoryChartData
 from pptx.enum.chart import XL_CHART_TYPE
 from pptx.enum.chart import XL_TICK_MARK
+from pptx.enum.dml import MSO_THEME_COLOR_INDEX
+from pptx.enum.shapes import MSO_SHAPE_TYPE
+from pptx.util import Inches
 from pptx.util import Pt
 
 from Ada_display_prototype import PptxGenerate
@@ -138,8 +139,8 @@ def generate_slide_trials():
     height_table = Inches(3)
     # slide6.shapes.add_table(3,4, left_table, top_table,
     #                         width_table, height_table)
-    table1_frame = slide6.shapes.add_table(3,4, left_table, top_table,
-                                          width_table, height_table)
+    table1_frame = slide6.shapes.add_table(3, 4, left_table, top_table,
+                                           width_table, height_table)
 
     # Populating a table
     table1 = table1_frame.table
@@ -169,11 +170,69 @@ def generate_slide_trials():
     pr1.save("trial_slides.pptx")
 
 
+def generate_pygame_window_trials():
+    # Activate, initiate pygame and give permission to use pygame's functionality.
+    pygame.init()
+
+    # Define the RGB value for the color
+    zima_green = (73, 232, 56)
+    dudu_purple = (102, 0, 204)
+    background_black = (8, 8, 8)
+
+    # Assign values to X and Y variable
+    width_window = 400
+    height_window = 400
+
+    # Create the display surface object of specific dimension (width, height)
+    display_surface = pygame.display.set_mode((width_window, height_window))
+
+    # Set the pygame window name
+    pygame.display.set_caption('Text display')
+
+    # Create a font object, the 1st parameter is the font file, and 2nd parameter is size of the font
+    font = pygame.font.Font('freesansbold.ttf', 32)
+
+    # Create a text surface object, on which text is drawn on it
+    text = font.render('Geeks for Geeks', True, zima_green, dudu_purple)
+
+    # Create a rectangular object for the text surface object
+    text_rectangular = text.get_rect()
+
+    # Set the center of the rectangular object
+    text_rectangular.center = (width_window // 2, height_window // 2)
+
+    # Infinite loop
+    while True:
+        # Completely fill the surface object with the background black
+        display_surface.fill(background_black)
+
+        # Copy the surface object to the display surface object at the center coordinate
+        display_surface.blit(text, text_rectangular)
+
+        # Iterate over the list of Event objects that was returned by pygame.event.get() method.
+        for event in pygame.event.get():
+            # If event object type is QUIT then quitting the pygame and program both.
+            if event.type == pygame.QUIT:
+                # Deactivates the pygame library
+                pygame.quit()
+                # Quit the program.
+                quit()
+
+            # Draws the surface object to the screen.
+            pygame.display.update()
+
+
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     # generate_slide_trials()
+
     ada_generator = PptxGenerate(start_pos="on_OHMD", time_off=5, time_on=5, amount_text=50,
                                  num_shifts=10, subtask_type="default", name_ppt="trial.pptx",
                                  text="lalalalalalalala")
     ada_generator.generate_slides()
-    ada_generator.set_transition_time()
+
+    # Manage the slides transition time, .
+    # Aspose will produce water marker, removing it seems to require a licensed account.
+    # ada_generator.set_transition_time()
+
+    generate_pygame_window_trials()
