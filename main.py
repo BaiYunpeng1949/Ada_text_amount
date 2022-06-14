@@ -2,6 +2,10 @@ from pptx import Presentation
 from pptx.enum.dml import MSO_THEME_COLOR_INDEX
 from pptx.enum.shapes import MSO_SHAPE_TYPE
 from pptx.util import Inches
+from pptx.chart.data import CategoryChartData
+from pptx.enum.chart import XL_CHART_TYPE
+from pptx.enum.chart import XL_TICK_MARK
+from pptx.util import Pt
 
 
 # For testing fetch function
@@ -89,8 +93,80 @@ def generate_slide_trials():
     fill_shape2.solid()
     fill_shape2.fore_color.theme_color = MSO_THEME_COLOR_INDEX.LIGHT_2
 
+    # Slide 4:
+    slide5_register = pr1.slide_layouts[5]
+    slide5 = pr1.slides.add_slide(slide5_register)
+
+    # Title:
+    title5 = slide5.shapes.title
+    title5.text = "Graphs"
+
+    # Build graph
+    graph_info = CategoryChartData()
+    graph_info.categories = ["A", "B", "C"]
+    graph_info.add_series("Series 1", (15, 11, 18))
+
+    # Add graph to slide with positioning
+    left_graph = Inches(2)
+    top_graph = Inches(2)
+    width_graph = Inches(6)
+    height_graph = Inches(4)
+    # slide5.shapes.add_chart(XL_CHART_TYPE.COLUMN_CLUSTERED,
+    #                         left_graph, top_graph, width_graph, height_graph,
+    #                         graph_info)
+    graph1_frame = slide5.shapes.add_chart(XL_CHART_TYPE.COLUMN_CLUSTERED,
+                                           left_graph, top_graph, width_graph, height_graph,
+                                           graph_info)
+    graph1 = graph1_frame.chart
+
+    # Edit graph
+    category_axis = graph1.category_axis
+    category_axis.has_major_gridlines = True
+    category_axis.minor_tick_mark = XL_TICK_MARK.OUTSIDE
+    category_axis.tick_labels.font.italic = True
+    category_axis.tick_labels.font.size = Pt(24)
+
+    # Slide 6:
+    slide6_register = pr1.slide_layouts[5]
+    slide6 = pr1.slides.add_slide(slide6_register)
+
+    title6 = slide6.shapes.title
+    title6.text = "Table"
+
+    # Add Graph to slide
+    left_table = Inches(1)
+    top_table = Inches(2)
+    width_table = Inches(8)
+    height_table = Inches(3)
+    # slide6.shapes.add_table(3,4, left_table, top_table,
+    #                         width_table, height_table)
+    table1_frame = slide6.shapes.add_table(3,4, left_table, top_table,
+                                          width_table, height_table)
+
+    # Populating a table
+    table1 = table1_frame.table
+    cell = table1.cell(0, 0)
+    cell.text = "Insert the title here"
+
+    cell = table1.cell(1, 0)
+    cell.text = "Insert Value here"
+
     # Rotate the shape
     shape2.rotation = 90
+
+    # Slide 7
+    slide7_register = pr1.slide_layouts[0]
+    slide7 = pr1.slides.add_slide(slide7_register)
+
+    title7 = slide7.shapes.title
+    title7.text = "Hyperlink"
+
+    # Adding hyperlinks
+    para1 = slide7.placeholders[1].text_frame.paragraphs[0]
+    addrun1 = para1.add_run()
+    addrun1.text = "Google Hyperlink"
+    hlink1 = addrun1.hyperlink
+    hlink1.address = "https://www.google.com"
 
     pr1.save("trial_slides.pptx")
 
