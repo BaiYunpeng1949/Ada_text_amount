@@ -1,3 +1,6 @@
+import itertools
+import os
+
 import pygame
 from pptx import Presentation
 from pptx.chart.data import CategoryChartData
@@ -180,8 +183,8 @@ def generate_pygame_window_trials():
     background_black = (8, 8, 8)
 
     # Assign values to X and Y variable
-    width_window = 400
-    height_window = 400
+    width_window = 800
+    height_window = 800
 
     # Create the display surface object of specific dimension (width, height)
     display_surface = pygame.display.set_mode((width_window, height_window))
@@ -201,7 +204,7 @@ def generate_pygame_window_trials():
     # Set the center of the rectangular object
     text_rectangular.center = (width_window // 2, height_window // 2)
 
-    # Infinite loop
+    # Infinite loop, the main loop
     while True:
         # Completely fill the surface object with the background black
         display_surface.fill(background_black)
@@ -222,6 +225,111 @@ def generate_pygame_window_trials():
             pygame.display.update()
 
 
+# Display text in a set amount of time
+# Reference: https://www.reddit.com/r/pygame/comments/d175oj/how_do_i_display_text_for_a_set_amount_of_time/
+
+
+class Scene:
+    def on_draw(self, surface): pass
+
+    def on_update(self, delta): pass
+
+    def on_event(self, event): pass
+
+
+class Manager:
+    @classmethod
+    def create(cls, title, width, height, center=False):
+        if center:
+            os.environ['SDL_VIDEO_CENTERED'] = '1'
+
+        # Basic pygame setup
+        pygame.display.set_caption(title)
+        cls.surface = pygame.display.set_mode((width, height))
+        cls.rect = cls.surface.get_rect()
+        cls.clock = pygame.time.Clock()
+        cls.running = False
+        cls.delta = 0
+        cls.fps = 60
+
+        cls.scene = Scene()
+
+    @classmethod
+    def mainloop(cls):
+        cls.running = True
+        while cls.running:
+            for event in pygame.event.get():
+                cls.scene.on_event(event)
+
+            cls.scene.on_update(cls.delta)
+            cls.scene.on_draw(cls.surface)
+
+            pygame.display.flip()
+            cls.delta = cls.clock.tick(cls.fps)
+
+
+class TextTimed:
+    def __init__(self, font, text, foreground, position, timed=3000, anchor="topleft"):
+        self.image = font.render(text, 1, foreground)
+        self.rect = self.image.get_rect()
+        setattr(self.rect, anchor, position)
+        self.timed = timed
+
+    def draw(self, surface):
+        if self.timed > 0:
+            # Introduction of the components of the pygame display.
+            # https://stackoverflow.com/questions/37800894/what-is-the-surface-blit-function-in-pygame-what-does-it-do-how-does-it-work
+            surface.blit(self.image, self.rect)
+
+    def update(self, delta):
+        self.timed -= delta  # c -= a -> c = c - a
+
+
+class Example(Scene):
+    def __init__(self):
+        self.font = pygame.font.Font(None, 24)
+        self.timed_text = []
+        self.count = itertools.count(start=1, step=1)
+
+    def position_text(self):
+        y = itertools.count(Manager.rect.bottom - 50, -30)
+        for text in self.timed_text[::-1]:
+            text.rect.y = next(y)
+
+    def on_draw(self, surface):
+        surface.fill(pygame.Color("black"))
+        for text in self.timed_text:
+            text.draw(surface)
+
+    def on_update(self, delta):
+        timed_text = []
+        for text in self.timed_text:
+            text.update(delta)
+            if text.timed > 0:
+                timed_text.append(text)
+
+        self.timed_text = timed_text
+        self.position_text()
+
+    def on_event(self, event):
+        if event.type == pygame.QUIT:
+            Manager.running = False
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                text = "Timed Text {}".format(next(self.count))
+                color = pygame.Color("dodgerblue")
+                timed = TextTimed(self.font, text, color, (20, 0))
+                self.timed_text.append(timed)
+                self.position_text()
+
+
+def main_example():
+    pygame.init()
+    Manager.create("Example Timed Text", 800, 600, True)
+    Manager.scene = Example()
+    Manager.mainloop()
+
+
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     # generate_slide_trials()
@@ -235,4 +343,5 @@ if __name__ == '__main__':
     # Aspose will produce water marker, removing it seems to require a licensed account.
     # ada_generator.set_transition_time()
 
-    generate_pygame_window_trials()
+    # generate_pygame_window_trials()
+    main_example()
