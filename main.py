@@ -266,6 +266,31 @@ class Manager:
 
         cls.scene = Scene()
 
+        cls.is_text_shown = True
+        # cls.is_task_shown = False
+
+        # Deisplayed text shown:
+        cls.time_threshold = 3000
+        cls.timer = 0
+
+        text = "wai bi ba bo?"
+        font_color = (73, 232, 56)
+        anchor = "topleft"
+        position = (20, 0)
+        font_text = pygame.font.Font(None, 24)  # TODO: make the font a tunable parameter.
+        cls.image_text = font_text.render(text, 1, font_color)
+        cls.rect_text = cls.image_text.get_rect()
+        setattr(cls.rect_text, anchor, position)
+
+        task_text = "Wubba lubba dub dub!"
+        font_color_task = pygame.Color("dodgerblue")
+        position_task = (50, 60)
+        font_task = pygame.font.Font(None, 48)
+        cls.image_task = font_task.render(task_text, 1, font_color_task)
+        cls.rect_task = cls.image_task.get_rect()
+        setattr(cls.rect_task, anchor, position_task)
+
+
     @classmethod
     def mainloop(cls):
         cls.running = True
@@ -279,7 +304,7 @@ class Manager:
             # eliminate the overtime ones and adjust placements.
             cls.scene.on_update(cls.delta)
             # Display texts.
-            cls.scene.on_draw(cls.surface)
+            # cls.scene.on_draw(cls.surface)    # TODO: unveil this will cause override.
 
             pygame.display.flip()
             cls.delta = cls.clock.tick(cls.fps)  # The timer to monitor elapsed time: 16/17ms each time.
@@ -289,10 +314,36 @@ class Manager:
             # than the given ticks per second. For example if we pass 10 as argument
             # the program will never run at more than 10 frames per second.
 
+            # This part's reference:
+            # https://stackoverflow.com/questions/44206901/how-to-display-text-for-only-a-certain-amount-of-time
+            elapsed = cls.delta
+            if cls.is_text_shown:
+                # Display the text:
+
+                cls.surface.blit(cls.image_text, cls.rect_text)
+
+                cls.timer = cls.timer + elapsed     # Timer's unit is "ms".
+                if cls.timer > cls.time_threshold:
+                    cls.is_text_shown = False
+                    cls.timer = 0
+                    # TODO: erase the shown text
+                    cls.surface.fill("black")
+            elif cls.is_text_shown is False:
+                # Display the task that aims to erase users short term memory
+
+                cls.surface.blit(cls.image_task, cls.rect_task)
+
+                cls.timer = cls.timer + elapsed  # Timer's unit is "ms".
+                if cls.timer > cls.time_threshold:
+                    cls.is_text_shown = True
+                    cls.timer = 0
+                    cls.surface.fill("black")
+
 
 class TextTimed:
     # Produce a single timed text (the text that is shown for a given amount of time).
     def __init__(self, font, text, foreground, position, timed=3000, anchor="topleft"):
+        # TODO: change the timed into a tunable parameter.
         self.image = font.render(text, 1, foreground)   # Render: draw text on a new surface.
         # Syntax: render(text, antialias, color, background=None) -> Surface
         self.rect = self.image.get_rect()
@@ -329,9 +380,64 @@ class Example(Scene):   # Class-Example is inherited from the class-Scene.
 
     # Display the update set of texts.
     def on_draw(self, surface):
-        surface.fill(pygame.Color("black"))
+        surface.fill(pygame.Color("white"))
         for text in self.timed_text:
             text.draw(surface)
+
+    # Update the set of texts that are shown on the canvas, delete the overtime ones, then reposition all of them.
+    def on_update(self, delta):
+        timed_text = []
+        for text in self.timed_text:
+            # Each text has a timer.
+            text.update(delta)
+            if text.timed > 0:
+                timed_text.append(text)
+
+        self.timed_text = timed_text
+        self.position_text()
+
+    def on_event(self, event):
+        if event.type == pygame.QUIT:
+            Manager.running = False
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                text = "Timed Text {}".format(next(self.count))
+                # color = pygame.Color("dodgerblue")
+                # TODO: change this color to a tunable variable.
+                color = (73, 232, 56)   # A light green that has higher contracts for OHMDs. Cool, it works.
+                timed = TextTimed(self.font, text, color, (20, 0))
+                self.timed_text.append(timed)   # Update the texts cluster.
+                self.position_text()
+
+
+class ExampleAttentionShift(Scene):   # Class-Example is inherited from the class-Scene.
+    def __init__(self):
+        self.font = pygame.font.Font(None, 24)  # TODO: make the font a tunable parameter.
+        self.timed_text = []
+        self.count = itertools.count(start=1, step=1)   # An infinite iterator
+
+        # Initiate the text registrations:
+        self.buffer_texts = []
+        self.buffer_text_contents = ['a', 'b', 'c', 'd', 'e', 'f', 'g']
+        # TODO: This stores a large amount of text, waiting to be broke into chunks and dispalyed.
+        # TODO: change this color to a tunable variable.
+        # TODO: insert a paragraph split function here.
+        color = (73, 232, 56)  # A light green that has higher contracts for OHMDs. Cool, it works.
+        for text_content in self.buffer_text_contents:
+            instanced_text_content = TextTimed(self.font, text_content, color, (20, 0))
+            self.buffer_texts.append(instanced_text_content)
+
+    def position_text(self):
+        y = itertools.count(Manager.rect.bottom - 50, -30)      # Move the old texts up
+        for text in self.timed_text[::-1]:  # Present reversely, the old ones are stacked up to higher places
+            text.rect.y = next(y)   # Returns the next item in an iterator.
+
+    # Display the update set of texts.
+    def on_draw(self, surface):
+        surface.fill(pygame.Color("black"))     # TODO: make the background color a tunable parameter.
+        for text in self.timed_text:
+            text.draw(surface)
+        # self.timed_text[0].draw(surface)
 
     # Update the set of texts that are shown on the canvas, delete the overtime ones, then reposition all of them.
     def on_update(self, delta):
