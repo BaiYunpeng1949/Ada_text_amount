@@ -1,6 +1,7 @@
 import itertools
-import pygame
 import os
+
+import pygame
 from pptx import Presentation
 from pptx.chart.data import CategoryChartData
 from pptx.enum.chart import XL_CHART_TYPE
@@ -10,7 +11,7 @@ from pptx.enum.shapes import MSO_SHAPE_TYPE
 from pptx.util import Inches
 from pptx.util import Pt
 
-from Ada_display_prototype import PptxGenerate
+import Ada_pygame_prototype
 
 
 def generate_slide_trials():
@@ -290,7 +291,6 @@ class Manager:
         cls.rect_task = cls.image_task.get_rect()
         setattr(cls.rect_task, anchor, position_task)
 
-
     @classmethod
     def mainloop(cls):
         cls.running = True
@@ -486,4 +486,6 @@ if __name__ == '__main__':
     # ada_generator.set_transition_time()
 
     # generate_pygame_window_trials()
-    example_main()
+    # example_main()
+
+    Ada_pygame_prototype.run_prototype()
