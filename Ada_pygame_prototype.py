@@ -107,7 +107,7 @@ class Runner:
                 if self.timer > self.duration_gap:
                     self.is_text_showing = True
                     self.timer = 0
-                    # self.surface.fill(self.color_background)
+                    self.surface.fill(self.color_background)
 
             pygame.display.flip()
 
@@ -162,5 +162,5 @@ def run_prototype():
     runner_trial = Runner(duration_gap=3000, duration_text=1500, amount_text=25, source_text=TEXTS_1,
                           task_type_gap="default",
                           num_attention_shifts=5, color_background="black", color_text=(73, 232, 56),
-                          size_text=70, size_gap=64, pos_text=(50, 250), pos_gap=(50, 200), title="trial_1")
+                          size_text=70, size_gap=64, pos_text=(50, 250), pos_gap=(0, 0), title="trial_1")
     runner_trial.mainloop()
