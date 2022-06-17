@@ -57,7 +57,7 @@ class Runner:
         self.index_content_texts = 0
         self.texts_chunks = []
         self.gap_task_chunks = []
-        self.gap_task_chunks_results = []
+        self.gap_task_chunks_results = []  # TODO: could be printed out or saved in log.
 
         self.content_text_temp = ""
         self.content_gap_temp = "Ga Ga Ga Ga Ga"
@@ -103,25 +103,25 @@ class Runner:
             # Update the timer.
             self.timer += self.time_elapsed
 
-            # Display text or gap content.
+            # Display text content.
             if self.is_text_showing:
                 # Draw content.
                 # Get the current texts.
                 self.content_text_temp = self.texts_chunks[self.index_content_texts]
                 self.image_text = self.font_text.render(self.content_text_temp, True, self.color_text)
-                # self.surface.blit(self.image_text, self.rect_text)
-                self.render_texts_multiple_lines()
-
+                self.render_texts_multiple_lines()  # Render text content word by word, line by line.
                 # Update the status.
                 if self.timer > self.duration_text:
                     self.counter_attention_shifts += 1
                     self.is_text_showing = False
                     self.timer = 0
                     self.surface.fill(self.color_background)
+
+            # Display the gap content.
             elif self.is_text_showing is False:
                 self.content_gap_temp = self.gap_task_chunks[self.counter_attention_shifts]
                 self.image_gap = self.font_gap.render(self.content_gap_temp, True, self.color_text)
-                self.surface.blit(self.image_gap, self.rect_gap)  # TODO: has to render line by line
+                self.render_gap_tasks()  # Render content according to task type.
                 if self.timer > self.duration_gap:
                     self.is_text_showing = True
                     self.timer = 0
@@ -132,7 +132,7 @@ class Runner:
             # The experiment is over with exceeding the iteration times.
             if self.counter_attention_shifts >= self.num_attention_shifts:
                 self.is_running = False
-
+        print(self.gap_task_chunks_results)
         pygame.quit()
 
     def split_amount_texts(self):
@@ -177,24 +177,39 @@ class Runner:
         """
         Generate different types of subtasks.
         Please specify tasks' parameters here.
-        :return:
+        :return: subtasks' answers.
         """
-        # Task type 1: mathematical tasks - several double-digit multiplication tasks.
-        ROW_EQUATIONS = 5
-        for i in range(self.num_attention_shifts):
-            # Generate ROW_EQUATIONS * 2 numbers between 10 and 99.
-            numbers_random = random.sample(range(10, 99), 2 * ROW_EQUATIONS)
-            # Statically allocate equations, without considering the line excess issue.
-            gap_task = ""
-            for j in range(ROW_EQUATIONS):
-                gap_task = gap_task + str(numbers_random[2 * j]) + " * " + str(numbers_random[2 * j + 1]) + " = \n"
-            self.gap_task_chunks.append(gap_task)
+        if self.task_type_gap == "math task":
+            # Task type 1: mathematical tasks - several double-digit multiplication tasks.
+            ROW_EQUATIONS = 5
+            for i in range(self.num_attention_shifts):
+                # Generate ROW_EQUATIONS * 2 numbers between 10 and 99.
+                numbers_random = random.sample(range(10, 99), 2 * ROW_EQUATIONS)
+                # Statically allocate equations, without considering the line excess issue.
+                gap_task = ""
+                results = ""
+                for j in range(ROW_EQUATIONS):
+                    gap_task = gap_task + str(numbers_random[2 * j]) + " * " + str(numbers_random[2 * j + 1]) + " = \n"
+                    results = results + str(numbers_random[2 * j]) + " * " + str(numbers_random[2 * j + 1]) + " = " + \
+                              str(numbers_random[2 * j] * numbers_random[2 * j + 1]) + " "
+                self.gap_task_chunks.append(gap_task)
+                self.gap_task_chunks_results.append(results)
+
+    def render_gap_tasks(self):
+        if self.task_type_gap == "math task":
+            line_list = self.gap_task_chunks[self.counter_attention_shifts].splitlines()
+            x_line, y_line = self.pos_gap
+            for line in line_list:
+                line_surface = self.font_gap.render(line, 0, self.color_text)
+                line_width, line_height = line_surface.get_size()
+                self.surface.blit(line_surface, (x_line, y_line))
+                y_line += line_height
 
 
 def run_prototype():
     pygame.init()
-    runner_trial = Runner(duration_gap=10000, duration_text=3000, amount_text=30, source_text=TEXTS_1,
-                          task_type_gap="default",
+    runner_trial = Runner(duration_gap=1500, duration_text=3000, amount_text=30, source_text=TEXTS_1,
+                          task_type_gap="math task",
                           num_attention_shifts=5, color_background="black", color_text=(73, 232, 56),
                           size_text=70, size_gap=64, pos_text=(50, 250), pos_gap=(0, 0), title="trial_1")
     runner_trial.mainloop()
