@@ -159,7 +159,7 @@ class Runner:
 
 def run_prototype():
     pygame.init()
-    runner_trial = Runner(duration_gap=3000, duration_text=1500, amount_text=25, source_text=TEXTS_1,
+    runner_trial = Runner(duration_gap=1500, duration_text=3000, amount_text=15 , source_text=TEXTS_1,
                           task_type_gap="default",
                           num_attention_shifts=5, color_background="black", color_text=(73, 232, 56),
                           size_text=70, size_gap=64, pos_text=(50, 250), pos_gap=(0, 0), title="trial_1")
