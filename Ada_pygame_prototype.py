@@ -39,6 +39,7 @@ class Runner:
         self.MARGIN_LEFT = self.pos_text[0]
         self.MARGIN_BOTTOM = 50
         self.MARGIN_TOP = self.pos_text[1]
+        self.FPS_GAP_COUNT_TASK = 3  # Set the fps for flashing shapes in gap task type 2.
 
         # Create the canvas.
         # Setup pygame
@@ -52,12 +53,36 @@ class Runner:
         self.fps = FPS
         self.is_text_showing = False
         self.timer = 0
+        self.timer_count_gap_task = 0
         self.counter_attention_shifts = 0
+        self.counter_count_gap_task_shapes_change = 0
         self.time_elapsed = 0
+        self.duration_count_gap_task_shapes_change = self.duration_gap / self.FPS_GAP_COUNT_TASK  # Unit is ms.
+        self.color_gap_count_task_shape = self.color_text
+        self.size_gap_count_task_shape = 35
+
         self.index_content_texts = 0
         self.texts_chunks = []
-        self.gap_task_chunks = []
-        self.gap_task_chunks_results = []  # TODO: could be printed out or saved in log.
+
+        # Declare the drawing space.
+        surface_width, surface_height = self.surface.get_size()
+        self.max_width = surface_width - self.MARGIN_RIGHT - self.MARGIN_LEFT
+        self.max_height = surface_height - self.MARGIN_BOTTOM - self.MARGIN_TOP
+
+        self.MARGIN_COO_LEFT_GAP_COUNT_TASK = 30
+        self.MARGIN_COO_RIGHT_GAP_COUNT_TASK = surface_width - self.MARGIN_COO_LEFT_GAP_COUNT_TASK
+        self.MARGIN_COO_TOP_GAP_COUNT_TASK = 45
+        self.MARGIN_COO_BOT_GAP_COUNT_TASK = surface_height - self.MARGIN_COO_TOP_GAP_COUNT_TASK
+
+        self.gap_math_task_chunks = []
+        self.gap_math_task_chunks_results = []
+
+        self.types_shapes_gap_count_task = ['circle', 'triangle', 'rectangle']
+        self.shapes_gap_count_task_chunks = []  # Store all (across different attention shifts) the indices of shapes
+        # to be displayed in a 2-d array.
+        self.pos_gap_count_task_chunks = []  # Store all the positions of shapes. 2-d list,
+        # index of items in a shift, and index of shifts.
+        self.num_gap_count_task_shapes = int(math.floor((self.duration_gap / 1000) * self.FPS_GAP_COUNT_TASK))
 
         self.content_text_temp = ""
         self.content_gap_temp = "Ga Ga Ga Ga Ga"
@@ -102,6 +127,7 @@ class Runner:
             self.time_elapsed = self.clock.tick(self.fps)
             # Update the timer.
             self.timer += self.time_elapsed
+            self.timer_count_gap_task += self.time_elapsed
 
             # Display text content.
             if self.is_text_showing:
@@ -119,20 +145,25 @@ class Runner:
 
             # Display the gap content.
             elif self.is_text_showing is False:
-                self.content_gap_temp = self.gap_task_chunks[self.counter_attention_shifts]
-                self.image_gap = self.font_gap.render(self.content_gap_temp, True, self.color_text)
+                if self.task_type_gap == "math task":
+                    self.content_gap_temp = self.gap_math_task_chunks[self.counter_attention_shifts]
+                    self.image_gap = self.font_gap.render(self.content_gap_temp, True, self.color_text)
+
                 self.render_gap_tasks()  # Render content according to task type.
+
                 if self.timer > self.duration_gap:
                     self.is_text_showing = True
                     self.timer = 0
                     self.surface.fill(self.color_background)
+                    # Flush the counter for gap task type 2: count task.
+                    self.counter_count_gap_task_shapes_change = 0
 
             pygame.display.flip()
 
             # The experiment is over with exceeding the iteration times.
             if self.counter_attention_shifts >= self.num_attention_shifts:
                 self.is_running = False
-        print(self.gap_task_chunks_results)
+        print(self.gap_math_task_chunks_results)  # TODO: log out the results here.
         pygame.quit()
 
     def split_amount_texts(self):
@@ -156,16 +187,13 @@ class Runner:
     def render_texts_multiple_lines(self):
         words = self.content_text_temp.split(' ')
         space = self.font_text.size(' ')[0]
-        surface_width, surface_height = self.surface.get_size()
-        max_width = surface_width - self.MARGIN_RIGHT - self.MARGIN_LEFT
-        max_height = surface_height - self.MARGIN_BOTTOM - self.MARGIN_TOP
         x_text, y_text = self.pos_text
 
         # Render word by word.
         for word in words:
             word_surface = self.font_text.render(word, 0, self.color_text)
             word_width, word_height = word_surface.get_size()
-            if x_text + word_width >= max_width:
+            if x_text + word_width >= self.max_width:
                 x_text = self.pos_text[0]  # Reset the x_text.
                 y_text += word_height
 
@@ -192,12 +220,35 @@ class Runner:
                     gap_task = gap_task + str(numbers_random[2 * j]) + " * " + str(numbers_random[2 * j + 1]) + " = \n"
                     results = results + str(numbers_random[2 * j]) + " * " + str(numbers_random[2 * j + 1]) + " = " + \
                               str(numbers_random[2 * j] * numbers_random[2 * j + 1]) + " "
-                self.gap_task_chunks.append(gap_task)
-                self.gap_task_chunks_results.append(results)
+                self.gap_math_task_chunks.append(gap_task)
+                self.gap_math_task_chunks_results.append(results)
+
+        elif self.task_type_gap == "count task":
+            # Task type 2: count task - count the number of a certain shape, e.g., circle, triangle, and rectangle.
+            for j in range(self.num_attention_shifts):
+                types_shapes_current_shift = []
+                pos_shapes_current_shift = []
+                results = []
+                for i in range(self.num_gap_count_task_shapes):
+                    types_shapes_current_shift.append(random.choice(self.types_shapes_gap_count_task))
+                    pos_x = random.randint(self.MARGIN_COO_LEFT_GAP_COUNT_TASK, self.MARGIN_COO_RIGHT_GAP_COUNT_TASK)
+                    pos_y = random.randint(self.MARGIN_COO_TOP_GAP_COUNT_TASK, self.MARGIN_COO_BOT_GAP_COUNT_TASK)
+                    pos_shapes_current_shift.append((pos_x, pos_y))
+                self.shapes_gap_count_task_chunks.append(types_shapes_current_shift)
+                self.pos_gap_count_task_chunks.append(pos_shapes_current_shift)
+
+                # Collect the appearances of different shapes.
+                count_shape_circle = types_shapes_current_shift.count("circle")
+                count_shape_triangle = types_shapes_current_shift.count("triangle")
+                count_shape_rectangle = types_shapes_current_shift.count("rectangle")
+                results.append("circle: " + str(count_shape_circle) + " ")
+                results.append("triangle: " + str(count_shape_triangle) + " ")
+                results.append("rectangle: " + str(count_shape_rectangle) + " ")
+                self.gap_math_task_chunks_results.append(results)
 
     def render_gap_tasks(self):
         if self.task_type_gap == "math task":
-            line_list = self.gap_task_chunks[self.counter_attention_shifts].splitlines()
+            line_list = self.gap_math_task_chunks[self.counter_attention_shifts].splitlines()
             x_line, y_line = self.pos_gap
             for line in line_list:
                 line_surface = self.font_gap.render(line, 0, self.color_text)
@@ -205,11 +256,43 @@ class Runner:
                 self.surface.blit(line_surface, (x_line, y_line))
                 y_line += line_height
 
+        elif self.task_type_gap == "count task":
+            # Update the timer
+            if self.timer_count_gap_task >= self.duration_count_gap_task_shapes_change:
+                self.timer_count_gap_task = 0
+                self.counter_count_gap_task_shapes_change += 1
+                self.surface.fill(self.color_background)
+            else:
+                type_shape = self.shapes_gap_count_task_chunks[self.counter_attention_shifts][
+                    self.counter_count_gap_task_shapes_change]
+                pos_shape = self.pos_gap_count_task_chunks[self.counter_attention_shifts][
+                    self.counter_count_gap_task_shapes_change]
+
+                if type_shape == "circle":
+                    pygame.draw.circle(self.surface, self.color_gap_count_task_shape,
+                                       pos_shape, self.size_gap_count_task_shape)
+                elif type_shape == "triangle":
+                    height = 2 * self.size_gap_count_task_shape
+                    point_1 = (pos_shape[0], pos_shape[1])
+                    point_2 = (pos_shape[0] - height / math.sqrt(3), pos_shape[1] - height)
+                    point_3 = (pos_shape[0] + height / math.sqrt(3), pos_shape[1] - height)
+                    pygame.draw.polygon(self.surface, color=self.color_gap_count_task_shape,
+                                        points=[point_1, point_2, point_3])
+                elif type_shape == "rectangle":
+                    width = 2 * self.size_gap_count_task_shape
+                    height = width
+                    pygame.draw.rect(self.surface, self.color_gap_count_task_shape,
+                                     [pos_shape[0], pos_shape[1], width, height], 0)
+
 
 def run_prototype():
     pygame.init()
-    runner_trial = Runner(duration_gap=1500, duration_text=3000, amount_text=30, source_text=TEXTS_1,
-                          task_type_gap="math task",
-                          num_attention_shifts=5, color_background="black", color_text=(73, 232, 56),
+    runner_trial = Runner(duration_gap=1500,
+                          duration_text=3000,
+                          amount_text=30,
+                          source_text=TEXTS_1,
+                          task_type_gap="count task",
+                          num_attention_shifts=5,
+                          color_background="black", color_text=(73, 232, 56),
                           size_text=70, size_gap=64, pos_text=(50, 250), pos_gap=(0, 0), title="trial_1")
     runner_trial.mainloop()
