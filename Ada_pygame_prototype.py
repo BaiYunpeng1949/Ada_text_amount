@@ -3,12 +3,40 @@ import random
 
 import pygame
 
+# TODO: the input texts' formats need to contain a space bar after every sentence. Change the code to recognize captal font in the future.
 TEXTS_1 = "US banks JPMorgan Chase, Citigroup and Wells Fargo said on Wednesday (Jun 15) they had raised their prime lending rates by 75 basis points to 4.75 per cent, effective Thursday, " \
-          "matching the Federal Reserve's rate hike earlier in the day." \
+          "matching the Federal Reserve's rate hike earlier in the day. " \
           "The Fed raised its target interest rate by three-quarters of a percentage point, the most by the US central bank since 1994, " \
-          "as it seeks to tame red-hot inflation. The central bank faces the task of charting a course for the economy to weather rate increases without a repeat of the 1970s-style predicament when the central bank's interest hikes aimed at fighting inflation resulted in a steep recession." \
-          "Inflation, which has become a hot-button political issue, has worsened with the Ukraine war, hitting market sentiment and piling pressure on to an already battered supply chain." \
+          "as it seeks to tame red-hot inflation. The central bank faces the task of charting a course for the economy to weather rate increases without a repeat of the 1970s-style predicament when the central bank's interest hikes aimed at fighting inflation resulted in a steep recession. " \
+          "Inflation, which has become a hot-button political issue, has worsened with the Ukraine war, hitting market sentiment and piling pressure on to an already battered supply chain. " \
           "However, since banks make money on the difference between what they earn from lending and payouts on deposits and other funds, they typically thrive in a high interest rate environment."
+TEXTS_2 = "If you've missed George Calombaris' friendly onscreen persona on MasterChef Australia, " \
+          "you'll want to catch the show's former judge in Singapore at the ongoing GastroBeats. " \
+          "The chef is part of an eight-hands collaboration featuring the MasterChef franchise alums Derek Cheong, " \
+          "Genevieve Lee and Sarah Todd. As part of his event from Jun 20 to 26, " \
+          "Calombaris will introduce several dishes including an interesting " \
+          "'surf and turf' one comprising taramasalata (cured cod roe) with poached prawns and lup cheong (Chinese sausage) bolognaise. " \
+          "Calombaris laid low following the collapse of his business empire in 2020 after admitting to underpaying AU$7.83m (S$7.56m) in wages to employees. " \
+          "During the same period, Calombaris and his fellow MasterChef judges Matt Preston and Gary Mehigan were replaced after season 11, " \
+          "when negotiations for a pay rise with broadcaster Network Ten broke down. Cue the pandemic, " \
+          "which gave the 43-year-old a real chance to re-examine and redefine his life. " \
+          "'I've learnt to pause, take a breath and ask if I want to do something and if that something is going to make me feel good,' " \
+          "said the affable chef who is now the culinary director at the historic Hotel Sorrento in Melbourne. " \
+          "Working on television is still something he enjoys, " \
+          "so it is no surprise when Calombaris tells us that he will soon be back on our screens. " \
+          "'We will be making some very exciting announcements in the next couple of weeks about a prime time show that we are first going to air in Australia,' " \
+          "he told CNA Lifestyle. 'This show is special. I've seen the first couple of episodes, " \
+          "and I'm blown away. I hate seeing myself on television, I really do, but making this felt good. " \
+          "It felt authentic. There's nothing like it in that food space, so stay tuned. I'll be back on that TV of yours.' " \
+          "Also in the works in an online platform called Culinary Wonderland, which he's co-founded and is scheduled for launch later this year. " \
+          "'Imagine it as the Google for food but underpinned by some of the best foodies and chefs all over the world.' " \
+          "But first things first: His maiden post-pandemic trip out of Australia to Singapore. 'I have a big soft spot for Singapore. " \
+          "A lot of my best chef mates are there cooking at the highest level,' " \
+          "he said excitedly. Besides his crazy-sounding surf and turf dish at GastroBeats " \
+          "('it's going to be great,' he promised), he will also be serving a modern take on that Melbournian classic: Avocado toast. " \
+          "And he'll be doing all three of the things that he loves best: 'Cooking for people, feeding people and meeting people.' " \
+          "Once that's done, Calombaris said he plans to catch up with his friends and discover the depths of smaller hawker stalls and Singapore's heritage fare on his 10-day trip. " \
+          "When asked what he's most looking forward to, Calombaris said, 'I'm just looking forward to eating chilli crab and chicken rice again.'"
 
 
 class Runner:
@@ -39,7 +67,6 @@ class Runner:
         self.MARGIN_LEFT = self.pos_text[0]
         self.MARGIN_BOTTOM = 50
         self.MARGIN_TOP = self.pos_text[1]
-        self.FPS_GAP_COUNT_TASK = 3  # Set the fps for flashing shapes in gap task type 2.
 
         # Create the canvas.
         # Setup pygame
@@ -53,16 +80,23 @@ class Runner:
         self.fps = FPS
         self.is_text_showing = False
         self.timer = 0
-        self.timer_count_gap_task = 0
-        self.counter_attention_shifts = 0
-        self.counter_count_gap_task_shapes_change = 0
         self.time_elapsed = 0
+        self.counter_attention_shifts = 0
+
+        # Parameters for text reading.
+        self.index_content_texts = 0
+        self.texts_chunks = []
+        self.marks = [",", ".", "!", "?", ";", ":", "'"]
+        self.threshold_bottom_num_text_reserve_sentence = 3     # If the words are less than 3, then reserve this sentence.
+        self.threshold_top_num_text_abandon_sentence = 5        # If the words are more than 5, then abandon this sentence.
+
+        # Parameters for subtask type 2: count task.
+        self.timer_count_gap_task = 0
+        self.FPS_GAP_COUNT_TASK = 3  # Set the fps for flashing shapes in gap task type 2.
+        self.counter_count_gap_task_shapes_change = 0
         self.duration_count_gap_task_shapes_change = self.duration_gap / self.FPS_GAP_COUNT_TASK  # Unit is ms.
         self.color_gap_count_task_shape = self.color_text
         self.size_gap_count_task_shape = 35
-
-        self.index_content_texts = 0
-        self.texts_chunks = []
 
         # Declare the drawing space.
         surface_width, surface_height = self.surface.get_size()
@@ -97,6 +131,7 @@ class Runner:
         self.rect_gap = self.image_gap.get_rect()
         setattr(self.rect_gap, ANCHOR, self.pos_gap)
 
+        # Initialize variables by inner functions.
         # Split the text according to the given chunk size.
         self.split_amount_texts()
 
@@ -170,19 +205,50 @@ class Runner:
         word_list = self.texts.split()
         num_words = len(word_list)
         num_texts_chunks = int(math.ceil(num_words / self.amount_text))
+        indices_words_contain_marks = []
 
-        for i in range(num_texts_chunks):
-            text_chunk = ""
-            index_pick_texts = i * self.amount_text
-            if i < (num_texts_chunks - 1):
-                num_left_words = self.amount_text
-            elif i == (num_texts_chunks - 1):   # The last chunk, maybe not enough words.
-                num_left_words = num_words - (num_texts_chunks - 1) * self.amount_text
+        # TODO: split according to the sentences, this is also useful in the future schemes: like the context mode.
+        for i in range(num_words):
+            for mark in self.marks:
+                if (list(word_list[i]))[-1] == mark:
+                    indices_words_contain_marks.append(i)
+                    break
+        print(indices_words_contain_marks)
 
-            for k in range(num_left_words):
-                text_chunk = text_chunk + " " + word_list[index_pick_texts + k]
+        # Find the closest index (higher value) in the list.
+        def find_closest_index(input_indices_list, input_index):
+            input_indices_list.sort(reverse=True)
+            difference = lambda input_indices_list: abs(input_indices_list - input_index)
+            res = min(input_indices_list, key=difference)
+            return res
 
-            self.texts_chunks.append(text_chunk)
+        # Dynamically split texts with a boolean flag.
+        is_over = False
+        index_start = 0
+        index_stop = 0
+        amount_left_texts = self.amount_text
+        while is_over is False:
+            # Initialize the stop index.
+            if amount_left_texts >= self.amount_text:
+                index_stop = index_start + self.amount_text - 1
+            else:
+                index_stop = index_start + amount_left_texts - 1
+
+            index_closest_stop_mark_higher = find_closest_index(indices_words_contain_marks, index_stop)
+            index_stop = index_closest_stop_mark_higher
+
+            # Populate the content of texts.
+            texts_chunk = ""
+            for word in word_list[index_start:(index_stop + 1)]:
+                texts_chunk = texts_chunk + word + " "
+            self.texts_chunks.append(texts_chunk)
+
+            # When the loop is over, refresh the starting index.
+            index_start = index_stop + 1
+            amount_left_texts = (num_words - 1) - index_stop
+
+            if amount_left_texts == 0:
+                is_over = True
 
     def render_texts_multiple_lines(self):
         words = self.content_text_temp.split(' ')
@@ -197,9 +263,8 @@ class Runner:
                 x_text = self.pos_text[0]  # Reset the x_text.
                 y_text += word_height
 
-            if word != '':  # TODO: the first element is a null, might because of the split.
-                self.surface.blit(word_surface, (x_text, y_text))
-                x_text += word_width + space
+            self.surface.blit(word_surface, (x_text, y_text))
+            x_text += word_width + space
 
     def generate_subtask(self):
         """
@@ -285,13 +350,21 @@ class Runner:
                                      [pos_shape[0], pos_shape[1], width, height], 0)
 
 
+# Avoid using string magic words. Declare global variables.
+GAP_COUNT_TASK = "count task"
+GAP_MATH_TASK = "math task"
+
+# TODO: add a configuration file to be read here.
+# TODO: fix the sentences problem by endding them with marks.
+
+
 def run_prototype():
     pygame.init()
     runner_trial = Runner(duration_gap=1500,
                           duration_text=3000,
                           amount_text=30,
                           source_text=TEXTS_1,
-                          task_type_gap="count task",
+                          task_type_gap=GAP_COUNT_TASK,
                           num_attention_shifts=5,
                           color_background="black", color_text=(73, 232, 56),
                           size_text=70, size_gap=64, pos_text=(50, 250), pos_gap=(0, 0), title="trial_1")
