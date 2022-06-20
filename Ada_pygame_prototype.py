@@ -225,7 +225,6 @@ class Runner:
                 if (list(word_list[i]))[-1] == mark:
                     indices_words_contain_marks.append(i)
                     break
-        print(indices_words_contain_marks)
 
         # Find the closest index (higher value) in the list.
         def find_closest_index(input_indices_list, input_index):
@@ -237,8 +236,8 @@ class Runner:
         # Dynamically split texts with a boolean flag.
         is_over = False
         index_start = 0
-        index_stop = 0
         amount_left_texts = self.amount_text
+        record_index_stop = 0
         while is_over is False:
             # Initialize the stop index.
             if amount_left_texts >= self.amount_text:
@@ -246,8 +245,16 @@ class Runner:
             else:
                 index_stop = index_start + amount_left_texts - 1
 
-            index_closest_stop_mark_higher = find_closest_index(indices_words_contain_marks, index_stop)
-            index_stop = index_closest_stop_mark_higher
+            # If I don't use the copy(), but simply list a = list b, when b is sorted, so as a.
+            copy_indices_words_contain_marks = indices_words_contain_marks.copy()
+            index_closest_stop_mark = find_closest_index(copy_indices_words_contain_marks, index_stop)
+
+            # Handle the exception that will cause a infinite loop (the closest index stuck in one position).
+            if index_closest_stop_mark == record_index_stop:
+                index_index_closest_stop_mark = indices_words_contain_marks.index(index_closest_stop_mark)
+                index_closest_stop_mark = indices_words_contain_marks[index_index_closest_stop_mark + 1]
+
+            index_stop = index_closest_stop_mark
 
             # Populate the content of texts.
             texts_chunk = ""
@@ -257,6 +264,7 @@ class Runner:
             self.log_actual_amounts_texts.append((index_stop + 1) - index_start)
 
             # When the loop is over, refresh the starting index.
+            record_index_stop = index_stop
             index_start = index_stop + 1
             amount_left_texts = (num_words - 1) - index_stop
 
@@ -370,8 +378,8 @@ class Runner:
 def run_prototype():
     pygame.init()
     runner_trial = Runner(duration_gap=1500,
-                          duration_text=3000,
-                          amount_text=30,
+                          duration_text=30000,
+                          amount_text=15,
                           source_text=TEXTS_1,
                           task_type_gap=GAP_COUNT_TASK,
                           num_attention_shifts=5,
