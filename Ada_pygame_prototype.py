@@ -38,6 +38,13 @@ TEXTS_2 = "If you've missed George Calombaris' friendly onscreen persona on Mast
           "Once that's done, Calombaris said he plans to catch up with his friends and discover the depths of smaller hawker stalls and Singapore's heritage fare on his 10-day trip. " \
           "When asked what he's most looking forward to, Calombaris said, 'I'm just looking forward to eating chilli crab and chicken rice again.'"
 
+# Avoid using string magic words. Declare global variables.
+GAP_COUNT_TASK = "count task"
+GAP_MATH_TASK = "math task"
+# Modes
+MODE_RSVP = "rsvp"
+MODE_MANUAL = "manual"
+
 
 class Runner:
     def __init__(self, duration_gap, duration_text, amount_text, source_text, task_type_gap,
@@ -89,6 +96,7 @@ class Runner:
         self.marks = [",", ".", "!", "?", ";", ":", "'"]
         self.threshold_bottom_num_text_reserve_sentence = 3     # If the words are less than 3, then reserve this sentence.
         self.threshold_top_num_text_abandon_sentence = 5        # If the words are more than 5, then abandon this sentence.
+        self.log_actual_amounts_texts = []
 
         # Parameters for subtask type 2: count task.
         self.timer_count_gap_task = 0
@@ -180,7 +188,7 @@ class Runner:
 
             # Display the gap content.
             elif self.is_text_showing is False:
-                if self.task_type_gap == "math task":
+                if self.task_type_gap == GAP_MATH_TASK:
                     self.content_gap_temp = self.gap_math_task_chunks[self.counter_attention_shifts]
                     self.image_gap = self.font_gap.render(self.content_gap_temp, True, self.color_text)
 
@@ -198,7 +206,11 @@ class Runner:
             # The experiment is over with exceeding the iteration times.
             if self.counter_attention_shifts >= self.num_attention_shifts:
                 self.is_running = False
+
+        # Log here
         print(self.gap_math_task_chunks_results)  # TODO: log out the results here.
+        print("The actual number of texts displayed are: " + str(self.log_actual_amounts_texts))
+
         pygame.quit()
 
     def split_amount_texts(self):
@@ -242,6 +254,7 @@ class Runner:
             for word in word_list[index_start:(index_stop + 1)]:
                 texts_chunk = texts_chunk + word + " "
             self.texts_chunks.append(texts_chunk)
+            self.log_actual_amounts_texts.append((index_stop + 1) - index_start)
 
             # When the loop is over, refresh the starting index.
             index_start = index_stop + 1
@@ -272,7 +285,7 @@ class Runner:
         Please specify tasks' parameters here.
         :return: subtasks' answers.
         """
-        if self.task_type_gap == "math task":
+        if self.task_type_gap == GAP_MATH_TASK:
             # Task type 1: mathematical tasks - several double-digit multiplication tasks.
             ROW_EQUATIONS = 5
             for i in range(self.num_attention_shifts):
@@ -288,7 +301,7 @@ class Runner:
                 self.gap_math_task_chunks.append(gap_task)
                 self.gap_math_task_chunks_results.append(results)
 
-        elif self.task_type_gap == "count task":
+        elif self.task_type_gap == GAP_COUNT_TASK:
             # Task type 2: count task - count the number of a certain shape, e.g., circle, triangle, and rectangle.
             for j in range(self.num_attention_shifts):
                 types_shapes_current_shift = []
@@ -312,7 +325,7 @@ class Runner:
                 self.gap_math_task_chunks_results.append(results)
 
     def render_gap_tasks(self):
-        if self.task_type_gap == "math task":
+        if self.task_type_gap == GAP_MATH_TASK:
             line_list = self.gap_math_task_chunks[self.counter_attention_shifts].splitlines()
             x_line, y_line = self.pos_gap
             for line in line_list:
@@ -321,7 +334,7 @@ class Runner:
                 self.surface.blit(line_surface, (x_line, y_line))
                 y_line += line_height
 
-        elif self.task_type_gap == "count task":
+        elif self.task_type_gap == GAP_COUNT_TASK:
             # Update the timer
             if self.timer_count_gap_task >= self.duration_count_gap_task_shapes_change:
                 self.timer_count_gap_task = 0
@@ -349,10 +362,6 @@ class Runner:
                     pygame.draw.rect(self.surface, self.color_gap_count_task_shape,
                                      [pos_shape[0], pos_shape[1], width, height], 0)
 
-
-# Avoid using string magic words. Declare global variables.
-GAP_COUNT_TASK = "count task"
-GAP_MATH_TASK = "math task"
 
 # TODO: add a configuration file to be read here.
 # TODO: fix the sentences problem by endding them with marks.
