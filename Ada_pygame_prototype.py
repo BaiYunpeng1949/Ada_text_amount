@@ -3,6 +3,7 @@ import random
 
 import pygame
 
+# TODO: find appropriate(interesting) reading materials that have comprehension questions. Found something here: https://www.myenglishpages.com/english/reading.php
 # TODO: the input texts' formats need to contain a space bar after every sentence. Change the code to recognize captal font in the future.
 TEXTS_1 = "US banks JPMorgan Chase, Citigroup and Wells Fargo said on Wednesday (Jun 15) they had raised their prime lending rates by 75 basis points to 4.75 per cent, effective Thursday, " \
           "matching the Federal Reserve's rate hike earlier in the day. " \
@@ -47,14 +48,14 @@ MODE_MANUAL = "manual"
 
 
 class Runner:
-    def __init__(self, duration_gap, duration_text, amount_text, source_text, task_type_gap,
+    def __init__(self, duration_gap, duration_text, amount_text, source_text_path, task_type_gap,
                  num_attention_shifts, color_background, color_text, size_text, size_gap,
                  pos_text, pos_gap, title):
         # Initialize input parameters.
         self.duration_gap = duration_gap
         self.duration_text = duration_text
         self.amount_text = amount_text
-        self.texts = source_text
+        self.texts_path = source_text_path
         self.task_type_gap = task_type_gap
         self.num_attention_shifts = num_attention_shifts
         self.color_background = color_background
@@ -91,6 +92,7 @@ class Runner:
         self.counter_attention_shifts = 0
 
         # Parameters for text reading.
+        self.texts = self.read_from_file()
         self.index_content_texts = 0
         self.texts_chunks = []
         self.marks = [",", ".", "!", "?", ";", ":", "'"]
@@ -212,6 +214,12 @@ class Runner:
         print("The actual number of texts displayed are: " + str(self.log_actual_amounts_texts))
 
         pygame.quit()
+
+    def read_from_file(self):
+        # Read materials from a text file. While the texts are all stacked up in one line.
+        with open(self.texts_path) as f:
+            texts = f.read()
+        return texts
 
     def split_amount_texts(self):
         word_list = self.texts.split()
@@ -372,7 +380,6 @@ class Runner:
 
 
 # TODO: add a configuration file to be read here.
-# TODO: fix the sentences problem by endding them with marks.
 
 
 def run_prototype():
@@ -380,7 +387,7 @@ def run_prototype():
     runner_trial = Runner(duration_gap=1500,
                           duration_text=30000,
                           amount_text=15,
-                          source_text=TEXTS_1,
+                          source_text_path="Reading Materials/World Water Day_204.txt",
                           task_type_gap=GAP_COUNT_TASK,
                           num_attention_shifts=5,
                           color_background="black", color_text=(73, 232, 56),
