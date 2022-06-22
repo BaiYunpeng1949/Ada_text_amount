@@ -133,7 +133,7 @@ class Runner:
                     if event.key == pygame.K_ESCAPE:
                         self.is_running = False
                     elif event.key == pygame.K_SPACE:
-                        if self.is_text_showing:
+                        if self.is_text_showing and self.mode_text_update is MODE_MANUAL:
                             self.surface.fill(self.color_background)  # Clear up.
                             self.index_content_texts += 1
                             # If the index of content is out of the range, loop back to 0.
@@ -155,12 +155,20 @@ class Runner:
                 self.content_text_temp = self.texts_chunks[self.index_content_texts]
                 self.image_text = self.font_text.render(self.content_text_temp, True, self.color_text)
                 self.render_texts_multiple_lines()  # Render text content word by word, line by line.
+
                 # Update the status.
                 if self.timer > self.duration_text:
                     self.counter_attention_shifts += 1
                     self.is_text_showing = False
                     self.timer = 0
                     self.surface.fill(self.color_background)
+
+                    # RSVP update mode for text display.
+                    if self.mode_text_update is MODE_RSVP:
+                        self.index_content_texts += 1
+                        # If the index of content is out of the range, loop back to 0.
+                        if self.index_content_texts == len(self.texts_chunks):
+                            self.index_content_texts = 0
 
             # Display the gap content.
             elif self.is_text_showing is False:
@@ -397,12 +405,12 @@ def run_prototype():
                           experiment_time="22 June 2022",
                           trial_information="trial0",
                           duration_gap=1500,
-                          duration_text=30000,
+                          duration_text=3000,
                           amount_text=15,
                           source_text_path="Reading Materials/What does cloud computing means_279.txt",
                           task_type_gap=GAP_COUNT_TASK,
                           num_attention_shifts=5,
-                          mode_update=MODE_MANUAL,
+                          mode_update=MODE_RSVP,
                           color_background="black", color_text=(73, 232, 56),
                           size_text=70, size_gap=64, pos_text=(50, 250), pos_gap=(0, 0), title="trial_1")
     runner_trial.mainloop()
