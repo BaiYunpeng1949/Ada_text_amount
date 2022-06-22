@@ -5,40 +5,6 @@ import pygame
 
 # TODO: find appropriate(interesting) reading materials that have comprehension questions. Found something here: https://www.myenglishpages.com/english/reading.php
 # TODO: the input texts' formats need to contain a space bar after every sentence. Change the code to recognize captal font in the future.
-TEXTS_1 = "US banks JPMorgan Chase, Citigroup and Wells Fargo said on Wednesday (Jun 15) they had raised their prime lending rates by 75 basis points to 4.75 per cent, effective Thursday, " \
-          "matching the Federal Reserve's rate hike earlier in the day. " \
-          "The Fed raised its target interest rate by three-quarters of a percentage point, the most by the US central bank since 1994, " \
-          "as it seeks to tame red-hot inflation. The central bank faces the task of charting a course for the economy to weather rate increases without a repeat of the 1970s-style predicament when the central bank's interest hikes aimed at fighting inflation resulted in a steep recession. " \
-          "Inflation, which has become a hot-button political issue, has worsened with the Ukraine war, hitting market sentiment and piling pressure on to an already battered supply chain. " \
-          "However, since banks make money on the difference between what they earn from lending and payouts on deposits and other funds, they typically thrive in a high interest rate environment."
-TEXTS_2 = "If you've missed George Calombaris' friendly onscreen persona on MasterChef Australia, " \
-          "you'll want to catch the show's former judge in Singapore at the ongoing GastroBeats. " \
-          "The chef is part of an eight-hands collaboration featuring the MasterChef franchise alums Derek Cheong, " \
-          "Genevieve Lee and Sarah Todd. As part of his event from Jun 20 to 26, " \
-          "Calombaris will introduce several dishes including an interesting " \
-          "'surf and turf' one comprising taramasalata (cured cod roe) with poached prawns and lup cheong (Chinese sausage) bolognaise. " \
-          "Calombaris laid low following the collapse of his business empire in 2020 after admitting to underpaying AU$7.83m (S$7.56m) in wages to employees. " \
-          "During the same period, Calombaris and his fellow MasterChef judges Matt Preston and Gary Mehigan were replaced after season 11, " \
-          "when negotiations for a pay rise with broadcaster Network Ten broke down. Cue the pandemic, " \
-          "which gave the 43-year-old a real chance to re-examine and redefine his life. " \
-          "'I've learnt to pause, take a breath and ask if I want to do something and if that something is going to make me feel good,' " \
-          "said the affable chef who is now the culinary director at the historic Hotel Sorrento in Melbourne. " \
-          "Working on television is still something he enjoys, " \
-          "so it is no surprise when Calombaris tells us that he will soon be back on our screens. " \
-          "'We will be making some very exciting announcements in the next couple of weeks about a prime time show that we are first going to air in Australia,' " \
-          "he told CNA Lifestyle. 'This show is special. I've seen the first couple of episodes, " \
-          "and I'm blown away. I hate seeing myself on television, I really do, but making this felt good. " \
-          "It felt authentic. There's nothing like it in that food space, so stay tuned. I'll be back on that TV of yours.' " \
-          "Also in the works in an online platform called Culinary Wonderland, which he's co-founded and is scheduled for launch later this year. " \
-          "'Imagine it as the Google for food but underpinned by some of the best foodies and chefs all over the world.' " \
-          "But first things first: His maiden post-pandemic trip out of Australia to Singapore. 'I have a big soft spot for Singapore. " \
-          "A lot of my best chef mates are there cooking at the highest level,' " \
-          "he said excitedly. Besides his crazy-sounding surf and turf dish at GastroBeats " \
-          "('it's going to be great,' he promised), he will also be serving a modern take on that Melbournian classic: Avocado toast. " \
-          "And he'll be doing all three of the things that he loves best: 'Cooking for people, feeding people and meeting people.' " \
-          "Once that's done, Calombaris said he plans to catch up with his friends and discover the depths of smaller hawker stalls and Singapore's heritage fare on his 10-day trip. " \
-          "When asked what he's most looking forward to, Calombaris said, 'I'm just looking forward to eating chilli crab and chicken rice again.'"
-
 # Avoid using string magic words. Declare global variables.
 GAP_COUNT_TASK = "count task"
 GAP_MATH_TASK = "math task"
@@ -48,9 +14,16 @@ MODE_MANUAL = "manual"
 
 
 class Runner:
-    def __init__(self, duration_gap, duration_text, amount_text, source_text_path, task_type_gap,
-                 num_attention_shifts, color_background, color_text, size_text, size_gap,
+    def __init__(self, participant_name, experiment_time, trial_information,
+                 duration_gap, duration_text, amount_text, source_text_path, task_type_gap,
+                 num_attention_shifts,mode_update,
+                 color_background, color_text, size_text, size_gap,
                  pos_text, pos_gap, title):
+        # Set experiment parameters.
+        self.participant_name = participant_name
+        self.experiment_time = experiment_time
+        self.trial_information = trial_information
+
         # Initialize input parameters.
         self.duration_gap = duration_gap
         self.duration_text = duration_text
@@ -58,6 +31,7 @@ class Runner:
         self.texts_path = source_text_path
         self.task_type_gap = task_type_gap
         self.num_attention_shifts = num_attention_shifts
+        self.mode_text_update = mode_update
         self.color_background = color_background
         self.color_text = color_text
         self.size_text = size_text
@@ -212,6 +186,8 @@ class Runner:
         # Log here
         print(self.gap_math_task_chunks_results)  # TODO: log out the results here.
         print("The actual number of texts displayed are: " + str(self.log_actual_amounts_texts))
+
+        self.generate_log_file()
 
         pygame.quit()
 
@@ -378,18 +354,55 @@ class Runner:
                     pygame.draw.rect(self.surface, self.color_gap_count_task_shape,
                                      [pos_shape[0], pos_shape[1], width, height], 0)
 
+    def generate_log_file(self):
+        file_path = "Results/" + self.participant_name + "_" + self.experiment_time + "_" + self.trial_information + ".txt"
+        with open(file_path, 'w') as f:
+            f.write("Participant Information: " + "\n")
+            f.write("Participant Name: " + self.participant_name + "\n")
+            f.write("Experiment Time: " + self.experiment_time + "\n")
+            f.write("Trial Number: " + self.trial_information + "\n")
 
-# TODO: add a configuration file to be read here.
+            f.write("\n")
+            f.write("Configuration: " + "\n")
+            f.write("Duration of gap task: " + str(self.duration_gap) + " ms" + "\n")
+            f.write("Duration of text reading: " + str(self.duration_text) + " ms" + "\n")
+            f.write("Amount of text in a chunk: " + str(self.amount_text) + " words" + "\n")
+            f.write("Text read: " + self.texts_path + "\n")
+            f.write("The type of task type: " + self.task_type_gap + "\n")
+            f.write("The number of attention shifts: " + str(self.num_attention_shifts) + "\n")
+            f.write("The mode of text content update: " + self.mode_text_update + "\n")
+            f.write("The color of OHMD background: " + str(self.color_background) + "\n")
+            f.write("The color of OHMD texts: " + str(self.color_text) + "\n")
+            f.write("The size of texts: " + str(self.size_text) + " pixels" + "\n")
+            f.write("The size of gap tasks: " + str(self.size_gap) + " pixels" + "\n")
+            f.write("The position of texts: " + str(self.pos_text) + "\n")
+            f.write("The position of gap tasks: " + str(self.pos_gap) + "\n")
+
+            f.write("\n")
+            f.write("Logs: " + "\n")
+            for i in range(self.num_attention_shifts):
+                f.write("The " + str(i+1) + " text chunk: " + "\n")
+                f.write("Gap task results: " + str(self.gap_math_task_chunks_results[i]) + "\n")
+
+            f.write("\n")
+            for i in range(len(self.texts_chunks)):
+                f.write("The " + str(i + 1) + " attention shift: " + "\n")
+                f.write("Amount of texts in this chunk: " + str(self.log_actual_amounts_texts[i]) + "\n")
 
 
 def run_prototype():
+    # Run the prototype.
     pygame.init()
-    runner_trial = Runner(duration_gap=1500,
+    runner_trial = Runner(participant_name="Bai Yunpeng",
+                          experiment_time="22 June 2022",
+                          trial_information="trial0",
+                          duration_gap=1500,
                           duration_text=30000,
                           amount_text=15,
-                          source_text_path="Reading Materials/World Water Day_204.txt",
+                          source_text_path="Reading Materials/What does cloud computing means_279.txt",
                           task_type_gap=GAP_COUNT_TASK,
                           num_attention_shifts=5,
+                          mode_update=MODE_MANUAL,
                           color_background="black", color_text=(73, 232, 56),
                           size_text=70, size_gap=64, pos_text=(50, 250), pos_gap=(0, 0), title="trial_1")
     runner_trial.mainloop()

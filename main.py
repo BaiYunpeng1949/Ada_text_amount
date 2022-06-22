@@ -491,5 +491,4 @@ if __name__ == '__main__':
 
     # generate_pygame_window_trials()
     # example_main()
-
     Ada_pygame_prototype.run_prototype()
