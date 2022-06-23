@@ -141,68 +141,62 @@ class Runner:
                             self.surface.fill(self.color_background)
                             self.is_text_showing = False
                             self.timer = 0
-                            self.counter_attention_shifts += 1
-                            self.index_content_texts += 1
+                            # Index for the text display, could be added.
+                            if self.index_content_texts < len(self.texts_chunks) - 1:
+                                self.index_content_texts += 1
+                            # Index of the gap task, could not be added with the last one.
+                            if self.counter_attention_shifts < self.num_attention_shifts:
+                                self.counter_attention_shifts += 1
 
                             # Collect the time spent on the certain amount of text.
                             self.log_time_elapsed_read_text_mode_manual.append(self.timer_elapsed_read_text_mode_manual)
                             self.timer_elapsed_read_text_mode_manual = 0
-
-                            # if event.key == pygame.K_DOWN:
-                            #     self.index_content_texts += 1
-                            # elif event.key == pygame.K_UP:
-                            #     self.index_content_texts -= 1
-
-                            # # If the index of content is out of the range, loop back to 0.
-                            # if self.index_content_texts == len(self.texts_chunks):
-                            #     self.index_content_texts = 0
-                            # # If the index of content is smaller than 0, then loop to the end.
-                            # if self.index_content_texts < 0:
-                            #     self.index_content_texts = (len(self.texts_chunks) - 1)
 
             # Count the time elapsed.
             self.time_elapsed = self.clock.tick(self.fps)
             # Update the timer.
             self.timer += self.time_elapsed
 
-            # Display text content.
-            if self.is_text_showing:
-                # Draw content.
-                # Get the current texts.
-                self.content_text_temp = self.texts_chunks[self.index_content_texts]
-                self.image_text = self.font_text.render(self.content_text_temp, True, self.color_text)
-                self.render_texts_multiple_lines()  # Render text content word by word, line by line.
+            # Display text content. Check the legimacy of indicies, in case of index out of range.
+            if self.counter_attention_shifts < self.num_attention_shifts:
+                # Display the texts and gap task.
+                if self.is_text_showing:
+                    # Draw content.
+                    # Get the current texts.
+                    self.content_text_temp = self.texts_chunks[self.index_content_texts]
+                    self.image_text = self.font_text.render(self.content_text_temp, True, self.color_text)
+                    self.render_texts_multiple_lines()  # Render text content word by word, line by line.
 
-                # Update the status automatically if in the rsvp mode.
-                if self.timer > self.duration_text and self.mode_text_update is MODE_RSVP:
-                    self.counter_attention_shifts += 1
-                    self.is_text_showing = False
-                    self.timer = 0
-                    self.surface.fill(self.color_background)
+                    # Update the status automatically if in the rsvp mode.
+                    if self.timer > self.duration_text and self.mode_text_update is MODE_RSVP:
+                        self.counter_attention_shifts += 1
+                        self.is_text_showing = False
+                        self.timer = 0
+                        self.surface.fill(self.color_background)
 
-                    # RSVP update mode for text display.
-                    self.index_content_texts += 1
-                    # If the index of content is out of the range, loop back to the beginning.
-                    if self.index_content_texts == len(self.texts_chunks):
-                        self.index_content_texts = 0
-                # Record the time spent on a certain amount of words in the manual mode.
-                elif self.mode_text_update is MODE_MANUAL:
-                    self.timer_elapsed_read_text_mode_manual += self.time_elapsed
+                        # RSVP update mode for text display.
+                        self.index_content_texts += 1
+                        # If the index of content is out of the range, loop back to the beginning.
+                        if self.index_content_texts == len(self.texts_chunks):
+                            self.index_content_texts = 0
+                    # Record the time spent on a certain amount of words in the manual mode.
+                    elif self.mode_text_update is MODE_MANUAL:
+                        self.timer_elapsed_read_text_mode_manual += self.time_elapsed
 
-            # Display the gap content.
-            elif self.is_text_showing is False:
-                if self.task_type_gap == GAP_MATH_TASK:
-                    self.content_gap_temp = self.gap_math_task_chunks[self.counter_attention_shifts]
-                    self.image_gap = self.font_gap.render(self.content_gap_temp, True, self.color_text)
+                # Display the gap content.
+                elif self.is_text_showing is False:
+                    if self.task_type_gap == GAP_MATH_TASK:
+                        self.content_gap_temp = self.gap_math_task_chunks[self.counter_attention_shifts]
+                        self.image_gap = self.font_gap.render(self.content_gap_temp, True, self.color_text)
 
-                self.render_gap_tasks()  # Render content according to task type.
+                    self.render_gap_tasks()  # Render content according to task type.
 
-                if self.timer > self.duration_gap:
-                    self.is_text_showing = True
-                    self.timer = 0
-                    self.surface.fill(self.color_background)
-                    # Flush the counter for gap task type 2: count task.
-                    self.counter_count_gap_task_shapes_change = 0
+                    if self.timer > self.duration_gap:
+                        self.is_text_showing = True
+                        self.timer = 0
+                        self.surface.fill(self.color_background)
+                        # Flush the counter for gap task type 2: count task.
+                        self.counter_count_gap_task_shapes_change = 0
 
             pygame.display.flip()
 
@@ -282,8 +276,6 @@ class Runner:
                 is_over = True
                 # Redefine the number of attention shifts.
                 self.num_attention_shifts = len(self.texts_chunks)
-                print(self.num_attention_shifts)
-
 
     def render_texts_multiple_lines(self):
         words = self.content_text_temp.split(' ')
@@ -437,11 +429,11 @@ def run_prototype():
     pygame.init()
     runner_trial = Runner(participant_name="Bai Yunpeng",
                           experiment_time="23 June 2022",
-                          trial_information="trial0",
-                          duration_gap=1500,
+                          trial_information="trial1",
+                          duration_gap=500,
                           duration_text=5000,   # TODO: duration_text to duration_text lists.
-                          amount_text=10,
-                          source_text_path="Reading Materials/What does cloud computing means_279.txt",
+                          amount_text=30,
+                          source_text_path="Reading Materials/World Water Day_204.txt",
                           task_type_gap=GAP_COUNT_TASK,
                           mode_update=MODE_MANUAL,
                           color_background="black", color_text=(73, 232, 56),
