@@ -1,22 +1,25 @@
 import math
 import random
-
+import os
 import pygame
+import numpy as np
 
 # TODO: find appropriate(interesting) reading materials that have comprehension questions. Found something here: https://www.myenglishpages.com/english/reading.php
 # TODO: the input texts' formats need to contain a space bar after every sentence. Change the code to recognize captal font in the future.
 # Avoid using string magic words. Declare global variables.
 GAP_COUNT_TASK = "count task"
 GAP_MATH_TASK = "math task"
-# Modes
+# Modes.
 MODE_RSVP = "rsvp"
 MODE_MANUAL = "manual"
+# Experiment conditions.
+CONDITION_POS_HOR = "position horizontal"
 
 
 class Runner:
     def __init__(self, participant_name, experiment_time, trial_information,
                  duration_gap, duration_text, amount_text, source_text_path, task_type_gap,
-                 mode_update,
+                 mode_update, condition_exp,
                  color_background, color_text, size_text, size_gap,
                  pos_text, pos_gap, title="AdaPrototype"):
         # Set experiment parameters.
@@ -32,6 +35,7 @@ class Runner:
         self.task_type_gap = task_type_gap
         self.num_attention_shifts = 9   # Initialize this parameter. TODO: return this into a tunable parameter in the future.
         self.mode_text_update = mode_update
+        self.condition_experiment = condition_exp
         self.color_background = color_background
         self.color_text = color_text
         self.size_text = size_text
@@ -380,62 +384,75 @@ class Runner:
                                      [pos_shape[0], pos_shape[1], width, height], 0)
 
     def generate_log_file(self):
-        file_path = "Results/" + self.participant_name + "_" + self.experiment_time + "_" + self.trial_information + ".txt"
-        with open(file_path, 'w') as f:
-            f.write("Participant Information: " + "\n")
-            f.write("Participant Name: " + self.participant_name + "\n")
-            f.write("Experiment Time: " + self.experiment_time + "\n")
-            f.write("Trial Number: " + self.trial_information + "\n")
+        folder_path = "Results/" + self.experiment_time + "/" + self.participant_name + "/"
 
-            f.write("\n")
-            f.write("Configuration: " + "\n")
-            f.write("Duration of gap task: " + str(self.duration_gap) + " ms" + "\n")
-            f.write("Duration of text reading: " + str(self.duration_text) + " ms" + "\n")
-            f.write("Amount of text in a chunk: " + str(self.amount_text) + " words" + "\n")
-            f.write("Text read: " + self.texts_path + "\n")
-            f.write("The type of task type: " + self.task_type_gap + "\n")
-            f.write("The number of attention shifts: " + str(self.num_attention_shifts) + "\n")
-            f.write("The mode of text content update: " + self.mode_text_update + "\n")
-            f.write("The color of OHMD background: " + str(self.color_background) + "\n")
-            f.write("The color of OHMD texts: " + str(self.color_text) + "\n")
-            f.write("The size of texts: " + str(self.size_text) + " pixels" + "\n")
-            f.write("The size of gap tasks: " + str(self.size_gap) + " pixels" + "\n")
-            f.write("The position of texts: " + str(self.pos_text) + "\n")
-            f.write("The position of gap tasks: " + str(self.pos_gap) + "\n")
+        # Check the existence of the folder. If not, create one.
+        if os.path.exists(folder_path) is False:
+            os.makedirs(folder_path)
 
-            f.write("\n")
-            f.write("Logs: " + "\n")
-            for i in range(self.num_attention_shifts):
-                f.write("The " + str(i + 1) + " text chunk: " + "\n")
-                f.write("Gap task results: " + str(self.gap_math_task_chunks_results[i]) + "\n")
+        if self.condition_experiment == CONDITION_POS_HOR:
+            file_path = folder_path + self.trial_information + "_pos" + str(self.pos_text[0]) + ".txt"
+        if not os.path.exists(file_path):
+            with open(file_path, 'w') as f:
+                f.write("Participant Information: " + "\n")
+                f.write("Participant Name: " + self.participant_name + "\n")
+                f.write("Experiment Time: " + self.experiment_time + "\n")
+                f.write("Trial Number: " + self.trial_information + "\n")
 
-            f.write("\n")
-            for i in range(len(self.texts_chunks)):
-                f.write("The " + str(i + 1) + " attention shift: " + "\n")
-                if self.mode_text_update is MODE_RSVP:
-                    f.write("Amount of texts in this chunk: " + str(self.log_actual_amounts_texts[i]) + "\n")
-                elif self.mode_text_update is MODE_MANUAL:
-                    if i < len(self.log_time_elapsed_read_text_mode_manual):
-                        f.write("Amount of texts in this chunk: " + str(self.log_actual_amounts_texts[i]) +
-                                "    Time spent: " + str(self.log_time_elapsed_read_text_mode_manual[i]) + " ms" + "\n")
-                    else:
+                f.write("\n")
+                f.write("Configuration: " + "\n")
+                f.write("Duration of gap task: " + str(self.duration_gap) + " ms" + "\n")
+                f.write("Duration of text reading: " + str(self.duration_text) + " ms" + "\n")
+                f.write("Amount of text in a chunk: " + str(self.amount_text) + " words" + "\n")
+                f.write("Text read: " + self.texts_path + "\n")
+                f.write("The type of task type: " + self.task_type_gap + "\n")
+                f.write("The number of attention shifts: " + str(self.num_attention_shifts) + "\n")
+                f.write("The mode of text content update: " + self.mode_text_update + "\n")
+                f.write("The color of OHMD background: " + str(self.color_background) + "\n")
+                f.write("The color of OHMD texts: " + str(self.color_text) + "\n")
+                f.write("The size of texts: " + str(self.size_text) + " pixels" + "\n")
+                f.write("The size of gap tasks: " + str(self.size_gap) + " pixels" + "\n")
+                f.write("The position of texts: " + str(self.pos_text) + "\n")
+                f.write("The position of gap tasks: " + str(self.pos_gap) + "\n")
+
+                f.write("\n")
+                f.write("Logs: " + "\n")
+                for i in range(self.num_attention_shifts):
+                    f.write("The " + str(i + 1) + " text chunk: " + "\n")
+                    f.write("Gap task results: " + str(self.gap_math_task_chunks_results[i]) + "\n")
+
+                f.write("\n")
+                for i in range(len(self.texts_chunks)):
+                    f.write("The " + str(i + 1) + " attention shift: " + "\n")
+                    if self.mode_text_update is MODE_RSVP:
                         f.write("Amount of texts in this chunk: " + str(self.log_actual_amounts_texts[i]) + "\n")
+                    elif self.mode_text_update is MODE_MANUAL:
+                        if i < len(self.log_time_elapsed_read_text_mode_manual):
+                            f.write("Amount of texts in this chunk: " + str(self.log_actual_amounts_texts[i]) +
+                                    "    Time spent: " + str(self.log_time_elapsed_read_text_mode_manual[i]) + " ms" + "\n")
+                        else:
+                            f.write("Amount of texts in this chunk: " + str(self.log_actual_amounts_texts[i]) + "\n")
+
+                        f.write("The average elapsed time is: " +
+                                str(np.mean(self.log_time_elapsed_read_text_mode_manual)) + " ms")
 
 # TODO: generate config file to choose factor's parameters in batches.
 # TODO: use configuration to counter balance.
+
 
 def run_prototype():
     # Run the prototype.
     pygame.init()
     runner_trial = Runner(participant_name="Bai Yunpeng",
-                          experiment_time="23 June 2022",
-                          trial_information="trial1",
-                          duration_gap=500,
+                          experiment_time="27 June 2022",
+                          trial_information="trial2",
+                          duration_gap=1500,
                           duration_text=5000,   # TODO: duration_text to duration_text lists.
                           amount_text=30,
-                          source_text_path="Reading Materials/World Water Day_204.txt",
+                          source_text_path="Reading Materials/Earth day_144.txt",
                           task_type_gap=GAP_COUNT_TASK,
                           mode_update=MODE_MANUAL,
+                          condition_exp=CONDITION_POS_HOR,
                           color_background="black", color_text=(73, 232, 56),
-                          size_text=60, size_gap=64, pos_text=(300, 250), pos_gap=(0, 0))
+                          size_text=60, size_gap=64, pos_text=(350, 50), pos_gap=(0, 0))
     runner_trial.mainloop()
