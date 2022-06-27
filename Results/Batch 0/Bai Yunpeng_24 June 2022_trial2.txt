@@ -1,0 +1,58 @@
+Participant Information: 
+Participant Name: Bai Yunpeng
+Experiment Time: 24 June 2022
+Trial Number: trial2
+
+Configuration: 
+Duration of gap task: 2500 ms
+Duration of text reading: 5000 ms
+Amount of text in a chunk: 30 words
+Text read: Reading Materials/Youth_278.txt
+The type of task type: count task
+The number of attention shifts: 9
+The mode of text content update: manual
+The color of OHMD background: black
+The color of OHMD texts: (73, 232, 56)
+The size of texts: 60 pixels
+The size of gap tasks: 64 pixels
+The position of texts: (550, 250)
+The position of gap tasks: (0, 0)
+
+Logs: 
+The 1 text chunk: 
+Gap task results: ['circle: 2 ', 'triangle: 0 ', 'rectangle: 5 ']
+The 2 text chunk: 
+Gap task results: ['circle: 3 ', 'triangle: 1 ', 'rectangle: 3 ']
+The 3 text chunk: 
+Gap task results: ['circle: 4 ', 'triangle: 1 ', 'rectangle: 2 ']
+The 4 text chunk: 
+Gap task results: ['circle: 1 ', 'triangle: 4 ', 'rectangle: 2 ']
+The 5 text chunk: 
+Gap task results: ['circle: 5 ', 'triangle: 1 ', 'rectangle: 1 ']
+The 6 text chunk: 
+Gap task results: ['circle: 2 ', 'triangle: 4 ', 'rectangle: 1 ']
+The 7 text chunk: 
+Gap task results: ['circle: 3 ', 'triangle: 2 ', 'rectangle: 2 ']
+The 8 text chunk: 
+Gap task results: ['circle: 3 ', 'triangle: 2 ', 'rectangle: 2 ']
+The 9 text chunk: 
+Gap task results: ['circle: 3 ', 'triangle: 2 ', 'rectangle: 2 ']
+
+The 1 attention shift: 
+Amount of texts in this chunk: 31    Time spent: 11249 ms
+The 2 attention shift: 
+Amount of texts in this chunk: 32    Time spent: 16230 ms
+The 3 attention shift: 
+Amount of texts in this chunk: 32    Time spent: 12096 ms
+The 4 attention shift: 
+Amount of texts in this chunk: 35    Time spent: 19517 ms
+The 5 attention shift: 
+Amount of texts in this chunk: 31    Time spent: 22539 ms
+The 6 attention shift: 
+Amount of texts in this chunk: 26    Time spent: 16304 ms
+The 7 attention shift: 
+Amount of texts in this chunk: 25    Time spent: 10929 ms
+The 8 attention shift: 
+Amount of texts in this chunk: 31    Time spent: 12506 ms
+The 9 attention shift: 
+Amount of texts in this chunk: 36    Time spent: 14713 ms

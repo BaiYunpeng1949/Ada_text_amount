@@ -1,0 +1,50 @@
+Participant Information: 
+Participant Name: Bai Yunpeng
+Experiment Time: 26 June 2022
+Trial Number: trial1
+
+Configuration: 
+Duration of gap task: 1500 ms
+Duration of text reading: 5000 ms
+Amount of text in a chunk: 30 words
+Text read: Reading Materials/Computers_209.txt
+The type of task type: count task
+The number of attention shifts: 7
+The mode of text content update: manual
+The color of OHMD background: black
+The color of OHMD texts: (73, 232, 56)
+The size of texts: 60 pixels
+The size of gap tasks: 64 pixels
+The position of texts: (350, 50)
+The position of gap tasks: (0, 0)
+
+Logs: 
+The 1 text chunk: 
+Gap task results: ['circle: 1 ', 'triangle: 1 ', 'rectangle: 2 ']
+The 2 text chunk: 
+Gap task results: ['circle: 1 ', 'triangle: 3 ', 'rectangle: 0 ']
+The 3 text chunk: 
+Gap task results: ['circle: 0 ', 'triangle: 1 ', 'rectangle: 3 ']
+The 4 text chunk: 
+Gap task results: ['circle: 1 ', 'triangle: 1 ', 'rectangle: 2 ']
+The 5 text chunk: 
+Gap task results: ['circle: 0 ', 'triangle: 3 ', 'rectangle: 1 ']
+The 6 text chunk: 
+Gap task results: ['circle: 2 ', 'triangle: 1 ', 'rectangle: 1 ']
+The 7 text chunk: 
+Gap task results: ['circle: 1 ', 'triangle: 0 ', 'rectangle: 3 ']
+
+The 1 attention shift: 
+Amount of texts in this chunk: 29    Time spent: 11328 ms
+The 2 attention shift: 
+Amount of texts in this chunk: 25    Time spent: 7084 ms
+The 3 attention shift: 
+Amount of texts in this chunk: 34    Time spent: 15300 ms
+The 4 attention shift: 
+Amount of texts in this chunk: 38    Time spent: 12222 ms
+The 5 attention shift: 
+Amount of texts in this chunk: 34    Time spent: 20907 ms
+The 6 attention shift: 
+Amount of texts in this chunk: 27    Time spent: 11249 ms
+The 7 attention shift: 
+Amount of texts in this chunk: 22    Time spent: 7717 ms

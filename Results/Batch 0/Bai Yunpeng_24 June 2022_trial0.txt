@@ -1,0 +1,50 @@
+Participant Information: 
+Participant Name: Bai Yunpeng
+Experiment Time: 24 June 2022
+Trial Number: trial0
+
+Configuration: 
+Duration of gap task: 2500 ms
+Duration of text reading: 5000 ms
+Amount of text in a chunk: 30 words
+Text read: Reading Materials/World Water Day_204.txt
+The type of task type: count task
+The number of attention shifts: 7
+The mode of text content update: manual
+The color of OHMD background: black
+The color of OHMD texts: (73, 232, 56)
+The size of texts: 60 pixels
+The size of gap tasks: 64 pixels
+The position of texts: (400, 250)
+The position of gap tasks: (0, 0)
+
+Logs: 
+The 1 text chunk: 
+Gap task results: ['circle: 3 ', 'triangle: 1 ', 'rectangle: 3 ']
+The 2 text chunk: 
+Gap task results: ['circle: 3 ', 'triangle: 4 ', 'rectangle: 0 ']
+The 3 text chunk: 
+Gap task results: ['circle: 2 ', 'triangle: 2 ', 'rectangle: 3 ']
+The 4 text chunk: 
+Gap task results: ['circle: 3 ', 'triangle: 4 ', 'rectangle: 0 ']
+The 5 text chunk: 
+Gap task results: ['circle: 2 ', 'triangle: 1 ', 'rectangle: 4 ']
+The 6 text chunk: 
+Gap task results: ['circle: 0 ', 'triangle: 4 ', 'rectangle: 3 ']
+The 7 text chunk: 
+Gap task results: ['circle: 2 ', 'triangle: 2 ', 'rectangle: 3 ']
+
+The 1 attention shift: 
+Amount of texts in this chunk: 21    Time spent: 8141 ms
+The 2 attention shift: 
+Amount of texts in this chunk: 35    Time spent: 12943 ms
+The 3 attention shift: 
+Amount of texts in this chunk: 27    Time spent: 12098 ms
+The 4 attention shift: 
+Amount of texts in this chunk: 29    Time spent: 12890 ms
+The 5 attention shift: 
+Amount of texts in this chunk: 32    Time spent: 10923 ms
+The 6 attention shift: 
+Amount of texts in this chunk: 29    Time spent: 9683 ms
+The 7 attention shift: 
+Amount of texts in this chunk: 31    Time spent: 11634 ms

@@ -1,0 +1,106 @@
+Participant Information: 
+Participant Name: Bai Yunpeng
+Experiment Time: 23 June 2022
+Trial Number: trial0
+
+Configuration: 
+Duration of gap task: 1500 ms
+Duration of text reading: 5000 ms
+Amount of text in a chunk: 10 words
+Text read: Reading Materials/What does cloud computing means_279.txt
+The type of task type: count task
+The number of attention shifts: 21
+The mode of text content update: manual
+The color of OHMD background: black
+The color of OHMD texts: (73, 232, 56)
+The size of texts: 60 pixels
+The size of gap tasks: 64 pixels
+The position of texts: (300, 250)
+The position of gap tasks: (0, 0)
+
+Logs: 
+The 1 text chunk: 
+Gap task results: ['circle: 2 ', 'triangle: 0 ', 'rectangle: 2 ']
+The 2 text chunk: 
+Gap task results: ['circle: 0 ', 'triangle: 0 ', 'rectangle: 4 ']
+The 3 text chunk: 
+Gap task results: ['circle: 0 ', 'triangle: 2 ', 'rectangle: 2 ']
+The 4 text chunk: 
+Gap task results: ['circle: 1 ', 'triangle: 2 ', 'rectangle: 1 ']
+The 5 text chunk: 
+Gap task results: ['circle: 2 ', 'triangle: 1 ', 'rectangle: 1 ']
+The 6 text chunk: 
+Gap task results: ['circle: 2 ', 'triangle: 1 ', 'rectangle: 1 ']
+The 7 text chunk: 
+Gap task results: ['circle: 1 ', 'triangle: 2 ', 'rectangle: 1 ']
+The 8 text chunk: 
+Gap task results: ['circle: 3 ', 'triangle: 0 ', 'rectangle: 1 ']
+The 9 text chunk: 
+Gap task results: ['circle: 0 ', 'triangle: 2 ', 'rectangle: 2 ']
+The 10 text chunk: 
+Gap task results: ['circle: 1 ', 'triangle: 2 ', 'rectangle: 1 ']
+The 11 text chunk: 
+Gap task results: ['circle: 1 ', 'triangle: 3 ', 'rectangle: 0 ']
+The 12 text chunk: 
+Gap task results: ['circle: 2 ', 'triangle: 1 ', 'rectangle: 1 ']
+The 13 text chunk: 
+Gap task results: ['circle: 1 ', 'triangle: 2 ', 'rectangle: 1 ']
+The 14 text chunk: 
+Gap task results: ['circle: 0 ', 'triangle: 3 ', 'rectangle: 1 ']
+The 15 text chunk: 
+Gap task results: ['circle: 2 ', 'triangle: 1 ', 'rectangle: 1 ']
+The 16 text chunk: 
+Gap task results: ['circle: 1 ', 'triangle: 1 ', 'rectangle: 2 ']
+The 17 text chunk: 
+Gap task results: ['circle: 1 ', 'triangle: 2 ', 'rectangle: 1 ']
+The 18 text chunk: 
+Gap task results: ['circle: 1 ', 'triangle: 1 ', 'rectangle: 2 ']
+The 19 text chunk: 
+Gap task results: ['circle: 3 ', 'triangle: 0 ', 'rectangle: 1 ']
+The 20 text chunk: 
+Gap task results: ['circle: 2 ', 'triangle: 2 ', 'rectangle: 0 ']
+The 21 text chunk: 
+Gap task results: ['circle: 0 ', 'triangle: 2 ', 'rectangle: 2 ']
+
+The 1 attention shift: 
+Amount of texts in this chunk: 18    Time spent: 1981 ms
+The 2 attention shift: 
+Amount of texts in this chunk: 6    Time spent: 563 ms
+The 3 attention shift: 
+Amount of texts in this chunk: 15    Time spent: 1606 ms
+The 4 attention shift: 
+Amount of texts in this chunk: 10    Time spent: 1241 ms
+The 5 attention shift: 
+Amount of texts in this chunk: 8
+The 6 attention shift: 
+Amount of texts in this chunk: 12
+The 7 attention shift: 
+Amount of texts in this chunk: 9
+The 8 attention shift: 
+Amount of texts in this chunk: 11
+The 9 attention shift: 
+Amount of texts in this chunk: 12
+The 10 attention shift: 
+Amount of texts in this chunk: 11
+The 11 attention shift: 
+Amount of texts in this chunk: 9
+The 12 attention shift: 
+Amount of texts in this chunk: 15
+The 13 attention shift: 
+Amount of texts in this chunk: 25
+The 14 attention shift: 
+Amount of texts in this chunk: 18
+The 15 attention shift: 
+Amount of texts in this chunk: 9
+The 16 attention shift: 
+Amount of texts in this chunk: 16
+The 17 attention shift: 
+Amount of texts in this chunk: 10
+The 18 attention shift: 
+Amount of texts in this chunk: 7
+The 19 attention shift: 
+Amount of texts in this chunk: 11
+The 20 attention shift: 
+Amount of texts in this chunk: 25
+The 21 attention shift: 
+Amount of texts in this chunk: 22

@@ -1,0 +1,44 @@
+Participant Information: 
+Participant Name: Bai Yunpeng
+Experiment Time: 27 June 2022
+Trial Number: trial1_pos550
+
+Configuration: 
+Duration of gap task: 1500 ms
+Duration of text reading: 5000 ms
+Amount of text in a chunk: 30 words
+Text read: Reading Materials/Earth day_144.txt
+The type of task type: count task
+The number of attention shifts: 5
+The mode of text content update: manual
+The color of OHMD background: black
+The color of OHMD texts: (73, 232, 56)
+The size of texts: 60 pixels
+The size of gap tasks: 64 pixels
+The position of texts: (550, 50)
+The position of gap tasks: (0, 0)
+
+Logs: 
+The 1 text chunk: 
+Gap task results: ['circle: 1 ', 'triangle: 0 ', 'rectangle: 3 ']
+The 2 text chunk: 
+Gap task results: ['circle: 2 ', 'triangle: 1 ', 'rectangle: 1 ']
+The 3 text chunk: 
+Gap task results: ['circle: 0 ', 'triangle: 4 ', 'rectangle: 0 ']
+The 4 text chunk: 
+Gap task results: ['circle: 2 ', 'triangle: 2 ', 'rectangle: 0 ']
+The 5 text chunk: 
+Gap task results: ['circle: 0 ', 'triangle: 2 ', 'rectangle: 2 ']
+
+The 1 attention shift: 
+Amount of texts in this chunk: 34    Time spent: 9896 ms
+The 2 attention shift: 
+Amount of texts in this chunk: 28    Time spent: 8958 ms
+The 3 attention shift: 
+Amount of texts in this chunk: 25    Time spent: 10719 ms
+The 4 attention shift: 
+Amount of texts in this chunk: 32    Time spent: 11146 ms
+The 5 attention shift: 
+Amount of texts in this chunk: 26    Time spent: 7524 ms
+
+Average: 9648 ms.
