@@ -4,10 +4,7 @@ import os
 import pygame
 import numpy as np
 
-# TODO: find appropriate(interesting) reading materials that have comprehension questions. Found something here: https://www.myenglishpages.com/english/reading.php
-# TODO: the input texts' formats need to contain a space bar after every sentence. Change the code to recognize captal font in the future.
 # Avoid using string magic words. Declare global variables.
-
 # For prototypes.
 GAP_COUNT_TASK = "count task"
 GAP_MATH_TASK = "math task"
@@ -86,14 +83,20 @@ class Runner:
         self.texts = self.read_from_file()
         self.index_content_texts = 0
         self.texts_chunks = []
+
         self.marks = [",", ".", "!", "?", ";", ":", "'"]
         self.threshold_bottom_num_text_reserve_sentence = 3     # If the words are less than 3, then reserve this sentence.
         self.threshold_top_num_text_abandon_sentence = 5        # If the words are more than 5, then abandon this sentence.
-        self.log_actual_amounts_texts = []
-        self.log_time_elapsed_read_text_mode_manual = []           # Store participants' reading speed: how many time for a certain amount of words.
-        self.log_time_elapsed_read_text_mode_rsvp = []
+
         self.wps_dynamical_duration_text = 3    # Words per second for dynamically changing duration of text reading at different text chunks.
         self.offset_seconds_dynamical_duration_text = 2     # The unit is second.
+
+        self.num_lines_scrolled_press_keys_present_all = 3      # This variable determines the number of lines that will be scrolled up or down with a single key press.
+        self.num_scrolling_press_keys_present_all = 0    # This variable will record the current number of scrolling operations, positive numbers negative numbers mean scrolling up and down.
+
+        self.log_actual_amounts_texts = []
+        self.log_time_elapsed_read_text_mode_manual = []  # Store participants' reading speed: how many time for a certain amount of words.
+        self.log_time_elapsed_read_text_mode_rsvp = []
 
         # Parameters for subtask type 2: count task.
         self.timer_count_gap_task = 0
@@ -170,6 +173,18 @@ class Runner:
                             # Collect the time spent on the certain amount of text.
                             self.log_time_elapsed_read_text_mode_manual.append(self.timer_elapsed_read_text_mode_manual)
                             self.timer_elapsed_read_text_mode_manual = 0
+                    # On the present-all mode, use up and down keys to scroll the texts.
+                    elif event.key == pygame.K_UP or event.key == pygame.K_DOWN:
+                        if self.is_text_showing and self.mode_text_update is MODE_PRESENT_ALL:
+                            # Clear up to avoid occlusions.
+                            self.surface.fill(self.color_background)
+                            # Update the scrolling parameters, including how many lines are operated, scroll up or down.
+                            if event.key == pygame.K_UP:
+                                # Scrolling up.
+                                self.num_scrolling_press_keys_present_all += 1
+                            elif event.key == pygame.K_DOWN:
+                                # Scrolling down.
+                                self.num_scrolling_press_keys_present_all -= 1
 
             # Count the time elapsed.
             self.time_elapsed = self.clock.tick(self.fps)
@@ -181,16 +196,21 @@ class Runner:
                 # Display the texts and gap task.
                 if self.is_text_showing:
                     # Draw content.
-                    # Get the current texts.
-                    self.content_text_temp = self.texts_chunks[self.index_content_texts]
-                    # Adaptively arrange the duration of the text reading. The global variable duration_text is updated.
-                    self.duration_text = self.log_time_elapsed_read_text_mode_rsvp[self.index_content_texts]
-                    # Display texts.
+                    # In the RSVP mode. Get the current texts. display different chunks of texts.
+                    if (self.mode_text_update is MODE_RSVP) or (self.mode_text_update is MODE_MANUAL):
+                        self.content_text_temp = self.texts_chunks[self.index_content_texts]
+                        # Adaptively arrange the duration of the text reading. The global variable duration_text is updated.
+                        self.duration_text = self.log_time_elapsed_read_text_mode_rsvp[self.index_content_texts]
+                    # In the Present-all mode, display all texts once.
+                    elif self.mode_text_update is MODE_PRESENT_ALL:
+                        self.content_text_temp = self.texts
+
+                    # Display texts. No matter which mode.
                     self.image_text = self.font_text.render(self.content_text_temp, True, self.color_text)
                     self.render_texts_multiple_lines()  # Render text content word by word, line by line.
 
-                    # Update the status automatically if in the rsvp mode.
-                    if self.timer > self.duration_text and self.mode_text_update is MODE_RSVP:
+                    # Update the status automatically if in the rsvp mode or in the present-all mode.
+                    if self.timer > self.duration_text and (self.mode_text_update is MODE_RSVP or self.mode_text_update is MODE_PRESENT_ALL):
                         self.counter_attention_shifts += 1
                         self.is_text_showing = False
                         self.timer = 0
@@ -202,9 +222,8 @@ class Runner:
                         if self.index_content_texts == len(self.texts_chunks):
                             self.index_content_texts = 0
 
-                        # Update log file.
+                        # Update log file for the RSVP mode and present all mode.
                         self.log_time_elapsed_read_text_mode_rsvp.append(self.duration_text)
-
                     # Record the time spent on a certain amount of words in the manual mode.
                     elif self.mode_text_update is MODE_MANUAL:
                         self.timer_elapsed_read_text_mode_manual += self.time_elapsed
@@ -311,9 +330,16 @@ class Runner:
             self.log_time_elapsed_read_text_mode_rsvp.append(duration_text)
 
     def render_texts_multiple_lines(self):
-        words = self.content_text_temp.split(' ')[:-1]  # Exclude the last item, which is a string.
+        # To be reminded that the displayed texts are stored in self.content_text_temp.
+        words = self.content_text_temp.split(' ')
         space = self.font_text.size(' ')[0]
         x_text, y_text = self.pos_text
+
+        # Update the parameters (present-all mode) of scrolling up and down. If not in the present-all mode, the variable self.num_scrolling_press_keys_present_all will keep as 0. So no need to use a condition statements (if and else structure).
+        word_random_surface = self.font_text.render(words[0], 0, self.color_text)       # Choose the first word as the random word.
+        height_line_word_random = word_random_surface.get_size()[1]     # Get the height of a line from a random word.
+        offset_y_texts = height_line_word_random * self.num_scrolling_press_keys_present_all * self.num_lines_scrolled_press_keys_present_all
+
         # Render word by word.
         for word in words:
             word_surface = self.font_text.render(word, 0, self.color_text)
@@ -321,8 +347,8 @@ class Runner:
             if x_text + word_width >= self.max_width:
                 x_text = self.pos_text[0]  # Reset the x_text.
                 y_text += word_height
-
-            self.surface.blit(word_surface, (x_text, y_text))
+            # Horizontally lay up the words.
+            self.surface.blit(word_surface, (x_text, y_text + offset_y_texts))
             x_text += word_width + space
 
     def generate_subtask(self):
@@ -454,11 +480,8 @@ class Runner:
                 for i in range(len(self.texts_chunks)):
                     f.write("The " + str(i + 1) + " attention shift: " + "\n")
                     if self.mode_text_update is MODE_RSVP:
-                        # if i < len(self.log_time_elapsed_read_text_mode_rsvp):
                         f.write("Amount of texts in this chunk: " + str(self.log_actual_amounts_texts[i]) +
                                 "    Time spent: " + str(self.log_time_elapsed_read_text_mode_rsvp[i]) + " ms" + "\n")
-                        # else:
-                        #     f.write("Amount of texts in this chunk: " + str(self.log_actual_amounts_texts[i]) + "\n")
                     elif self.mode_text_update is MODE_MANUAL:
                         if i < len(self.log_time_elapsed_read_text_mode_manual):
                             f.write("Amount of texts in this chunk: " + str(self.log_actual_amounts_texts[i]) +
@@ -468,22 +491,25 @@ class Runner:
 
                         f.write("The average elapsed time is: " +
                                 str(np.mean(self.log_time_elapsed_read_text_mode_manual)) + " ms")
+                    elif self.mode_text_update is MODE_PRESENT_ALL:
+                        f.write("    Time spent: " + str(self.log_time_elapsed_read_text_mode_rsvp[i]) + " ms" + "\n")
 
 def run_prototype():
     # Run the prototype.
     pygame.init()
     runner_trial = Runner(participant_name="Bai Yunpeng",
                           experiment_time="28 June 2022",
-                          trial_information="trial0",
+                          trial_information="trial1",
                           duration_gap=500,
                           duration_text=5000,   # TODO: duration_text to duration_text lists.
-                          amount_text=30,
-                          source_text_path="Reading Materials/Earth day_144.txt",
+                          amount_text=35,
+                          source_text_path="Reading Materials/Education_403.txt",
                           task_type_gap=GAP_COUNT_TASK,
-                          mode_update=MODE_RSVP,
+                          mode_update=MODE_PRESENT_ALL,
                           condition_exp=CONDITION_POS_HOR,
                           color_background="black", color_text=(73, 232, 56),
-                          size_text=60, size_gap=64, pos_text=(550, 50), pos_gap=(0, 0))
+                          size_text=60, size_gap=64,
+                          pos_text=(50, 50), pos_gap=(0, 0))
     runner_trial.mainloop()
 
 
@@ -522,13 +548,13 @@ def run_pilots(name, time, condition):
                           trial_information=condition,
                           duration_gap=duration_gap,
                           duration_text=5000,  # TODO: duration_text to duration_text lists.
-                          amount_text=25,
+                          amount_text=35,
                           source_text_path=source_text_path,
                           task_type_gap=GAP_COUNT_TASK,
                           mode_update=mode_update,
                           condition_exp=CONDITION_POS_HOR,
                           color_background="black", color_text=(73, 232, 56),
                           size_text=60, size_gap=64,
-                          pos_text=(550, 50), pos_gap=(0, 0))
+                          pos_text=(50, 50), pos_gap=(0, 0))
     # Run the pilot.
     runner_pilot.mainloop()
