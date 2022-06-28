@@ -7,13 +7,25 @@ import numpy as np
 # TODO: find appropriate(interesting) reading materials that have comprehension questions. Found something here: https://www.myenglishpages.com/english/reading.php
 # TODO: the input texts' formats need to contain a space bar after every sentence. Change the code to recognize captal font in the future.
 # Avoid using string magic words. Declare global variables.
+
+# For prototypes.
 GAP_COUNT_TASK = "count task"
 GAP_MATH_TASK = "math task"
 # Modes.
 MODE_RSVP = "rsvp"
 MODE_MANUAL = "manual"
+MODE_PRESENT_ALL = "present all"
 # Experiment conditions.
 CONDITION_POS_HOR = "position horizontal"
+
+# For pilot studies.
+# Configurations.
+CONDITION1 = "present_all_4s"
+CONDITION2 = "present_all_8s"
+CONDITION3 = "present_all_12s"
+CONDITION4 = "adaptive_4s"
+CONDITION5 = "adaptive_8s"
+CONDITION6 = "adaptive_12s"
 
 
 class Runner:
@@ -79,6 +91,9 @@ class Runner:
         self.threshold_top_num_text_abandon_sentence = 5        # If the words are more than 5, then abandon this sentence.
         self.log_actual_amounts_texts = []
         self.log_time_elapsed_read_text_mode_manual = []           # Store participants' reading speed: how many time for a certain amount of words.
+        self.log_time_elapsed_read_text_mode_rsvp = []
+        self.wps_dynamical_duration_text = 3    # Words per second for dynamically changing duration of text reading at different text chunks.
+        self.offset_seconds_dynamical_duration_text = 2     # The unit is second.
 
         # Parameters for subtask type 2: count task.
         self.timer_count_gap_task = 0
@@ -168,6 +183,9 @@ class Runner:
                     # Draw content.
                     # Get the current texts.
                     self.content_text_temp = self.texts_chunks[self.index_content_texts]
+                    # Adaptively arrange the duration of the text reading. The global variable duration_text is updated.
+                    self.duration_text = self.log_time_elapsed_read_text_mode_rsvp[self.index_content_texts]
+                    # Display texts.
                     self.image_text = self.font_text.render(self.content_text_temp, True, self.color_text)
                     self.render_texts_multiple_lines()  # Render text content word by word, line by line.
 
@@ -183,6 +201,10 @@ class Runner:
                         # If the index of content is out of the range, loop back to the beginning.
                         if self.index_content_texts == len(self.texts_chunks):
                             self.index_content_texts = 0
+
+                        # Update log file.
+                        self.log_time_elapsed_read_text_mode_rsvp.append(self.duration_text)
+
                     # Record the time spent on a certain amount of words in the manual mode.
                     elif self.mode_text_update is MODE_MANUAL:
                         self.timer_elapsed_read_text_mode_manual += self.time_elapsed
@@ -281,11 +303,17 @@ class Runner:
                 # Redefine the number of attention shifts.
                 self.num_attention_shifts = len(self.texts_chunks)
 
+        # Adaptively allocate reading duration according to the number of words
+        for i in range(len(self.texts_chunks)):
+            num_words = self.log_actual_amounts_texts[i]
+            duration_text = int(math.ceil(num_words / self.wps_dynamical_duration_text) + \
+                            self.offset_seconds_dynamical_duration_text) * 1000
+            self.log_time_elapsed_read_text_mode_rsvp.append(duration_text)
+
     def render_texts_multiple_lines(self):
-        words = self.content_text_temp.split(' ')
+        words = self.content_text_temp.split(' ')[:-1]  # Exclude the last item, which is a string.
         space = self.font_text.size(' ')[0]
         x_text, y_text = self.pos_text
-
         # Render word by word.
         for word in words:
             word_surface = self.font_text.render(word, 0, self.color_text)
@@ -397,7 +425,8 @@ class Runner:
                 f.write("Participant Information: " + "\n")
                 f.write("Participant Name: " + self.participant_name + "\n")
                 f.write("Experiment Time: " + self.experiment_time + "\n")
-                f.write("Trial Number: " + self.trial_information + "\n")
+                f.write("Trial Number / Condition: " + self.trial_information + "\n")
+                f.write("Text source path: " + self.texts_path + "\n")
 
                 f.write("\n")
                 f.write("Configuration: " + "\n")
@@ -425,7 +454,11 @@ class Runner:
                 for i in range(len(self.texts_chunks)):
                     f.write("The " + str(i + 1) + " attention shift: " + "\n")
                     if self.mode_text_update is MODE_RSVP:
-                        f.write("Amount of texts in this chunk: " + str(self.log_actual_amounts_texts[i]) + "\n")
+                        # if i < len(self.log_time_elapsed_read_text_mode_rsvp):
+                        f.write("Amount of texts in this chunk: " + str(self.log_actual_amounts_texts[i]) +
+                                "    Time spent: " + str(self.log_time_elapsed_read_text_mode_rsvp[i]) + " ms" + "\n")
+                        # else:
+                        #     f.write("Amount of texts in this chunk: " + str(self.log_actual_amounts_texts[i]) + "\n")
                     elif self.mode_text_update is MODE_MANUAL:
                         if i < len(self.log_time_elapsed_read_text_mode_manual):
                             f.write("Amount of texts in this chunk: " + str(self.log_actual_amounts_texts[i]) +
@@ -436,23 +469,66 @@ class Runner:
                         f.write("The average elapsed time is: " +
                                 str(np.mean(self.log_time_elapsed_read_text_mode_manual)) + " ms")
 
-# TODO: generate config file to choose factor's parameters in batches.
-# TODO: use configuration to counter balance.
-
-
 def run_prototype():
     # Run the prototype.
     pygame.init()
     runner_trial = Runner(participant_name="Bai Yunpeng",
-                          experiment_time="27 June 2022",
-                          trial_information="trial2",
-                          duration_gap=1500,
+                          experiment_time="28 June 2022",
+                          trial_information="trial0",
+                          duration_gap=500,
                           duration_text=5000,   # TODO: duration_text to duration_text lists.
                           amount_text=30,
                           source_text_path="Reading Materials/Earth day_144.txt",
                           task_type_gap=GAP_COUNT_TASK,
-                          mode_update=MODE_MANUAL,
+                          mode_update=MODE_RSVP,
                           condition_exp=CONDITION_POS_HOR,
                           color_background="black", color_text=(73, 232, 56),
-                          size_text=60, size_gap=64, pos_text=(350, 50), pos_gap=(0, 0))
+                          size_text=60, size_gap=64, pos_text=(550, 50), pos_gap=(0, 0))
     runner_trial.mainloop()
+
+
+def run_pilots(name, time, condition):
+    # Run the studies
+    pygame.init()
+    # Config parameters.
+    if condition == CONDITION1:
+        duration_gap = 4000
+        mode_update = MODE_PRESENT_ALL
+        source_text_path = "Reading Materials/Youth_278.txt"
+    elif condition == CONDITION2:
+        duration_gap = 8000
+        mode_update = MODE_PRESENT_ALL
+        source_text_path = "Reading Materials/New York City_297.txt"
+    elif condition == CONDITION3:
+        duration_gap = 12000
+        mode_update = MODE_PRESENT_ALL
+        source_text_path = "Reading Materials/Elephants_232.txt"
+    elif condition == CONDITION4:
+        duration_gap = 4000
+        mode_update = MODE_RSVP
+        source_text_path = "Reading Materials/What does cloud computing means_279.txt"
+    elif condition == CONDITION5:
+        duration_gap = 8000
+        mode_update = MODE_RSVP
+        source_text_path = "Reading Materials/Easter day_228.txt"
+    elif condition == CONDITION6:
+        duration_gap = 8000
+        mode_update = MODE_RSVP
+        source_text_path = "Reading Materials/Rainforests_223.txt"
+
+    # Initiate the pilot instance.
+    runner_pilot = Runner(participant_name=name,
+                          experiment_time=time,
+                          trial_information=condition,
+                          duration_gap=duration_gap,
+                          duration_text=5000,  # TODO: duration_text to duration_text lists.
+                          amount_text=25,
+                          source_text_path=source_text_path,
+                          task_type_gap=GAP_COUNT_TASK,
+                          mode_update=mode_update,
+                          condition_exp=CONDITION_POS_HOR,
+                          color_background="black", color_text=(73, 232, 56),
+                          size_text=60, size_gap=64,
+                          pos_text=(550, 50), pos_gap=(0, 0))
+    # Run the pilot.
+    runner_pilot.mainloop()
