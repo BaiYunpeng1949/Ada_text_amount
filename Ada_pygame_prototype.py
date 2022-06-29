@@ -1,8 +1,9 @@
 import math
-import random
+import numpy as np
 import os
 import pygame
-import numpy as np
+import random
+from pynput import keyboard
 
 # Avoid using string magic words. Declare global variables.
 # For prototypes.
@@ -16,13 +17,43 @@ MODE_PRESENT_ALL = "present all"
 CONDITION_POS_HOR = "position horizontal"
 
 # For pilot studies.
-# Configurations.
-CONDITION1 = "present_all_4s"
-CONDITION2 = "present_all_8s"
-CONDITION3 = "present_all_12s"
-CONDITION4 = "adaptive_4s"
-CONDITION5 = "adaptive_8s"
-CONDITION6 = "adaptive_12s"
+# Configurations. The condition number listed here are generated randomly. Use dictionary to store data.
+CONDITIONS = {
+    1: {
+        "duration_gap": 4000,
+        "mode_update": MODE_PRESENT_ALL
+    },
+    2: {
+        "duration_gap": 12000,
+        "mode_update": MODE_RSVP
+    },
+    3: {
+        "duration_gap": 12000,
+        "mode_update": MODE_PRESENT_ALL
+    },
+    4: {
+        "duration_gap": 8000,
+        "mode_update": MODE_PRESENT_ALL
+    },
+    5: {
+        "duration_gap": 8000,
+        "mode_update": MODE_RSVP
+    },
+    6: {
+        "duration_gap": 4000,
+        "mode_update": MODE_RSVP
+    }
+}
+
+SOURCE_TEXTS_PATH_LIST = [
+    "Reading Materials/Earth day_144.txt",
+    # "Reading Materials/Youth_278.txt",
+    "Reading Materials/New York City_297.txt",
+    "Reading Materials/Elephants_232.txt",
+    "Reading Materials/What does cloud computing means_279.txt",
+    "Reading Materials/Easter day_228.txt",
+    "Reading Materials/Rainforests_223.txt"
+]
 
 
 class Runner:
@@ -259,6 +290,7 @@ class Runner:
         print("The actual number of texts displayed are: " + str(self.log_actual_amounts_texts))
         self.generate_log_file()
 
+        # Quit the game at the main method.
         pygame.quit()
 
     def read_from_file(self):
@@ -489,7 +521,8 @@ class Runner:
                     elif self.mode_text_update is MODE_MANUAL:
                         if i < len(self.log_time_elapsed_read_text_mode_manual):
                             f.write("Amount of texts in this chunk: " + str(self.log_actual_amounts_texts[i]) +
-                                    "    Time spent: " + str(self.log_time_elapsed_read_text_mode_manual[i]) + " ms" + "\n")
+                                    "    Time spent: " + str(
+                                self.log_time_elapsed_read_text_mode_manual[i]) + " ms" + "\n")
                         else:
                             f.write("Amount of texts in this chunk: " + str(self.log_actual_amounts_texts[i]) + "\n")
 
@@ -497,6 +530,9 @@ class Runner:
                                 str(np.mean(self.log_time_elapsed_read_text_mode_manual)) + " ms")
                     elif self.mode_text_update is MODE_PRESENT_ALL:
                         f.write("    Time spent: " + str(self.log_time_elapsed_read_text_mode_rsvp[i]) + " ms" + "\n")
+
+    def output_parameters(self):
+        return self.content_text_temp
 
 
 def run_prototype():
@@ -519,73 +555,112 @@ def run_prototype():
 
 
 def run_pilots(name, time, id_participant):
-    # Config parameters. The condition number listed here are generated randomly. Use dictionary to store data.
-    # TODO: finish this part with referenec to https://www.programiz.com/python-programming/nested-dictionary
-    conditions = {
-        1:{
-            "duration_gap": 4000,
-            "mode_update": MODE_PRESENT_ALL,
-            "source_text_path": "Reading Materials/Youth_278.txt"
-        },
-        2: {
-
-        }
-    }
-
-    1: {
-        "duration_gap": 4000,
-        "mode_update": MODE_PRESENT_ALL,
-        "source_text_path": "Reading Materials/Youth_278.txt"
-
-    if condition == CONDITION1:
-        duration_gap = 4000
-        mode_update = MODE_PRESENT_ALL
-        source_text_path = "Reading Materials/Youth_278.txt"
-    elif condition == CONDITION4:
-        duration_gap = 8000
-        mode_update = MODE_PRESENT_ALL
-        source_text_path = "Reading Materials/New York City_297.txt"
-    elif condition == CONDITION3:
-        duration_gap = 12000
-        mode_update = MODE_PRESENT_ALL
-        source_text_path = "Reading Materials/Elephants_232.txt"
-    elif condition == CONDITION6:
-        duration_gap = 4000
-        mode_update = MODE_RSVP
-        source_text_path = "Reading Materials/What does cloud computing means_279.txt"
-    elif condition == CONDITION5:
-        duration_gap = 8000
-        mode_update = MODE_RSVP
-        source_text_path = "Reading Materials/Easter day_228.txt"
-    elif condition == CONDITION2:
-        duration_gap = 8000
-        mode_update = MODE_RSVP
-        source_text_path = "Reading Materials/Rainforests_223.txt"
-
-    # TODO: create the latin-square sequence.
-    def generate_latin_square(num_conditions: int, start_el: int=1):
-        row = [i for i in range(1, num_conditions + 1)]
+    # Auxiliary functions.
+    # Create the latin-square sequence.
+    def generate_latin_square(n: int, start_el: int = 1):
+        row = [i for i in range(1, n + 1)]
         row = row[start_el - 1:] + row[:start_el - 1]
-        return [row[i:] + row[:i] for i in range(num_conditions)]
+        return [row[i:] + row[:i] for i in range(n)]
 
-    sequence_latin_square = generate_latin_square(num_conditions=6)
+    # Reshow the last scene.
+    def show_last_scene(texts, font_text, pos_text, color_text, max_width, surface,
+                        num_scrolling_press_keys_present_all, num_lines_scrolled_press_keys_present_all):
+        # To be reminded that the displayed texts are stored in self.content_text_temp.
+        words = texts.split(' ')
+        space = font_text.size(' ')[0]
+        x_text, y_text = pos_text
 
-    # Run the studies
-    pygame.init()
+        # Update the parameters (present-all mode) of scrolling up and down. If not in the present-all mode, the variable self.num_scrolling_press_keys_present_all will keep as 0. So no need to use a condition statements (if and else structure).
+        word_random_surface = font_text.render(words[0], 0,
+                                               color_text)  # Choose the first word as the random word.
+        height_line_word_random = word_random_surface.get_size()[1]  # Get the height of a line from a random word.
+        offset_y_texts = height_line_word_random * num_scrolling_press_keys_present_all * num_lines_scrolled_press_keys_present_all
 
-    # Initiate the pilot actuator.
-    runner_pilot = Runner(participant_name=name,
-                          experiment_time=time,
-                          trial_information=condition,
-                          duration_gap=duration_gap,
-                          duration_text=5000,
-                          amount_text=35,
-                          source_text_path=source_text_path,
-                          task_type_gap=GAP_COUNT_TASK,
-                          mode_update=mode_update,
-                          condition_exp=CONDITION_POS_HOR,
-                          color_background="black", color_text=(73, 232, 56),
-                          size_text=60, size_gap=64,
-                          pos_text=(50, 150), pos_gap=(0, 0))
-    # Run the pilot.
-    runner_pilot.mainloop()
+        # Render word by word.
+        for word in words:
+            word_surface = font_text.render(word, 0, color_text)
+            word_width, word_height = word_surface.get_size()
+            if x_text + word_width >= max_width:
+                x_text = pos_text[0]  # Reset the x_text.
+                y_text += word_height
+            # Horizontally lay up the words.
+            surface.blit(word_surface, (x_text, y_text + offset_y_texts))
+            x_text += word_width + space
+
+    # Get the number of conditions.
+    num_conditions = len(CONDITIONS)
+
+    # Get the latin square sequence.
+    sequences_latin_square = generate_latin_square(n=num_conditions)
+
+    # Get the seqeunce of pilot study for this particular parcitipant according to latin square.
+    index_current_participant_in_sequences = int(id_participant % num_conditions) - 1
+    sequence_current_participant = sequences_latin_square[index_current_participant_in_sequences]
+
+    # Went through all condition for participants.
+    for i in range(num_conditions):
+        # Determine the pilot study condition according to the participant's id.
+        index_current_participant_in_conditions = sequence_current_participant[i]
+        duration_gap_current_condition = CONDITIONS[index_current_participant_in_conditions]["duration_gap"]
+        mode_update_current_condition = CONDITIONS[index_current_participant_in_conditions]["mode_update"]
+
+        # Initiate.
+        pygame.init()
+
+        # Initiate the pilot study actuator.
+        runner_pilot_current = Runner(participant_name=name + "_" + str(id_participant),
+                                      experiment_time=time,
+                                      trial_information="condition_" + str(index_current_participant_in_conditions),
+                                      duration_gap=duration_gap_current_condition,
+                                      duration_text=5000,
+                                      amount_text=35,
+                                      source_text_path=SOURCE_TEXTS_PATH_LIST[i],
+                                      task_type_gap=GAP_COUNT_TASK,
+                                      mode_update=mode_update_current_condition,
+                                      condition_exp=CONDITION_POS_HOR,
+                                      color_background="black", color_text=(73, 232, 56),
+                                      size_text=60, size_gap=64,
+                                      pos_text=(50, 150), pos_gap=(0, 0))
+        print("During the study.......Now is the condition: " + str(
+            index_current_participant_in_conditions) + " .........")
+
+        # Run the pilot.
+        runner_pilot_current.mainloop()
+
+        # Wait for the next move. Listen to the keyboard press event to proceed to the next pilot study.
+        # Create a new window to display the last image to let participant recall their stop point, for evaluation.
+        pygame.init()
+
+        waiting_surface = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+        waiting_font_text = pygame.font.SysFont(runner_pilot_current.font_type_selected, runner_pilot_current.size_text)
+
+        # TODO: fix this part. <bound method Runner.output_parameters of <Ada_pygame_prototype.Runner object at 0x000001DA4A580BE0>>
+        # TODO: store everything in the text file.
+        print(runner_pilot_current.output_parameters)
+        print(runner_pilot_current.pos_text)
+        print(runner_pilot_current.num_lines_scrolled_press_keys_present_all)
+
+        show_last_scene(texts=runner_pilot_current.content_text_temp,
+                        font_text=waiting_font_text,
+                        pos_text=runner_pilot_current.pos_text,
+                        color_text=runner_pilot_current.color_text,
+                        max_width=runner_pilot_current.max_width,
+                        surface=waiting_surface,
+                        num_scrolling_press_keys_present_all=runner_pilot_current.num_scrolling_press_keys_present_all,
+                        num_lines_scrolled_press_keys_present_all=runner_pilot_current.num_lines_scrolled_press_keys_present_all
+                        )
+
+        is_waiting = True
+        delay_time_before_next_study = 3  # The unit is second.
+        print("Waiting for the next study...")
+        while is_waiting:
+            for event in pygame.event.get():
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        print("Proceed to the next pilot study in " + str(
+                            delay_time_before_next_study) + " seconds........")
+                        pygame.time.delay(delay_time_before_next_study * 1000)
+                        is_waiting = False
+        pygame.quit()
+
+    print("All the studies are over, thank you for participating.")
