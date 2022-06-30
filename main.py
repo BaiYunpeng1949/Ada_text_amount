@@ -8,5 +8,5 @@ if __name__ == '__main__':
 
     # Do the pilot studies. Do not run this with prototype.
     Ada_pygame_prototype.run_pilots(name="Bai Yunpeng",
-                                    time="29 June 2022",
+                                    time="30 June 2022",
                                     id_participant=1)
