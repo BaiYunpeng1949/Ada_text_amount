@@ -1,3 +1,5 @@
+[![OSCS Status](https://www.oscs1024.com/platform/badge/1110236/Ada_text_amount.svg?size=large)](https://www.oscs1024.com/project/1110236/Ada_text_amount?ref=badge_large)
+
 The is the code repo for my reserach topic: adaptive text display's prototype.
 Still in the progress.
 To be continued.
