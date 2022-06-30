@@ -1,4 +1,6 @@
 import math
+import sys
+
 import numpy as np
 import os
 import pygame
@@ -129,7 +131,7 @@ class Runner:
         self.threshold_bottom_num_text_reserve_sentence = 3     # If the words are less than 3, then reserve this sentence.
         self.threshold_top_num_text_abandon_sentence = 5        # If the words are more than 5, then abandon this sentence.
 
-        self.wps_dynamical_duration_text = 30  # Words per second for dynamically changing duration of text reading at different text chunks.
+        self.wps_dynamical_duration_text = 3  # Words per second for dynamically changing duration of text reading at different text chunks.
         self.offset_seconds_dynamical_duration_text = 2  # The unit is second.
 
         self.num_lines_scrolled_press_keys_present_all = 3      # This variable determines the number of lines that will be scrolled up or down with a single key press.
@@ -141,7 +143,7 @@ class Runner:
 
         # Parameters for subtask type 2: count task.
         self.timer_count_gap_task = 0
-        self.FPS_GAP_COUNT_TASK = 3  # Set the fps for flashing shapes in gap task type 2.
+        self.FPS_GAP_COUNT_TASK = 2  # Set the fps for flashing shapes in gap task type 2.
         self.counter_count_gap_task_shapes_change = 0   # The shape changes in a single attention shift.
         self.duration_count_gap_task_shapes_change = 1000 / self.FPS_GAP_COUNT_TASK  # Unit is ms.
         self.color_gap_count_task_shape = self.color_text
@@ -627,7 +629,7 @@ def run_pilots(name, time, id_participant):
     # Wait for the formal studies to be started.
     pygame.init()
 
-    waiting_surface = pygame.display.set_mode((800, 1200), pygame.RESIZABLE)
+    waiting_surface = pygame.display.set_mode((1200, 800), pygame.RESIZABLE)
     # waiting_sruface.fill("red")
     # self.surface.fill(self.color_background)
     waiting_font_text = pygame.font.SysFont("arial", 50)
