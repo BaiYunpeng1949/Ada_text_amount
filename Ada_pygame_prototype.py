@@ -134,7 +134,8 @@ class Runner:
         self.wps_dynamical_duration_text = 3  # Words per second for dynamically changing duration of text reading at different text chunks.
         self.offset_seconds_dynamical_duration_text = 2  # The unit is second.
 
-        self.num_lines_scrolled_press_keys_present_all = 9      # This variable determines the number of lines that will be scrolled up or down with a single key press.
+        # TODO: do this robustly.
+        self.num_lines_scrolled_press_keys_present_all = 8      # This variable determines the number of lines that will be scrolled up or down with a single key press.
         self.num_scrolling_press_keys_present_all = 0    # This variable will record the current number of scrolling operations, positive numbers negative numbers mean scrolling up and down.
 
         self.log_actual_amounts_texts = []
