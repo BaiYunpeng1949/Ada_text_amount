@@ -512,7 +512,8 @@ class Runner:
             os.makedirs(folder_path)
 
         if self.condition_experiment == CONDITION_POS_HOR:
-            file_path = folder_path + self.trial_information + "_pos" + str(self.pos_text[0]) + ".txt"
+            # file_path = folder_path + self.trial_information + "_pos" + str(self.pos_text[0]) + ".txt"
+            file_path = folder_path + self.trial_information + ".txt"
         if not os.path.exists(file_path):
             with open(file_path, 'w') as f:
                 f.write("Participant Information: " + "\n")
@@ -673,7 +674,8 @@ def run_pilots(name, time, id_participant):
         # Initiate the pilot study actuator.
         runner_pilot_current = Runner(participant_name=name + "_" + str(id_participant),
                                       experiment_time=time,
-                                      trial_information="condition_" + str(index_current_participant_in_conditions),
+                                      trial_information="condition_" + str(
+                                          index_current_participant_in_conditions) + "_sequence_" + str(i + 1),
                                       duration_gap=duration_gap_current_condition_studies,
                                       duration_text=5000,
                                       amount_text=35,
