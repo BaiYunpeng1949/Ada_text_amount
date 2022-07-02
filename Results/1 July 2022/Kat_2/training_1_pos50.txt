@@ -1,17 +1,17 @@
 Participant Information: 
-Participant Name: Bai Yunpeng_1
-Experiment Time: 30 June 2022
-Trial Number / Condition: training_2
+Participant Name: Kat_2
+Experiment Time: 1 July 2022
+Trial Number / Condition: training_1
 Text source path: Reading Materials/Earth day_144.txt
 
 Configuration: 
-Duration of gap task: 2000 ms
+Duration of gap task: 3000 ms
 Duration of text reading: 14000 ms
 Amount of text in a chunk: 35 words
 Text read: Reading Materials/Earth day_144.txt
 The type of task type: count task
 The number of attention shifts: 4
-The mode of text content update: rsvp
+The mode of text content update: present all
 The color of OHMD background: black
 The color of OHMD texts: (73, 232, 56)
 The size of texts: 60 pixels
@@ -21,19 +21,19 @@ The position of gap tasks: (0, 0)
 
 Logs: 
 The 1 text chunk: 
-Gap task results: ['circle: 1 ', 'triangle: 1 ', 'rectangle: 2 ']
+Gap task results: ['circle: 1 ', 'triangle: 4 ', 'rectangle: 1 ']
 The 2 text chunk: 
-Gap task results: ['circle: 2 ', 'triangle: 1 ', 'rectangle: 1 ']
+Gap task results: ['circle: 3 ', 'triangle: 3 ', 'rectangle: 0 ']
 The 3 text chunk: 
-Gap task results: ['circle: 1 ', 'triangle: 0 ', 'rectangle: 3 ']
+Gap task results: ['circle: 3 ', 'triangle: 1 ', 'rectangle: 2 ']
 The 4 text chunk: 
-Gap task results: ['circle: 1 ', 'triangle: 1 ', 'rectangle: 2 ']
+Gap task results: ['circle: 2 ', 'triangle: 0 ', 'rectangle: 4 ']
 
 The 1 attention shift: 
-Amount of texts in this chunk: 34    Time spent: 14000 ms
+    Time spent: 14000 ms
 The 2 attention shift: 
-Amount of texts in this chunk: 39    Time spent: 15000 ms
+    Time spent: 15000 ms
 The 3 attention shift: 
-Amount of texts in this chunk: 36    Time spent: 14000 ms
+    Time spent: 14000 ms
 The 4 attention shift: 
-Amount of texts in this chunk: 36    Time spent: 14000 ms
+    Time spent: 14000 ms

@@ -1,11 +1,11 @@
 Participant Information: 
-Participant Name: Bai Yunpeng_1
-Experiment Time: 30 June 2022
-Trial Number / Condition: condition_1
+Participant Name: Zhou Chen_4
+Experiment Time: 1 July 2022
+Trial Number / Condition: condition_4
 Text source path: Reading Materials/Youth_278.txt
 
 Configuration: 
-Duration of gap task: 4000 ms
+Duration of gap task: 8000 ms
 Duration of text reading: 14000 ms
 Amount of text in a chunk: 35 words
 Text read: Reading Materials/Youth_278.txt
@@ -21,21 +21,21 @@ The position of gap tasks: (0, 0)
 
 Logs: 
 The 1 text chunk: 
-Gap task results: ['circle: 3 ', 'triangle: 2 ', 'rectangle: 3 ']
+Gap task results: ['circle: 4 ', 'triangle: 4 ', 'rectangle: 8 ']
 The 2 text chunk: 
-Gap task results: ['circle: 4 ', 'triangle: 1 ', 'rectangle: 3 ']
+Gap task results: ['circle: 3 ', 'triangle: 4 ', 'rectangle: 9 ']
 The 3 text chunk: 
-Gap task results: ['circle: 1 ', 'triangle: 4 ', 'rectangle: 3 ']
+Gap task results: ['circle: 6 ', 'triangle: 4 ', 'rectangle: 6 ']
 The 4 text chunk: 
-Gap task results: ['circle: 1 ', 'triangle: 5 ', 'rectangle: 2 ']
+Gap task results: ['circle: 2 ', 'triangle: 5 ', 'rectangle: 9 ']
 The 5 text chunk: 
-Gap task results: ['circle: 2 ', 'triangle: 5 ', 'rectangle: 1 ']
+Gap task results: ['circle: 7 ', 'triangle: 2 ', 'rectangle: 7 ']
 The 6 text chunk: 
-Gap task results: ['circle: 1 ', 'triangle: 5 ', 'rectangle: 2 ']
+Gap task results: ['circle: 7 ', 'triangle: 6 ', 'rectangle: 3 ']
 The 7 text chunk: 
-Gap task results: ['circle: 3 ', 'triangle: 4 ', 'rectangle: 1 ']
+Gap task results: ['circle: 6 ', 'triangle: 4 ', 'rectangle: 6 ']
 The 8 text chunk: 
-Gap task results: ['circle: 3 ', 'triangle: 2 ', 'rectangle: 3 ']
+Gap task results: ['circle: 2 ', 'triangle: 6 ', 'rectangle: 8 ']
 
 The 1 attention shift: 
     Time spent: 13000 ms

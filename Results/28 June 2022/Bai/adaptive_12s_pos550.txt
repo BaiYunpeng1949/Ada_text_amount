@@ -1,11 +1,11 @@
 Participant Information: 
-Participant Name: Bai Yunpeng_1
-Experiment Time: 30 June 2022
-Trial Number / Condition: condition_6
+Participant Name: Bai
+Experiment Time: 28 June 2022
+Trial Number / Condition: adaptive_12s
 Text source path: Reading Materials/Rainforests_223.txt
 
 Configuration: 
-Duration of gap task: 4000 ms
+Duration of gap task: 8000 ms
 Duration of text reading: 15000 ms
 Amount of text in a chunk: 35 words
 Text read: Reading Materials/Rainforests_223.txt
@@ -16,22 +16,22 @@ The color of OHMD background: black
 The color of OHMD texts: (73, 232, 56)
 The size of texts: 60 pixels
 The size of gap tasks: 64 pixels
-The position of texts: (50, 150)
+The position of texts: (550, 50)
 The position of gap tasks: (0, 0)
 
 Logs: 
 The 1 text chunk: 
-Gap task results: ['circle: 4 ', 'triangle: 3 ', 'rectangle: 1 ']
+Gap task results: ['circle: 9 ', 'triangle: 6 ', 'rectangle: 9 ']
 The 2 text chunk: 
-Gap task results: ['circle: 3 ', 'triangle: 3 ', 'rectangle: 2 ']
+Gap task results: ['circle: 8 ', 'triangle: 6 ', 'rectangle: 10 ']
 The 3 text chunk: 
-Gap task results: ['circle: 3 ', 'triangle: 1 ', 'rectangle: 4 ']
+Gap task results: ['circle: 5 ', 'triangle: 8 ', 'rectangle: 11 ']
 The 4 text chunk: 
-Gap task results: ['circle: 2 ', 'triangle: 2 ', 'rectangle: 4 ']
+Gap task results: ['circle: 9 ', 'triangle: 6 ', 'rectangle: 9 ']
 The 5 text chunk: 
-Gap task results: ['circle: 4 ', 'triangle: 1 ', 'rectangle: 3 ']
+Gap task results: ['circle: 8 ', 'triangle: 10 ', 'rectangle: 6 ']
 The 6 text chunk: 
-Gap task results: ['circle: 0 ', 'triangle: 7 ', 'rectangle: 1 ']
+Gap task results: ['circle: 8 ', 'triangle: 11 ', 'rectangle: 5 ']
 
 The 1 attention shift: 
 Amount of texts in this chunk: 32    Time spent: 13000 ms
