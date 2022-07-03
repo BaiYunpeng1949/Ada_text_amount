@@ -1,18 +1,17 @@
 import math
+import os
+import random
 import sys
 
 import numpy as np
-import os
 import pygame
-import random
-from pynput import keyboard
 
 # Avoid using string magic words. Declare global variables.
 # For prototypes.
 GAP_COUNT_TASK = "count task"
 GAP_MATH_TASK = "math task"
 # Modes.
-MODE_RSVP = "rsvp"
+MODE_ADAPTIVE = "adaptive"
 MODE_MANUAL = "manual"
 MODE_PRESENT_ALL = "present all"
 # Experiment conditions.
@@ -27,7 +26,7 @@ CONDITIOMS_TRAININGS = {
     },
     2: {
         "duration_gap": 2000,
-        "mode_update": MODE_RSVP
+        "mode_update": MODE_ADAPTIVE
     }
 }
 CONDITIONS_STUDIES = {
@@ -37,7 +36,7 @@ CONDITIONS_STUDIES = {
     },
     2: {
         "duration_gap": 12000,
-        "mode_update": MODE_RSVP
+        "mode_update": MODE_ADAPTIVE
     },
     3: {
         "duration_gap": 12000,
@@ -49,16 +48,16 @@ CONDITIONS_STUDIES = {
     },
     5: {
         "duration_gap": 8000,
-        "mode_update": MODE_RSVP
+        "mode_update": MODE_ADAPTIVE
     },
     6: {
         "duration_gap": 4000,
-        "mode_update": MODE_RSVP
+        "mode_update": MODE_ADAPTIVE
     }
 }
 
 SOURCE_TEXTS_PATH_LIST = [
-    "Reading Materials/Earth day_144.txt",  # This text is for the training session.
+    "Reading Materials/Education_403.txt",  # This text is for the training session.
     "Reading Materials/Youth_278.txt",
     "Reading Materials/New York City_297.txt",
     "Reading Materials/Elephants_232.txt",
@@ -103,7 +102,7 @@ class Runner:
         ANCHOR = "topleft"
         self.MARGIN_RIGHT = 50
         self.MARGIN_LEFT = self.pos_text[0]
-        self.MARGIN_BOTTOM = 50
+        self.MARGIN_BOTTOM = 0
         self.MARGIN_TOP = self.pos_text[1]
 
         # Create the canvas.
@@ -133,10 +132,6 @@ class Runner:
 
         self.wps_dynamical_duration_text = 3  # Words per second for dynamically changing duration of text reading at different text chunks.
         self.offset_seconds_dynamical_duration_text = 2  # The unit is second.
-
-        # TODO: do this robustly.
-        self.num_lines_scrolled_press_keys_present_all = 8      # This variable determines the number of lines that will be scrolled up or down with a single key press.
-        self.num_scrolling_press_keys_present_all = 0    # This variable will record the current number of scrolling operations, positive numbers negative numbers mean scrolling up and down.
 
         self.log_actual_amounts_texts = []
         self.log_time_elapsed_read_text_mode_manual = []  # Store participants' reading speed: how many time for a certain amount of words.
@@ -173,12 +168,22 @@ class Runner:
         self.content_text_temp = ""
         self.content_gap_temp = "Ga Ga Ga Ga Ga"
 
-        self.font_type_selected = pygame.font.get_fonts()[0]    # We select the system's first font, "arial" font.
+        self.font_type_selected = pygame.font.get_fonts()[0]  # We select the system's first font, "arial" font.
 
         self.font_text = pygame.font.SysFont(self.font_type_selected, self.size_text)
         self.image_text = self.font_text.render(self.content_text_temp, True, self.color_text)
         self.rect_text = self.image_text.get_rect()
         setattr(self.rect_text, ANCHOR, self.pos_text)
+
+        self.num_scrolling_press_keys_present_all = 0  # This variable will record the current number of scrolling operations, positive numbers negative numbers mean scrolling up and down.
+
+        self.y_range_texts_display_present_all_mode = self.max_height
+        self.surface_words = self.font_text.render(" ", 0, self.color_text)
+        self.height_line = self.surface_words.get_size()[1]
+        self.num_lines_tolerated_present_all_mode = int(
+            math.floor(self.y_range_texts_display_present_all_mode / self.height_line))
+        print(self.num_lines_tolerated_present_all_mode)
+        self.offset_y_texts_static_present_all_mode = self.y_range_texts_display_present_all_mode - self.num_lines_tolerated_present_all_mode * self.height_line + self.MARGIN_TOP
 
         self.font_gap = pygame.font.SysFont(self.font_type_selected, self.size_gap)
         self.image_gap = self.font_gap.render(self.content_gap_temp, True, self.color_text)
@@ -244,7 +249,7 @@ class Runner:
                 if self.is_text_showing:
                     # Draw content.
                     # In the RSVP mode. Get the current texts. display different chunks of texts.
-                    if (self.mode_text_update is MODE_RSVP) or (self.mode_text_update is MODE_MANUAL):
+                    if (self.mode_text_update is MODE_ADAPTIVE) or (self.mode_text_update is MODE_MANUAL):
                         self.content_text_temp = self.texts_chunks[self.index_content_texts]
                     # In the Present-all mode, display all texts once.
                     elif self.mode_text_update is MODE_PRESENT_ALL:
@@ -259,7 +264,7 @@ class Runner:
 
                     # Update the status automatically if in the rsvp mode or in the present-all mode.
                     if self.timer > self.duration_text:
-                        if self.mode_text_update is MODE_RSVP or self.mode_text_update is MODE_PRESENT_ALL:
+                        if self.mode_text_update is MODE_ADAPTIVE or self.mode_text_update is MODE_PRESENT_ALL:
                             self.counter_attention_shifts += 1
                             self.is_text_showing = False
                             self.timer = 0
@@ -400,20 +405,31 @@ class Runner:
         space = self.font_text.size(' ')[0]
         x_text, y_text = self.pos_text
 
-        # Update the parameters (present-all mode) of scrolling up and down. If not in the present-all mode, the variable self.num_scrolling_press_keys_present_all will keep as 0. So no need to use a condition statements (if and else structure).
-        word_random_surface = self.font_text.render(words[0], 0, self.color_text)       # Choose the first word as the random word.
-        height_line_word_random = word_random_surface.get_size()[1]     # Get the height of a line from a random word.
-        offset_y_texts = height_line_word_random * self.num_scrolling_press_keys_present_all * self.num_lines_scrolled_press_keys_present_all
+        offset_y_texts_dynamical = (
+                                               self.y_range_texts_display_present_all_mode + self.MARGIN_TOP) * self.num_scrolling_press_keys_present_all  # The page update. Page by page.
+        offset_y_texts_static = self.offset_y_texts_static_present_all_mode
 
         # Render word by word.
+        count_num_lines = 1  # Have to start from 1!
         for word in words:
             word_surface = self.font_text.render(word, 0, self.color_text)
             word_width, word_height = word_surface.get_size()
             if x_text + word_width >= self.max_width:
+                # Update the counter. Already starts from the second line.
+                count_num_lines += 1
+
+                # Update the position.
                 x_text = self.pos_text[0]  # Reset the x_text.
                 y_text += word_height
+
+                # Check if need to create a new page.
+                if (count_num_lines % self.num_lines_tolerated_present_all_mode == 1) and (count_num_lines > 1):
+                    print("the count of number of lines is: " + str(count_num_lines))
+                    print("The current word is: " + word)
+                    y_text += offset_y_texts_static
+
             # Horizontally lay up the words.
-            self.surface.blit(word_surface, (x_text, y_text + offset_y_texts))
+            self.surface.blit(word_surface, (x_text, y_text + offset_y_texts_dynamical))
             x_text += word_width + space
 
     def generate_subtask(self):
@@ -550,7 +566,7 @@ class Runner:
                 f.write("\n")
                 for i in range(len(self.texts_chunks)):
                     f.write("The " + str(i + 1) + " attention shift: " + "\n")
-                    if self.mode_text_update is MODE_RSVP:
+                    if self.mode_text_update is MODE_ADAPTIVE:
                         f.write("Amount of texts in this chunk: " + str(self.log_actual_amounts_texts[i]) +
                                 "    Time spent: " + str(self.log_time_elapsed_read_text_mode_rsvp[i]) + " ms" + "\n")
                     elif self.mode_text_update is MODE_MANUAL:
@@ -631,14 +647,12 @@ def run_pilots(name, time, id_participant):
     # Wait for the formal studies to be started.
     pygame.init()
 
-    waiting_surface = pygame.display.set_mode((1200, 800), pygame.RESIZABLE)
+    waiting_surface = pygame.display.set_mode((1200, 300), pygame.RESIZABLE)
     # waiting_sruface.fill("red")
     # self.surface.fill(self.color_background)
     waiting_font_text = pygame.font.SysFont("arial", 50)
     image_text = waiting_font_text.render("Press SPACEBAR to proceed to formal studies", True, (73, 232, 56))
-    # rect_text = image_text.get_rect()
-    # setattr(rect_text, "topleft", (50, 150))
-    waiting_surface.blit(image_text, (50, 150))
+    waiting_surface.blit(image_text, (120, 150))
 
     pygame.display.flip()
 
@@ -674,11 +688,14 @@ def run_pilots(name, time, id_participant):
         # Initiate.
         pygame.init()
 
+        # TODO: add a GUI that enables participants to insert answers themselves, and calculate the accuracy or RMSE.
+
         # Initiate the pilot study actuator.
         runner_pilot_current = Runner(participant_name=name + "_" + str(id_participant),
                                       experiment_time=time,
-                                      trial_information="condition_" + str(
-                                          index_current_participant_in_conditions) + "_sequence_" + str(i + 1),
+                                      trial_information="sequence_" + str(i + 1) + "_" +
+                                                        str(mode_update_current_condition_studies) + "_" +
+                                                        str(duration_gap_current_condition_studies),
                                       duration_gap=duration_gap_current_condition_studies,
                                       duration_text=5000,
                                       amount_text=35,
