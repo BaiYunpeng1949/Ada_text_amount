@@ -1,0 +1,55 @@
+Participant Information: 
+Participant Name: Runze_7
+Experiment Time: 4 July 2022
+Trial Number / Condition: sequence_1_present all_4000
+Text source path: Reading Materials/Youth_278.txt
+
+Configuration: 
+Duration of gap task: 4000 ms
+Duration of text reading: 14000 ms
+Amount of text in a chunk: 35 words
+Text read: Reading Materials/Youth_278.txt
+The type of task type: count task
+The number of attention shifts: 8
+The mode of text content update: present all
+The color of OHMD background: black
+The color of OHMD texts: (73, 232, 56)
+The size of texts: 60 pixels
+The size of gap tasks: 64 pixels
+The position of texts: (50, 150)
+The position of gap tasks: (0, 0)
+
+Logs: 
+The 1 text chunk: 
+Gap task results: ['circle: 4 ', 'triangle: 1 ', 'rectangle: 3 ']
+The 2 text chunk: 
+Gap task results: ['circle: 0 ', 'triangle: 5 ', 'rectangle: 3 ']
+The 3 text chunk: 
+Gap task results: ['circle: 2 ', 'triangle: 2 ', 'rectangle: 4 ']
+The 4 text chunk: 
+Gap task results: ['circle: 4 ', 'triangle: 3 ', 'rectangle: 1 ']
+The 5 text chunk: 
+Gap task results: ['circle: 1 ', 'triangle: 5 ', 'rectangle: 2 ']
+The 6 text chunk: 
+Gap task results: ['circle: 1 ', 'triangle: 4 ', 'rectangle: 3 ']
+The 7 text chunk: 
+Gap task results: ['circle: 3 ', 'triangle: 4 ', 'rectangle: 1 ']
+The 8 text chunk: 
+Gap task results: ['circle: 2 ', 'triangle: 1 ', 'rectangle: 5 ']
+
+The 1 attention shift: 
+    Time spent: 13000 ms
+The 2 attention shift: 
+    Time spent: 14000 ms
+The 3 attention shift: 
+    Time spent: 14000 ms
+The 4 attention shift: 
+    Time spent: 15000 ms
+The 5 attention shift: 
+    Time spent: 14000 ms
+The 6 attention shift: 
+    Time spent: 15000 ms
+The 7 attention shift: 
+    Time spent: 13000 ms
+The 8 attention shift: 
+    Time spent: 14000 ms
