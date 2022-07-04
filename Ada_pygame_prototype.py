@@ -182,7 +182,6 @@ class Runner:
         self.height_line = self.surface_words.get_size()[1]
         self.num_lines_tolerated_present_all_mode = int(
             math.floor(self.y_range_texts_display_present_all_mode / self.height_line))
-        print(self.num_lines_tolerated_present_all_mode)
         self.offset_y_texts_static_present_all_mode = self.y_range_texts_display_present_all_mode - self.num_lines_tolerated_present_all_mode * self.height_line + self.MARGIN_TOP
 
         self.font_gap = pygame.font.SysFont(self.font_type_selected, self.size_gap)
@@ -424,8 +423,6 @@ class Runner:
 
                 # Check if need to create a new page.
                 if (count_num_lines % self.num_lines_tolerated_present_all_mode == 1) and (count_num_lines > 1):
-                    print("the count of number of lines is: " + str(count_num_lines))
-                    print("The current word is: " + word)
                     y_text += offset_y_texts_static
 
             # Horizontally lay up the words.
