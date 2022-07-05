@@ -1,0 +1,63 @@
+Participant Information: 
+Participant Name: Sam_6
+Experiment Time: 5 July 2022
+Trial Number / Condition: sequence_1_adaptive_4000
+Text source path: Reading Materials/Youth_278.txt
+
+Configuration: 
+Duration of gap task: 4000 ms
+Duration of text reading: 14000 ms
+Amount of text in a chunk: 35 words
+Text read: Reading Materials/Youth_278.txt
+The type of task type: count task
+The number of attention shifts: 8
+The mode of text content update: adaptive
+The color of OHMD background: black
+The color of OHMD texts: (73, 232, 56)
+The size of texts: 60 pixels
+The size of gap tasks: 64 pixels
+The position of texts: (50, 150)
+The position of gap tasks: (0, 0)
+
+Logs: 
+The 1 text chunk: 
+Gap task results: ['circle: 2 ', 'triangle: 2 ', 'rectangle: 4 ']
+The 2 text chunk: 
+Gap task results: ['circle: 2 ', 'triangle: 5 ', 'rectangle: 1 ']
+The 3 text chunk: 
+Gap task results: ['circle: 3 ', 'triangle: 1 ', 'rectangle: 4 ']
+The 4 text chunk: 
+Gap task results: ['circle: 4 ', 'triangle: 2 ', 'rectangle: 2 ']
+The 5 text chunk: 
+Gap task results: ['circle: 2 ', 'triangle: 4 ', 'rectangle: 2 ']
+The 6 text chunk: 
+Gap task results: ['circle: 2 ', 'triangle: 1 ', 'rectangle: 5 ']
+The 7 text chunk: 
+Gap task results: ['circle: 3 ', 'triangle: 3 ', 'rectangle: 2 ']
+The 8 text chunk: 
+Gap task results: ['circle: 1 ', 'triangle: 1 ', 'rectangle: 6 ']
+
+The 1 attention shift: 
+Amount of texts in this chunk: 31    Time spent: 13000 ms
+Juvenile delinquency refers to antisocial or illegal behavior by children or adolescents and is considered a serious problem all over the world. It is caused by social, economic and cultural factors. 
+The 2 attention shift: 
+Amount of texts in this chunk: 36    Time spent: 14000 ms
+This juvenile criminality is apparent in marginal sectors of urban areas where children are exposed to violence in their immediate social environment, either as observers or as victims. Because delinquents basic education, if they have any, 
+The 3 attention shift: 
+Amount of texts in this chunk: 35    Time spent: 14000 ms
+is poor they have been marginalized from society and destitute of any dignity or self esteem. Although most legal systems prescribe specific procedures for dealing with young criminals, such as juvenile detention centers and suppression, 
+The 4 attention shift: 
+Amount of texts in this chunk: 39    Time spent: 15000 ms
+approaches to prevent youth from becoming delinquent should also include measures to instill equality and justice, fight poverty and create an atmosphere of hope and peace among youth. These preventive policies should be given priorities over any coercive measures. 
+The 5 attention shift: 
+Amount of texts in this chunk: 34    Time spent: 14000 ms
+Socioeconomic opportunities and administrative services should be provided in rural areas to discourage young people from migrating to urban areas. Similarly, youth from poor urban settings should benefit from plans that focus on education, 
+The 6 attention shift: 
+Amount of texts in this chunk: 37    Time spent: 15000 ms
+employment and access to leisure programs , especially during long school holidays. Young people who drop out of school or come from broken families should have access to specific social programs that help them become responsible adults. 
+The 7 attention shift: 
+Amount of texts in this chunk: 31    Time spent: 13000 ms
+Information campaigns should be planned to sensitize youth to be aware of the detrimental effects of violence on the family, community and society, to teach them how to communicate without violence. 
+The 8 attention shift: 
+Amount of texts in this chunk: 36    Time spent: 14000 ms
+Focus on the importance of family should become a priority because it is the primary institution of socialization of youth and continues to play an important role in the prevention of juvenile delinquency and underage crime. 

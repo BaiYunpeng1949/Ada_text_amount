@@ -1,0 +1,58 @@
+Participant Information: 
+Participant Name: Sam_6
+Experiment Time: 5 July 2022
+Trial Number / Condition: sequence_6_adaptive_8000
+Text source path: Reading Materials/Rainforests_223.txt
+
+Configuration: 
+Duration of gap task: 8000 ms
+Duration of text reading: 8000 ms
+Amount of text in a chunk: 35 words
+Text read: Reading Materials/Rainforests_223.txt
+The type of task type: count task
+The number of attention shifts: 7
+The mode of text content update: adaptive
+The color of OHMD background: black
+The color of OHMD texts: (73, 232, 56)
+The size of texts: 60 pixels
+The size of gap tasks: 64 pixels
+The position of texts: (50, 150)
+The position of gap tasks: (0, 0)
+
+Logs: 
+The 1 text chunk: 
+Gap task results: ['circle: 8 ', 'triangle: 4 ', 'rectangle: 4 ']
+The 2 text chunk: 
+Gap task results: ['circle: 5 ', 'triangle: 6 ', 'rectangle: 5 ']
+The 3 text chunk: 
+Gap task results: ['circle: 2 ', 'triangle: 7 ', 'rectangle: 7 ']
+The 4 text chunk: 
+Gap task results: ['circle: 8 ', 'triangle: 5 ', 'rectangle: 3 ']
+The 5 text chunk: 
+Gap task results: ['circle: 7 ', 'triangle: 4 ', 'rectangle: 5 ']
+The 6 text chunk: 
+Gap task results: ['circle: 8 ', 'triangle: 6 ', 'rectangle: 2 ']
+The 7 text chunk: 
+Gap task results: ['circle: 3 ', 'triangle: 8 ', 'rectangle: 5 ']
+
+The 1 attention shift: 
+Amount of texts in this chunk: 32    Time spent: 13000 ms
+Rainforests are forests characterized by biodiversity and high rainfall, with annual rainfall between 250 and 450 centimeters (98 and 177 in). There are two types of rainforest: tropical rainforest and temperate rainforest. 
+The 2 attention shift: 
+Amount of texts in this chunk: 37    Time spent: 15000 ms
+Tropical rainforests are characterized by a warm and wet climate with no substantial dry season: typically found within 10 degrees north and south of the equator in areas such as South America, Southeast Asia and Sub-Saharan Africa. 
+The 3 attention shift: 
+Amount of texts in this chunk: 34    Time spent: 14000 ms
+Temperate rainforests, however, are only found in few temperate regions around the world such as Europe, North America and East Asia. Around 40% to 75% of all biotic species are indigenous to the rainforests. 
+The 4 attention shift: 
+Amount of texts in this chunk: 37    Time spent: 15000 ms
+It has been estimated that there may be many millions of species of plants, insects and microorganisms still undiscovered in tropical rainforests. Tropical rainforests have been called the "jewels of the Earth" and the "world's largest pharmacy", 
+The 5 attention shift: 
+Amount of texts in this chunk: 32    Time spent: 13000 ms
+because over one quarter of natural medicines have been discovered there. Rainforests are also responsible for 28% of the world's oxygen turnover; that is why ropical forests are also called "Earth's lungs." 
+The 6 attention shift: 
+Amount of texts in this chunk: 35    Time spent: 14000 ms
+Rainforests produce many items that we all use in our daily lives. Tropical rainforests provide timber as well as animal products such as meat and hides. Other common rainforests products include: chocolate, sugar, cinnamon, rubber, 
+The 7 attention shift: 
+Amount of texts in this chunk: 16    Time spent: 8000 ms
+medicine, and pineapples. Rainforests also have value as tourism destinations and for the ecosystem services provided. 

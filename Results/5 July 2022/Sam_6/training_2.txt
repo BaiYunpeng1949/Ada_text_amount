@@ -1,0 +1,83 @@
+Participant Information: 
+Participant Name: Sam_6
+Experiment Time: 5 July 2022
+Trial Number / Condition: training_2
+Text source path: Reading Materials/Education_403.txt
+
+Configuration: 
+Duration of gap task: 2000 ms
+Duration of text reading: 9000 ms
+Amount of text in a chunk: 35 words
+Text read: Reading Materials/Education_403.txt
+The type of task type: count task
+The number of attention shifts: 12
+The mode of text content update: adaptive
+The color of OHMD background: black
+The color of OHMD texts: (73, 232, 56)
+The size of texts: 60 pixels
+The size of gap tasks: 64 pixels
+The position of texts: (50, 150)
+The position of gap tasks: (0, 0)
+
+Logs: 
+The 1 text chunk: 
+Gap task results: ['circle: 0 ', 'triangle: 2 ', 'rectangle: 2 ']
+The 2 text chunk: 
+Gap task results: ['circle: 1 ', 'triangle: 2 ', 'rectangle: 1 ']
+The 3 text chunk: 
+Gap task results: ['circle: 1 ', 'triangle: 2 ', 'rectangle: 1 ']
+The 4 text chunk: 
+Gap task results: ['circle: 1 ', 'triangle: 1 ', 'rectangle: 2 ']
+The 5 text chunk: 
+Gap task results: ['circle: 1 ', 'triangle: 1 ', 'rectangle: 2 ']
+The 6 text chunk: 
+Gap task results: ['circle: 1 ', 'triangle: 2 ', 'rectangle: 1 ']
+The 7 text chunk: 
+Gap task results: ['circle: 2 ', 'triangle: 1 ', 'rectangle: 1 ']
+The 8 text chunk: 
+Gap task results: ['circle: 2 ', 'triangle: 2 ', 'rectangle: 0 ']
+The 9 text chunk: 
+Gap task results: ['circle: 3 ', 'triangle: 1 ', 'rectangle: 0 ']
+The 10 text chunk: 
+Gap task results: ['circle: 2 ', 'triangle: 1 ', 'rectangle: 1 ']
+The 11 text chunk: 
+Gap task results: ['circle: 1 ', 'triangle: 1 ', 'rectangle: 2 ']
+The 12 text chunk: 
+Gap task results: ['circle: 0 ', 'triangle: 1 ', 'rectangle: 3 ']
+
+The 1 attention shift: 
+Amount of texts in this chunk: 33    Time spent: 13000 ms
+Education encompasses both the teaching and learning of knowledge, proper conduct, and technical competency. It thus focuses on the cultivation of skills, trades or professions, as well as mental, moral & aesthetic development. 
+The 2 attention shift: 
+Amount of texts in this chunk: 35    Time spent: 14000 ms
+Formal education consists of systematic instruction, teaching and training by professional teachers. This consists of the application of pedagogy and the development of curricula. The right to education is a fundamental human right. Since 1952, 
+The 3 attention shift: 
+Amount of texts in this chunk: 33    Time spent: 13000 ms
+Article 2 of the first Protocol to the European Convention on Human Rights obliges all signatory parties to guarantee the right to education. At world level, the United Nations' International Covenant on Economic, 
+The 4 attention shift: 
+Amount of texts in this chunk: 35    Time spent: 14000 ms
+Social and Cultural Rights of 1966 guarantees this right under its Article 13. Educational systems are established to provide education and training, often for children and the young. A curriculum defines what students should know, 
+The 5 attention shift: 
+Amount of texts in this chunk: 39    Time spent: 15000 ms
+understand and be able to do as the result of education. A teaching profession delivers teaching which enables learning, and a system of policies, regulations, examinations, structures and funding enables teachers to teach to the best of their abilities. 
+The 6 attention shift: 
+Amount of texts in this chunk: 36    Time spent: 14000 ms
+Sometimes educational systems can be used to promote doctrines or ideals as well as knowledge, which is known as social engineering. This can lead to political abuse of the system, particularly in totalitarian states and government. 
+The 7 attention shift: 
+Amount of texts in this chunk: 37    Time spent: 15000 ms
+Primary (or elementary) education consists of the first years of formal, structured education. In general, primary education consists of six or seven years of schooling starting at the age of 5 or 6, although this varies between, 
+The 8 attention shift: 
+Amount of texts in this chunk: 28    Time spent: 12000 ms
+and sometimes within, countries. Globally, around 70% of primary-age children are enrolled in primary education, and this proportion is rising. In most contemporary educational systems of the world, 
+The 9 attention shift: 
+Amount of texts in this chunk: 35    Time spent: 14000 ms
+secondary education consists of the second years of formal education that occur during adolescence.It is characterized by transition from the typically compulsory, comprehensive primary education for minors, to the optional, selective tertiary, "post-secondary", or "higher" 
+The 10 attention shift: 
+Amount of texts in this chunk: 34    Time spent: 14000 ms
+education (e.g., university, vocational school) for adults. Higher education, also called tertiary, third stage, or post secondary education, is the non-compulsory educational level that follows the completion of a school providing a secondary education, 
+The 11 attention shift: 
+Amount of texts in this chunk: 37    Time spent: 15000 ms
+such as a high school or secondary school. Tertiary education is normally taken to include undergraduate and postgraduate education, as well as vocational education and training. Colleges and universities are the main institutions that provide tertiary education. 
+The 12 attention shift: 
+Amount of texts in this chunk: 21    Time spent: 9000 ms
+Collectively, these are sometimes known as tertiary institutions. Tertiary education generally results in the receipt of certificates, diplomas, or academic degrees. 

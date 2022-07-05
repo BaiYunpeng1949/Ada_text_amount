@@ -1,0 +1,58 @@
+Participant Information: 
+Participant Name: Sam_6
+Experiment Time: 5 July 2022
+Trial Number / Condition: sequence_3_adaptive_12000
+Text source path: Reading Materials/Elephants_232.txt
+
+Configuration: 
+Duration of gap task: 12000 ms
+Duration of text reading: 6000 ms
+Amount of text in a chunk: 35 words
+Text read: Reading Materials/Elephants_232.txt
+The type of task type: count task
+The number of attention shifts: 7
+The mode of text content update: adaptive
+The color of OHMD background: black
+The color of OHMD texts: (73, 232, 56)
+The size of texts: 60 pixels
+The size of gap tasks: 64 pixels
+The position of texts: (50, 150)
+The position of gap tasks: (0, 0)
+
+Logs: 
+The 1 text chunk: 
+Gap task results: ['circle: 6 ', 'triangle: 7 ', 'rectangle: 11 ']
+The 2 text chunk: 
+Gap task results: ['circle: 6 ', 'triangle: 8 ', 'rectangle: 10 ']
+The 3 text chunk: 
+Gap task results: ['circle: 9 ', 'triangle: 9 ', 'rectangle: 6 ']
+The 4 text chunk: 
+Gap task results: ['circle: 11 ', 'triangle: 7 ', 'rectangle: 6 ']
+The 5 text chunk: 
+Gap task results: ['circle: 11 ', 'triangle: 6 ', 'rectangle: 7 ']
+The 6 text chunk: 
+Gap task results: ['circle: 7 ', 'triangle: 13 ', 'rectangle: 4 ']
+The 7 text chunk: 
+Gap task results: ['circle: 9 ', 'triangle: 9 ', 'rectangle: 6 ']
+
+The 1 attention shift: 
+Amount of texts in this chunk: 39    Time spent: 15000 ms
+Elephants are large mammals of the family Elephantidae and the order Proboscidea. Traditionally, two species are recognized, the African elephant and the Asian elephant, although some evidence suggests that African bush elephants and African forest elephants are separate species. 
+The 2 attention shift: 
+Amount of texts in this chunk: 24    Time spent: 10000 ms
+Other families of the order Proboscidea, including mammoths and mastodons are now extinct. Elephants are scattered throughout sub-Saharan Africa, South Asia, and Southeast Asia. 
+The 3 attention shift: 
+Amount of texts in this chunk: 42    Time spent: 16000 ms
+Male African elephants are the largest surviving terrestrial animals and can reach a height of 4 m (13 ft) and weigh 7,000 kg (15,000 lb). All elephants have several distinctive features the most notable of which is a long trunk or proboscis, 
+The 4 attention shift: 
+Amount of texts in this chunk: 39    Time spent: 15000 ms
+used for many purposes, particularly breathing, lifting water and grasping objects. Their incisors grow into tusks, which can serve as weapons and as tools for moving objects and digging. Elephants' large ear flaps help to control their body temperature. 
+The 5 attention shift: 
+Amount of texts in this chunk: 39    Time spent: 15000 ms
+Their pillar-like legs can carry their great weight. African elephants have larger ears and concave backs while Asian elephants have smaller ears and convex or level backs. One of the biggest threats to elephant populations is the ivory trade, 
+The 6 attention shift: 
+Amount of texts in this chunk: 38    Time spent: 15000 ms
+as the animals are poached for their ivory tusks. Other threats to wild elephants include habitat destruction and conflicts with local people. Elephants are used as working animals in Asia. In the past they were used in war; 
+The 7 attention shift: 
+Amount of texts in this chunk: 11    Time spent: 6000 ms
+today, they are often put on display in zoos and circuses. 
