@@ -126,7 +126,7 @@ class Runner:
         self.index_content_texts = 0
         self.texts_chunks = []
 
-        self.marks = [",", ".", "!", "?", ";", ":", "'"]
+        self.marks = [",", ".", "!", "?", ";", ":", "'", '"']   # Take care of "'" and '"'. Kind of tricky here.
         self.threshold_bottom_num_text_reserve_sentence = 3     # If the words are less than 3, then reserve this sentence.
         self.threshold_top_num_text_abandon_sentence = 5        # If the words are more than 5, then abandon this sentence.
 
@@ -311,13 +311,16 @@ class Runner:
         is_waiting = True
         delay_time_before_next_study = 3  # The unit is second.
         print("Waiting for the next study...")
-        self.surface.fill("red")
+        self.surface.fill("white")  # The red is too harsh and uncomfortable, change it to the white.
         self.render_texts_multiple_lines()
         pygame.display.flip()
         while is_waiting:
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
+                        # Add feedback to the key pression for the experimenter. The feedback is the screen black out.
+                        self.surface.fill("black")
+                        pygame.display.flip()
                         print("Proceed to the next pilot study in " + str(
                             delay_time_before_next_study) + " seconds........" + "\n")
                         pygame.time.delay(delay_time_before_next_study * 1000)
@@ -566,6 +569,8 @@ class Runner:
                     if self.mode_text_update is MODE_ADAPTIVE:
                         f.write("Amount of texts in this chunk: " + str(self.log_actual_amounts_texts[i]) +
                                 "    Time spent: " + str(self.log_time_elapsed_read_text_mode_rsvp[i]) + " ms" + "\n")
+                        # Log the text chunks if the current mode is Adaptive.
+                        f.write(self.texts_chunks[i] + "\n")
                     elif self.mode_text_update is MODE_MANUAL:
                         if i < len(self.log_time_elapsed_read_text_mode_manual):
                             f.write("Amount of texts in this chunk: " + str(self.log_actual_amounts_texts[i]) +
@@ -645,8 +650,6 @@ def run_pilots(name, time, id_participant):
     pygame.init()
 
     waiting_surface = pygame.display.set_mode((1200, 300), pygame.RESIZABLE)
-    # waiting_sruface.fill("red")
-    # self.surface.fill(self.color_background)
     waiting_font_text = pygame.font.SysFont("arial", 50)
     image_text = waiting_font_text.render("Press SPACEBAR to proceed to formal studies", True, (73, 232, 56))
     waiting_surface.blit(image_text, (120, 150))
