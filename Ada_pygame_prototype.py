@@ -3,8 +3,10 @@ import os
 import random
 import sys
 
+import nltk
 import numpy as np
 import pygame
+from nltk import tokenize
 
 # Avoid using string magic words. Declare global variables.
 # For prototypes.
@@ -14,6 +16,7 @@ GAP_MATH_TASK = "math task"
 MODE_ADAPTIVE = "adaptive"
 MODE_MANUAL = "manual"
 MODE_PRESENT_ALL = "present all"
+MODE_CONTEXTUAL = "contextual adaptive"
 # Experiment conditions.
 CONDITION_POS_HOR = "position horizontal"
 
@@ -73,6 +76,9 @@ class Runner:
                  mode_update, condition_exp,
                  color_background, color_text, size_text, size_gap,
                  pos_text, pos_gap, title="AdaPrototype"):
+        # Package setup for splitting sentences.
+        nltk.download('punkt')
+
         # Set experiment parameters.
         self.participant_name = participant_name
         self.experiment_time = experiment_time
@@ -196,6 +202,8 @@ class Runner:
         setattr(self.rect_gap, ANCHOR, self.pos_gap)
 
         # Initialize variables by inner functions.
+        # TODO: try new function
+        self.split_texts_into_sentences()
         # Split the text according to the given chunk size.
         self.split_amount_texts()
         # Generate the subtasks.
@@ -338,7 +346,6 @@ class Runner:
 
         # Show the last scene to help with record where the reader stopped.
         # Display the white background to indicate participants to stop.
-        self.surface.fill("white")  # The red is too harsh and uncomfortable, change it to the white.
         self.render_texts_multiple_lines()
         pygame.display.flip()
 
@@ -384,10 +391,77 @@ class Runner:
             texts = f.read()
         return texts
 
+    # TODO: script function
+    def split_texts_into_sentences(self):
+        amount_words_standard = self.amount_text
+
+        # Store the indices of words contain a upper case letter. Could be a full stop.
+        num_texts_sentences = []
+        # TODO: test sentence splition here.
+        split_sentences = tokenize.sent_tokenize(self.texts)
+        print(split_sentences)
+        print(len(split_sentences))
+        print(split_sentences[1])
+        for i in range(len(split_sentences)):
+            num_texts_sentences.append(len(split_sentences[i].split()))
+        print(num_texts_sentences)
+
+        index_text_chunk_start = 0
+        index_text_chunk_end = 0
+        index_num_texts_sentences = 0
+        count_chunks = 0
+        while True:
+            texts_chunk = []
+            num_texts_chunk_buffer = 0
+            num_texts_chunk_buffer += num_texts_sentences[index_num_texts_sentences]
+            print("dududa: " + str(num_texts_sentences[index_num_texts_sentences]))
+            print("zaizai: " + str(index_text_chunk_start))
+            if num_texts_chunk_buffer >= amount_words_standard:
+                index_num_texts_sentences += 1
+                # index_text_chunk_end = index_num_texts_sentences
+            else:
+                while num_texts_chunk_buffer < amount_words_standard:  # and index_num_texts_sentences < len(num_texts_sentences) - 1
+                    index_num_texts_sentences += 1
+                    num_texts_chunk_buffer += num_texts_sentences[index_num_texts_sentences]
+                    print("dudu: " + str(num_texts_sentences[index_num_texts_sentences]))
+                    if index_num_texts_sentences == len(num_texts_sentences) - 1:
+                        break
+
+                # TODO: we feed the users more texts, then compensate in the context mode.
+
+                # Determine the starting index.
+                if count_chunks == 0:
+                    index_text_chunk_start = 0
+                # else:
+                #     index_text_chunk_start = index_text_chunk_end
+
+            # Determine the ending index.
+            if index_num_texts_sentences + 1 < len(num_texts_sentences):
+                index_text_chunk_end = index_num_texts_sentences + 1
+            else:
+                index_text_chunk_end = index_num_texts_sentences
+
+            # Add to the chunks and logs.
+            for sentence in split_sentences[index_text_chunk_start:(index_text_chunk_end + 1)]:
+                texts_chunk.append(sentence + " ")
+            self.texts_chunks.append(texts_chunk)
+            self.log_actual_amounts_texts.append(num_texts_chunk_buffer)
+
+            # Update indicies
+            count_chunks += 1
+            index_text_chunk_start = index_text_chunk_end
+
+            print(texts_chunk)
+            print(num_texts_chunk_buffer)
+
+            if index_num_texts_sentences == len(num_texts_sentences) - 1:
+                break
+
     def split_amount_texts(self):
         word_list = self.texts.split()
         num_words = len(word_list)
         num_texts_chunks = int(math.ceil(num_words / self.amount_text))
+        # Store the indices of words contain marks. Simple stops, maybe not full stop.
         indices_words_contain_marks = []
 
         for i in range(num_words):
@@ -451,21 +525,29 @@ class Runner:
             self.log_time_elapsed_read_text_mode_rsvp.append(duration_text)
 
     def render_texts_multiple_lines(self):
+        # Refresh the canvas/scene/window. Or the opacity will just be aggregated.
+        if self.is_running:
+            # While the trial is still on the run.
+            self.surface.fill("black")  # TODO: this caused the deprecation of escaping function of Esc.
+        elif self.is_running is False:
+            # If the trial is stopped by Esc key. Or terminates normally. Display the white background to indicate participants to stop.
+            self.surface.fill("white")
+
         # To be reminded that the displayed texts are stored in self.content_text_temp.
         words = self.content_text_temp.split(' ')
         space = self.font_text.size(' ')[0]
         x_text, y_text = self.pos_text
 
-        offset_y_texts_dynamical = (self.y_range_texts_display_present_all_mode + self.MARGIN_TOP) * self.num_scrolling_press_keys_present_all  # The page update. Page by page.
+        offset_y_texts_dynamical = (
+                                               self.y_range_texts_display_present_all_mode + self.MARGIN_TOP) * self.num_scrolling_press_keys_present_all  # The page update. Page by page.
         offset_y_texts_static = self.offset_y_texts_static_present_all_mode
 
         # Render word by word.
         count_num_lines = 1  # Have to start from 1!
         for word in words:
             word_surface = self.font_text.render(word, 0, self.color_text)
-            # TODO: could add opacity here, to the word_surface directly.
-            if count_num_lines % 2 == 0:
-                word_surface.set_alpha(15)
+            # TODO: determine which texts to have lower opacity, and how much opacity.
+            word_surface.set_alpha(15)
 
             word_width, word_height = word_surface.get_size()
             if x_text + word_width >= self.max_width:
@@ -765,8 +847,6 @@ def run_pilots(name, time, id_participant):
 
         # Initiate.
         pygame.init()
-
-        # TODO: add a GUI that enables participants to insert answers themselves, and calculate the accuracy or RMSE.
 
         # Initiate the pilot study actuator.
         runner_pilot_current = Runner(participant_name=name + "_" + str(id_participant),
