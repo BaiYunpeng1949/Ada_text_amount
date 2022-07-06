@@ -21,7 +21,7 @@ CONDITION_POS_HOR = "position horizontal"
 # Configurations. The condition number listed here are generated randomly. Use dictionary to store data.
 CONDITIOMS_TRAININGS = {
     1: {
-        "duration_gap": 3000,
+        "duration_gap": 2000,
         "mode_update": MODE_PRESENT_ALL
     },
     2: {
@@ -55,15 +55,15 @@ CONDITIONS_STUDIES = {
         "mode_update": MODE_ADAPTIVE
     }
 }
-
+# TODO: change this to ZC's texts later.
 SOURCE_TEXTS_PATH_LIST = [
-    "Reading Materials/Education_403.txt",  # This text is for the training session.
-    "Reading Materials/Youth_278.txt",
-    "Reading Materials/New York City_297.txt",
-    "Reading Materials/Elephants_232.txt",
-    "Reading Materials/What does cloud computing means_279.txt",
-    "Reading Materials/Easter day_228.txt",
-    "Reading Materials/Rainforests_223.txt"
+    "Reading Materials/Pilot version 1 July/Education_403.txt",  # This text is for the training session.
+    "Reading Materials/Pilot version 1 July/Youth_278.txt",
+    "Reading Materials/Pilot version 1 July/New York City_297.txt",
+    "Reading Materials/Pilot version 1 July/Elephants_232.txt",
+    "Reading Materials/Pilot version 1 July/What does cloud computing means_279.txt",
+    "Reading Materials/Pilot version 1 July/Easter day_228.txt",
+    "Reading Materials/Pilot version 1 July/Rainforests_223.txt"
 ]
 
 
@@ -133,9 +133,11 @@ class Runner:
         self.wps_dynamical_duration_text = 3  # Words per second for dynamically changing duration of text reading at different text chunks.
         self.offset_seconds_dynamical_duration_text = 2  # The unit is second.
 
+        # Intialize logs.
         self.log_actual_amounts_texts = []
         self.log_time_elapsed_read_text_mode_manual = []  # Store participants' reading speed: how many time for a certain amount of words.
         self.log_time_elapsed_read_text_mode_rsvp = []
+        self.log_time_elapsed_waiting_next_trial = []
 
         # Parameters for subtask type 2: count task.
         self.timer_count_gap_task = 0
@@ -175,6 +177,7 @@ class Runner:
         self.rect_text = self.image_text.get_rect()
         setattr(self.rect_text, ANCHOR, self.pos_text)
 
+        # Settings for the "present all" mode.
         self.num_scrolling_press_keys_present_all = 0  # This variable will record the current number of scrolling operations, positive numbers negative numbers mean scrolling up and down.
 
         self.y_range_texts_display_present_all_mode = self.max_height
@@ -184,6 +187,9 @@ class Runner:
             math.floor(self.y_range_texts_display_present_all_mode / self.height_line))
         self.offset_y_texts_static_present_all_mode = self.y_range_texts_display_present_all_mode - self.num_lines_tolerated_present_all_mode * self.height_line + self.MARGIN_TOP
 
+        self.boundary_num_pages = self.get_num_pages()
+
+        # Settings for gap tasks.
         self.font_gap = pygame.font.SysFont(self.font_type_selected, self.size_gap)
         self.image_gap = self.font_gap.render(self.content_gap_temp, True, self.color_text)
         self.rect_gap = self.image_gap.get_rect()
@@ -192,7 +198,6 @@ class Runner:
         # Initialize variables by inner functions.
         # Split the text according to the given chunk size.
         self.split_amount_texts()
-
         # Generate the subtasks.
         self.generate_subtask()
 
@@ -231,11 +236,14 @@ class Runner:
                             self.surface.fill(self.color_background)
                             # Update the scrolling parameters, including how many lines are operated, scroll up or down.
                             if event.key == pygame.K_PAGEUP:
-                                # Scrolling up.
-                                self.num_scrolling_press_keys_present_all += 1
+                                # Scrolling up. But not exceed the upper boundary.
+                                if self.num_scrolling_press_keys_present_all < 0:
+                                    self.num_scrolling_press_keys_present_all += 1
                             elif event.key == pygame.K_PAGEDOWN:
-                                # Scrolling down.
-                                self.num_scrolling_press_keys_present_all -= 1
+                                # Scrolling down. Not exceed the lower boundary.
+                                if self.num_scrolling_press_keys_present_all > (-(self.boundary_num_pages - 1)):
+                                    # Minus 1 because initially participants are in the 1st page, and parameter self.num_scrolling_press_keys_present_all starts from 0.
+                                    self.num_scrolling_press_keys_present_all -= 1
 
             # Count the time elapsed.
             self.time_elapsed = self.clock.tick(self.fps)
@@ -258,7 +266,6 @@ class Runner:
                     self.duration_text = self.log_time_elapsed_read_text_mode_rsvp[self.index_content_texts]
 
                     # Display texts. No matter which mode.
-                    # self.image_text = self.font_text.render(self.content_text_temp, True, self.color_text) # TODO: change back later, is the image really useful?
                     self.render_texts_multiple_lines()  # Render text content word by word, line by line.
 
                     # Update the status automatically if in the rsvp mode or in the present-all mode.
@@ -296,35 +303,77 @@ class Runner:
                         # Flush the counter for gap task type 2: count task.
                         self.counter_count_gap_task_shapes_change = 0
 
+                        # Pause after the gap task is over, wait for the participant to start next reading session.
+                        # Display information.
+                        self.surface.fill("black")
+                        texts_guide_to_next_study_surface = self.font_text.render(
+                            "Start to read, click [R] on the ring", True, self.color_text)
+                        self.surface.blit(texts_guide_to_next_study_surface, (575, 350))
+                        pygame.display.flip()
+                        # Pause here.
+                        is_waiting_participant_next_trial = True
+                        # Timer settings
+                        timer_waiting = 0
+                        while is_waiting_participant_next_trial:
+                            # Timer update.
+                            time_elapsed_waiting = self.clock.tick(self.fps)
+                            timer_waiting = timer_waiting + time_elapsed_waiting
+                            for event in pygame.event.get():
+                                if event.type == pygame.MOUSEBUTTONDOWN:
+                                    if event.button == 3:  # 3 stands for the right click.
+                                        is_waiting_participant_next_trial = False  # Jump out of the loop.
+                                        # Clear the scene.
+                                        self.surface.fill("black")
+                                        # Update the time elapsed while waiting
+                                        self.log_time_elapsed_waiting_next_trial.append(timer_waiting)
+
             pygame.display.flip()
 
             # The experiment is over with exceeding the iteration times. It only works in rsvp mode.
             if self.counter_attention_shifts >= self.num_attention_shifts:
                 self.is_running = False
 
-        # Log here
-        print(self.gap_math_task_chunks_results)
-        print("The actual number of texts displayed are: " + str(self.log_actual_amounts_texts))
+        # Log here, once the tial is over. In case data lost due to following wrong operations.
         self.generate_log_file()
 
         # Show the last scene to help with record where the reader stopped.
-        is_waiting = True
-        delay_time_before_next_study = 3  # The unit is second.
-        print("Waiting for the next study...")
+        # Display the white background to indicate participants to stop.
         self.surface.fill("white")  # The red is too harsh and uncomfortable, change it to the white.
         self.render_texts_multiple_lines()
         pygame.display.flip()
-        while is_waiting:
+
+        # Waiting for the experimenter to press the Space key to show the instruction to the participant.
+        # Consider the natural operation: Esc for stop and Space for proceeding. Noted in the experimenter specification.
+        is_waiting_experimenter_questions = True
+        is_questions_finished = False
+        while is_waiting_experimenter_questions:
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
-                        # Add feedback to the key pression for the experimenter. The feedback is the screen black out.
-                        self.surface.fill("black")
+                    if event.key == pygame.K_SPACE:
+                        # If the questions are not finished, then show the instructions.
+                        if is_questions_finished is False:
+                            # Add feedback to the key pression for the experimenter. The feedback is the screen black out.
+                            self.surface.fill("black")
+                            texts_guide_to_tests_surface = self.font_text.render("Now please remove the glasses and answer questions", True, self.color_text)
+                            self.surface.blit(texts_guide_to_tests_surface, (375, 350))
+                            # Update the flag.
+                            is_questions_finished = True
+                        elif is_questions_finished:
+                            self.surface.fill("black")
+                            texts_guide_to_next_study_surface = self.font_text.render("Start next study, click [R] on the ring", True, self.color_text)
+                            self.surface.blit(texts_guide_to_next_study_surface, (575, 350))
+                            # Update the flag.
+                            is_waiting_experimenter_questions = False
+                        # Update the scene.
                         pygame.display.flip()
-                        print("Proceed to the next pilot study in " + str(
-                            delay_time_before_next_study) + " seconds........" + "\n")
-                        pygame.time.delay(delay_time_before_next_study * 1000)
-                        is_waiting = False
+
+        # Waiting for the participant to click the R button on the ringmouse to start the next trial (quit the current one, the new one will be started automatically).
+        is_waiting_participant_next_study = True
+        while is_waiting_participant_next_study:
+            for event in pygame.event.get():
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 3:    # 3 stands for the right click.
+                        is_waiting_participant_next_study = False  # Jump out of the loop.
 
         # Quit the game at the main method.
         pygame.quit()
@@ -407,8 +456,7 @@ class Runner:
         space = self.font_text.size(' ')[0]
         x_text, y_text = self.pos_text
 
-        offset_y_texts_dynamical = (
-                                               self.y_range_texts_display_present_all_mode + self.MARGIN_TOP) * self.num_scrolling_press_keys_present_all  # The page update. Page by page.
+        offset_y_texts_dynamical = (self.y_range_texts_display_present_all_mode + self.MARGIN_TOP) * self.num_scrolling_press_keys_present_all  # The page update. Page by page.
         offset_y_texts_static = self.offset_y_texts_static_present_all_mode
 
         # Render word by word.
@@ -431,6 +479,29 @@ class Runner:
             # Horizontally lay up the words.
             self.surface.blit(word_surface, (x_text, y_text + offset_y_texts_dynamical))
             x_text += word_width + space
+
+    def get_num_pages(self):
+        """
+        Get the number of lines and number of pages when displaying all texts at once. Especially in the "present all" mode.
+        :return: count_num_lines
+        """
+        words = self.texts.split(' ')
+        space = self.font_text.size(' ')[0]
+        x_text, y_text = self.pos_text
+
+        # Render word by word.
+        count_num_lines = 1  # Have to start from 1!
+        for word in words:
+            word_surface = self.font_text.render(word, 0, self.color_text)
+            word_width, word_height = word_surface.get_size()
+            if x_text + word_width >= self.max_width:
+                # Update the counter. Already starts from the second line.
+                count_num_lines += 1
+                x_text = self.pos_text[0]
+            x_text += word_width + space
+
+        num_pages = int(math.ceil(count_num_lines / self.num_lines_tolerated_present_all_mode))
+        return num_pages
 
     def generate_subtask(self):
         """
@@ -562,6 +633,8 @@ class Runner:
                 for i in range(self.num_attention_shifts):
                     f.write("The " + str(i + 1) + " text chunk: " + "\n")
                     f.write("Gap task results: " + str(self.gap_math_task_chunks_results[i]) + "\n")
+                    f.write("Time elapsed while waiting before the new reading tiral: " + str(self.log_time_elapsed_waiting_next_trial[i]) + " ms." + "\n")
+                    f.write("The total time spent on the non-reading trial: " + str(self.log_time_elapsed_waiting_next_trial[i] + self.duration_gap) + " ms." + "\n")
 
                 f.write("\n")
                 for i in range(len(self.texts_chunks)):
@@ -594,7 +667,7 @@ def run_prototype():
                           duration_gap=500,
                           duration_text=5000,
                           amount_text=35,
-                          source_text_path="Reading Materials/Education_403.txt",
+                          source_text_path="Reading Materials/Pilot version 1 July/Education_403.txt",
                           task_type_gap=GAP_COUNT_TASK,
                           mode_update=MODE_PRESENT_ALL,
                           condition_exp=CONDITION_POS_HOR,
@@ -649,10 +722,10 @@ def run_pilots(name, time, id_participant):
     # Wait for the formal studies to be started.
     pygame.init()
 
-    waiting_surface = pygame.display.set_mode((1200, 300), pygame.RESIZABLE)
+    waiting_surface = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
     waiting_font_text = pygame.font.SysFont("arial", 50)
-    image_text = waiting_font_text.render("Press SPACEBAR to proceed to formal studies", True, (73, 232, 56))
-    waiting_surface.blit(image_text, (120, 150))
+    image_text = waiting_font_text.render("That is the end of training session. Can we proceed to formal studies?", True, (73, 232, 56))
+    waiting_surface.blit(image_text, (300, 350))
 
     pygame.display.flip()
 
