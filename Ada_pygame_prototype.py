@@ -463,6 +463,10 @@ class Runner:
         count_num_lines = 1  # Have to start from 1!
         for word in words:
             word_surface = self.font_text.render(word, 0, self.color_text)
+            # TODO: could add opacity here, to the word_surface directly.
+            if count_num_lines % 2 == 0:
+                word_surface.set_alpha(15)
+
             word_width, word_height = word_surface.get_size()
             if x_text + word_width >= self.max_width:
                 # Update the counter. Already starts from the second line.
@@ -633,8 +637,9 @@ class Runner:
                 for i in range(self.num_attention_shifts):
                     f.write("The " + str(i + 1) + " text chunk: " + "\n")
                     f.write("Gap task results: " + str(self.gap_math_task_chunks_results[i]) + "\n")
-                    f.write("Time elapsed while waiting before the new reading tiral: " + str(self.log_time_elapsed_waiting_next_trial[i]) + " ms." + "\n")
-                    f.write("The total time spent on the non-reading trial: " + str(self.log_time_elapsed_waiting_next_trial[i] + self.duration_gap) + " ms." + "\n")
+                    if i < len(self.log_time_elapsed_waiting_next_trial):   # Cater to the excession error.
+                        f.write("Time elapsed while waiting before the new reading tiral: " + str(self.log_time_elapsed_waiting_next_trial[i]) + " ms." + "\n")
+                        f.write("The total time spent on the non-reading trial: " + str(self.log_time_elapsed_waiting_next_trial[i] + self.duration_gap) + " ms." + "\n")
 
                 f.write("\n")
                 for i in range(len(self.texts_chunks)):
