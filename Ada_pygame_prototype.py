@@ -202,12 +202,17 @@ class Runner:
         setattr(self.rect_gap, ANCHOR, self.pos_gap)
 
         # Initialize variables by inner functions.
-        # TODO: try new function
-        self.split_texts_into_sentences()
+        # TODO: try new function, add a prepare_materials_dynamicallys function, categorize scenarios there.
+
+        self.split_sentences_chunks()
+        # self.split_texts_into_sentences()
         # Split the text according to the given chunk size.
         self.split_amount_texts()
         # Generate the subtasks.
         self.generate_subtask()
+
+    def prepare_materials_dynamically(self):
+        pass
 
     def mainloop(self):
         self.is_running = True
@@ -391,71 +396,110 @@ class Runner:
             texts = f.read()
         return texts
 
-    # TODO: script function
-    def split_texts_into_sentences(self):
-        amount_words_standard = self.amount_text
+    def allocate_time_adaptively(self):
+        for i in range(len(self.texts_chunks)):
+            num_words = self.log_actual_amounts_texts[i]
+            duration_text = int(math.ceil(num_words / self.wps_dynamical_duration_text) + \
+                            self.offset_seconds_dynamical_duration_text) * 1000
+            self.log_time_elapsed_read_text_mode_rsvp.append(duration_text) # TODO change here.
 
-        # Store the indices of words contain a upper case letter. Could be a full stop.
-        num_texts_sentences = []
-        # TODO: test sentence splition here.
-        split_sentences = tokenize.sent_tokenize(self.texts)
-        print(split_sentences)
-        print(len(split_sentences))
-        print(split_sentences[1])
-        for i in range(len(split_sentences)):
-            num_texts_sentences.append(len(split_sentences[i].split()))
-        print(num_texts_sentences)
+    def split_sentences_chunks(self):
+        # Get the word range reference.
+        amount_words_reference = self.amount_text
 
-        index_text_chunk_start = 0
-        index_text_chunk_end = 0
-        index_num_texts_sentences = 0
-        count_chunks = 0
-        while True:
-            texts_chunk = []
-            num_texts_chunk_buffer = 0
-            num_texts_chunk_buffer += num_texts_sentences[index_num_texts_sentences]
-            print("dududa: " + str(num_texts_sentences[index_num_texts_sentences]))
-            print("zaizai: " + str(index_text_chunk_start))
-            if num_texts_chunk_buffer >= amount_words_standard:
-                index_num_texts_sentences += 1
-                # index_text_chunk_end = index_num_texts_sentences
+        # Split the sentences.
+        # Store all number of words and texts in each sentence. Initialize the dictionary.
+        dic_texts_sentences = {
+            "number of words per sentence": [0],
+            "texts in each sentence": [""]
+        }
+
+        split_full_sentences = tokenize.sent_tokenize(self.texts)
+        for i in range(len(split_full_sentences)):
+            if i == 0:
+                dic_texts_sentences["number of words per sentence"][i] = len(split_full_sentences[i].split())
+                dic_texts_sentences["texts in each sentence"][i] = split_full_sentences[i]
             else:
-                while num_texts_chunk_buffer < amount_words_standard:  # and index_num_texts_sentences < len(num_texts_sentences) - 1
-                    index_num_texts_sentences += 1
-                    num_texts_chunk_buffer += num_texts_sentences[index_num_texts_sentences]
-                    print("dudu: " + str(num_texts_sentences[index_num_texts_sentences]))
-                    if index_num_texts_sentences == len(num_texts_sentences) - 1:
+                dic_texts_sentences["number of words per sentence"].append(len(split_full_sentences[i].split()))
+                dic_texts_sentences["texts in each sentence"].append(split_full_sentences[i])
+        print(dic_texts_sentences)  # TODO: delete this later.
+
+        # Allocate sentences into chunks.
+        # Current logic: every chunk composes 3 parts: earlier context (1 sentence, low opacity),
+        # current texts (multiple sentences, number of words > reference, full opacity), later context (1 sentence, low opacity).
+        # Initialize parameters.
+        index_earlier_context = 0
+        index_texts_start = 0
+        index_texts_ending = 0
+        index_later_context = 0
+        counter_num_chunks = 0
+        index_pointer = 0   # A sliding pointer.
+
+        while True:
+            # Refresh the buffers.
+            buffer_num_words_chunk = 0
+            buffer_texts_chunk = []
+
+            # Allocate for the texts first.
+            # Initialize buffer for counting number of words.
+            buffer_num_words_chunk += dic_texts_sentences["number of words per sentence"][index_pointer]
+
+            if buffer_num_words_chunk >= amount_words_reference:
+                # Just one sentence in this text chunk.
+                index_texts_start = index_pointer
+                index_texts_ending = index_pointer
+            else:
+                # Feed texts in a loop.
+                index_texts_start = index_pointer
+                while True:
+                    # Normal situations.
+                    if index_pointer + 1 < len(split_full_sentences):
+                        index_pointer += 1
+                        buffer_num_words_chunk += dic_texts_sentences["number of words per sentence"][index_pointer]    # Check the eligibility of the index_pointer.
+                    # Special situations: not enough data. Has already reached the bottom boundary.
+                    else:
+                        # Stop here.
+                        index_texts_ending = index_pointer
+                        # Break because the index is out of range.
                         break
 
-                # TODO: we feed the users more texts, then compensate in the context mode.
+                    # Jump out of the loop because number of words is enough.
+                    if buffer_num_words_chunk >= amount_words_reference:
+                        # Update indices.
+                        index_texts_ending = index_pointer
+                        break
 
-                # Determine the starting index.
-                if count_chunks == 0:
-                    index_text_chunk_start = 0
-                # else:
-                #     index_text_chunk_start = index_text_chunk_end
-
-            # Determine the ending index.
-            if index_num_texts_sentences + 1 < len(num_texts_sentences):
-                index_text_chunk_end = index_num_texts_sentences + 1
+            # Allocate the corresponding earlier and later chunks.
+            if index_texts_start - 1 < 0:
+                # There is no earlier chunk since it is the first chunk.
+                index_earlier_context = index_texts_start   # 0.
             else:
-                index_text_chunk_end = index_num_texts_sentences
+                index_earlier_context = index_texts_start - 1
+            if index_texts_ending + 1 >= len(split_full_sentences):
+                # There is no later chunk since it is the last chunk.
+                index_later_context = index_texts_ending    # The last index.
+            else:
+                index_later_context = index_texts_ending + 1
 
-            # Add to the chunks and logs.
-            for sentence in split_sentences[index_text_chunk_start:(index_text_chunk_end + 1)]:
-                texts_chunk.append(sentence + " ")
-            self.texts_chunks.append(texts_chunk)
-            self.log_actual_amounts_texts.append(num_texts_chunk_buffer)
+            # Add sentences into buffer.
+            for sentence in split_full_sentences[index_earlier_context:(index_later_context + 1)]:
+                buffer_texts_chunk.append(sentence + " ")
+            self.texts_chunks.append(buffer_texts_chunk)
+            self.log_actual_amounts_texts.append(buffer_num_words_chunk)
 
-            # Update indicies
-            count_chunks += 1
-            index_text_chunk_start = index_text_chunk_end
+            # Update counters.
+            counter_num_chunks += 1
+            # "index_pointer" stopped at the last chunk, now move to the new chunk.
+            index_pointer += 1
 
-            print(texts_chunk)
-            print(num_texts_chunk_buffer)
-
-            if index_num_texts_sentences == len(num_texts_sentences) - 1:
+            # Jump out of the chunk.
+            if index_pointer >= len(split_full_sentences):
                 break
+
+        # Update the parameters.
+        self.num_attention_shifts = len(self.texts_chunks)
+        # Allocate time for each reading chunk adaptively.
+        self.allocate_time_adaptively()
 
     def split_amount_texts(self):
         word_list = self.texts.split()
