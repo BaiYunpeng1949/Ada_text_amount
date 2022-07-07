@@ -30,6 +30,10 @@ CONDITIOMS_TRAININGS = {
     2: {
         "duration_gap": 2000,
         "mode_update": MODE_ADAPTIVE
+    },
+    3: {
+        "duration_gap": 2000,
+        "mode_update": MODE_CONTEXTUAL
     }
 }
 CONDITIONS_STUDIES = {
@@ -90,7 +94,7 @@ class Runner:
         self.amount_text = amount_text
         self.texts_path = source_text_path
         self.task_type_gap = task_type_gap
-        self.num_attention_shifts = 9   # Initialize this parameter. TODO: return this into a tunable parameter in the future.
+        self.num_attention_shifts = 9   # Initialize this parameter.    # TODO: need to be a input instead of an output in real settings.
         self.mode_text_update = mode_update
         self.condition_experiment = condition_exp
         self.color_background = color_background
@@ -142,7 +146,7 @@ class Runner:
         # Intialize logs.
         self.log_actual_amounts_texts = []
         self.log_time_elapsed_read_text_mode_manual = []  # Store participants' reading speed: how many time for a certain amount of words.
-        self.log_time_elapsed_read_text_mode_rsvp = []
+        self.log_time_elapsed_read_text_mode_rsvp = []      # Self update time chunk allocation.
         self.log_time_elapsed_waiting_next_trial = []
 
         # Parameters for subtask type 2: count task.
@@ -173,7 +177,7 @@ class Runner:
         # index of items in a shift, and index of shifts.
         self.num_gap_count_task_shapes = int(math.floor(self.duration_gap / self.duration_count_gap_task_shapes_change))
 
-        self.content_text_temp = ""
+        self.content_text_temp = "Du Du Du"
         self.content_gap_temp = "Ga Ga Ga Ga Ga"
 
         self.font_type_selected = pygame.font.get_fonts()[0]  # We select the system's first font, "arial" font.
@@ -184,6 +188,7 @@ class Runner:
         setattr(self.rect_text, ANCHOR, self.pos_text)
 
         # Settings for the "present all" mode.
+        self.opacity_texts_present_all = 255
         self.num_scrolling_press_keys_present_all = 0  # This variable will record the current number of scrolling operations, positive numbers negative numbers mean scrolling up and down.
 
         self.y_range_texts_display_present_all_mode = self.max_height
@@ -195,6 +200,13 @@ class Runner:
 
         self.boundary_num_pages = self.get_num_pages()
 
+        # Settings for the "contextual adaptive" mode.
+        self.opacity_texts_contextual_adaptive_context = 135
+        self.opacity_texts_contextual_adaptive = 255
+
+        # Settings for the "adaptive" mode.
+        self.opacity_texts_adaptive = 255
+
         # Settings for gap tasks.
         self.font_gap = pygame.font.SysFont(self.font_type_selected, self.size_gap)
         self.image_gap = self.font_gap.render(self.content_gap_temp, True, self.color_text)
@@ -202,17 +214,18 @@ class Runner:
         setattr(self.rect_gap, ANCHOR, self.pos_gap)
 
         # Initialize variables by inner functions.
-        # TODO: try new function, add a prepare_materials_dynamicallys function, categorize scenarios there.
-
-        self.split_sentences_chunks()
-        # self.split_texts_into_sentences()
-        # Split the text according to the given chunk size.
-        self.split_amount_texts()
-        # Generate the subtasks.
-        self.generate_subtask()
+        self.prepare_materials_dynamically()
 
     def prepare_materials_dynamically(self):
-        pass
+        # Run the whole materal prepare procedure here.
+        # Split texts.
+        self.split_full_sentences_chunks()
+        # Allocate time.
+        self.allocate_time_adaptively()
+        # Split the text according to the given chunk size.
+        # self.split_short_sentences_texts() # Deprecated text split method. But it will be reserved here.
+        # Generate the subtasks.
+        self.generate_subtask()
 
     def mainloop(self):
         self.is_running = True
@@ -269,7 +282,7 @@ class Runner:
                 if self.is_text_showing:
                     # Draw content.
                     # In the RSVP mode. Get the current texts. display different chunks of texts.
-                    if (self.mode_text_update is MODE_ADAPTIVE) or (self.mode_text_update is MODE_MANUAL):
+                    if (self.mode_text_update is MODE_ADAPTIVE) or (self.mode_text_update is MODE_MANUAL) or (self.mode_text_update is MODE_CONTEXTUAL):
                         self.content_text_temp = self.texts_chunks[self.index_content_texts]
                     # In the Present-all mode, display all texts once.
                     elif self.mode_text_update is MODE_PRESENT_ALL:
@@ -283,7 +296,7 @@ class Runner:
 
                     # Update the status automatically if in the rsvp mode or in the present-all mode.
                     if self.timer > self.duration_text:
-                        if self.mode_text_update is MODE_ADAPTIVE or self.mode_text_update is MODE_PRESENT_ALL:
+                        if (self.mode_text_update is MODE_ADAPTIVE) or (self.mode_text_update is MODE_PRESENT_ALL) or (self.mode_text_update is MODE_CONTEXTUAL):
                             self.counter_attention_shifts += 1
                             self.is_text_showing = False
                             self.timer = 0
@@ -291,9 +304,6 @@ class Runner:
 
                             # RSVP update mode for text display.
                             self.index_content_texts += 1
-                            # If the index of content is out of the range, loop back to the beginning.
-                            if self.index_content_texts == len(self.texts_chunks):
-                                self.index_content_texts = 0
 
                             # Update log file for the RSVP mode and present all mode.
                             self.log_time_elapsed_read_text_mode_rsvp.append(self.duration_text)
@@ -318,7 +328,7 @@ class Runner:
 
                         # Pause after the gap task is over, wait for the participant to start next reading session.
                         # Display information.
-                        self.surface.fill("black")
+                        self.surface.fill(self.color_background)
                         texts_guide_to_next_study_surface = self.font_text.render(
                             "Start to read, click [R] on the ring", True, self.color_text)
                         self.surface.blit(texts_guide_to_next_study_surface, (575, 350))
@@ -397,13 +407,22 @@ class Runner:
         return texts
 
     def allocate_time_adaptively(self):
+        """
+        The basic time allocation algorithm, our adaptive mode's heart.
+        :return: time allocation - log_time_elapsed_read_text_mode_rsvp
+        """
         for i in range(len(self.texts_chunks)):
             num_words = self.log_actual_amounts_texts[i]
             duration_text = int(math.ceil(num_words / self.wps_dynamical_duration_text) + \
                             self.offset_seconds_dynamical_duration_text) * 1000
-            self.log_time_elapsed_read_text_mode_rsvp.append(duration_text) # TODO change here.
+            self.log_time_elapsed_read_text_mode_rsvp.append(duration_text)
 
-    def split_sentences_chunks(self):
+    def split_full_sentences_chunks(self):
+        """
+        This function split texts with full stops, i.e., stop with ".".
+        And allocate different text chunks with our proposed idea of adaptive and contextual adaptive methods.
+        :return: text chunks, time allocated, and some log files.
+        """
         # Get the word range reference.
         amount_words_reference = self.amount_text
 
@@ -422,7 +441,6 @@ class Runner:
             else:
                 dic_texts_sentences["number of words per sentence"].append(len(split_full_sentences[i].split()))
                 dic_texts_sentences["texts in each sentence"].append(split_full_sentences[i])
-        print(dic_texts_sentences)  # TODO: delete this later.
 
         # Allocate sentences into chunks.
         # Current logic: every chunk composes 3 parts: earlier context (1 sentence, low opacity),
@@ -498,10 +516,9 @@ class Runner:
 
         # Update the parameters.
         self.num_attention_shifts = len(self.texts_chunks)
-        # Allocate time for each reading chunk adaptively.
-        self.allocate_time_adaptively()
 
-    def split_amount_texts(self):
+    def split_short_sentences_texts(self):
+        # Split texts into short sentences. Not have to be full stops that end with ".".
         word_list = self.texts.split()
         num_words = len(word_list)
         num_texts_chunks = int(math.ceil(num_words / self.amount_text))
@@ -572,43 +589,95 @@ class Runner:
         # Refresh the canvas/scene/window. Or the opacity will just be aggregated.
         if self.is_running:
             # While the trial is still on the run.
-            self.surface.fill("black")  # TODO: this caused the deprecation of escaping function of Esc.
+            self.surface.fill(self.color_background)
         elif self.is_running is False:
             # If the trial is stopped by Esc key. Or terminates normally. Display the white background to indicate participants to stop.
             self.surface.fill("white")
 
         # To be reminded that the displayed texts are stored in self.content_text_temp.
-        words = self.content_text_temp.split(' ')
-        space = self.font_text.size(' ')[0]
-        x_text, y_text = self.pos_text
+        # Determine the current texts to be displayed.
+        texts_earlier_context_display = ""
+        texts_middle = ""
+        texts_later_context_display = ""
 
-        offset_y_texts_dynamical = (
-                                               self.y_range_texts_display_present_all_mode + self.MARGIN_TOP) * self.num_scrolling_press_keys_present_all  # The page update. Page by page.
-        offset_y_texts_static = self.offset_y_texts_static_present_all_mode
+        # The 1st chunk.
+        if self.index_content_texts == 0:
+            for i in range(len(self.content_text_temp) - 1):
+                texts_middle += self.content_text_temp[i]
+            texts_later_context_display = self.content_text_temp[-1]
+        # The last chunk.
+        elif self.index_content_texts == (len(self.texts_chunks) - 1):
+            texts_earlier_context_display = self.content_text_temp[0]
+            for i in range(1, len(self.content_text_temp)):    # Change this
+                texts_middle += self.content_text_temp[i]
+        # Middle chunks.
+        else:
+            texts_earlier_context_display = self.content_text_temp[0]
+            for i in range(1, (len(self.content_text_temp) - 1)):  # Change this
+                texts_middle += self.content_text_temp[i]
+            texts_later_context_display = self.content_text_temp[-1]
 
-        # Render word by word.
-        count_num_lines = 1  # Have to start from 1!
-        for word in words:
-            word_surface = self.font_text.render(word, 0, self.color_text)
-            # TODO: determine which texts to have lower opacity, and how much opacity.
-            word_surface.set_alpha(15)
+        # Auxiliary tool for rendering texts.
+        def render_words(texts_display, x_text, y_text, opacity):
+            words = texts_display.split(' ')
+            space = self.font_text.size(' ')[0]
+            # x_text, y_text = self.pos_text
 
-            word_width, word_height = word_surface.get_size()
-            if x_text + word_width >= self.max_width:
-                # Update the counter. Already starts from the second line.
-                count_num_lines += 1
+            # Some position related parameters update.
+            offset_y_texts_dynamical = (
+                                                   self.y_range_texts_display_present_all_mode + self.MARGIN_TOP) * self.num_scrolling_press_keys_present_all  # The page update. Page by page.
+            offset_y_texts_static = self.offset_y_texts_static_present_all_mode
 
-                # Update the position.
-                x_text = self.pos_text[0]  # Reset the x_text.
-                y_text += word_height
+            # Render the texts word by word.
+            count_num_lines = 1  # Have to start from 1! - reserved especially for the "present all" mode.
+            for word in words:
+                word_surface = self.font_text.render(word, 0, self.color_text)
+                word_surface.set_alpha(opacity)
 
-                # Check if need to create a new page.
-                if (count_num_lines % self.num_lines_tolerated_present_all_mode == 1) and (count_num_lines > 1):
-                    y_text += offset_y_texts_static
+                word_width, word_height = word_surface.get_size()
+                if x_text + word_width >= self.max_width:
+                    # Update the counter. Already starts from the second line.
+                    count_num_lines += 1
+                    # Update the position.
+                    x_text = self.pos_text[0]  # Reset the x_text.
+                    y_text += word_height
+                    # Check if need to create a new page.
+                    if (count_num_lines % self.num_lines_tolerated_present_all_mode == 1) and (count_num_lines > 1):
+                        y_text += offset_y_texts_static
 
-            # Horizontally lay up the words.
-            self.surface.blit(word_surface, (x_text, y_text + offset_y_texts_dynamical))
-            x_text += word_width + space
+                # Horizontally lay up the words.
+                self.surface.blit(word_surface, (x_text, y_text + offset_y_texts_dynamical))
+                x_text += word_width + space
+            return x_text, y_text
+
+        # Distinguish between different modes: adaptive and contextual adaptive.
+        if self.mode_text_update is MODE_ADAPTIVE:
+            render_words(texts_display=texts_middle,
+                         x_text=self.pos_text[0],
+                         y_text=self.pos_text[1],
+                         opacity=self.opacity_texts_adaptive)
+        elif self.mode_text_update is MODE_CONTEXTUAL:
+            # texts_display = texts_earlier_context_display + texts_middle + texts_later_context_display
+            if self.index_content_texts > 0:
+                x_middle_start_text, y_middle_start_text = render_words(texts_display=texts_earlier_context_display,
+                                                                        x_text=self.pos_text[0],
+                                                                        y_text=self.pos_text[1],
+                                                                        opacity=self.opacity_texts_contextual_adaptive_context)
+            elif self.index_content_texts == 0:
+                x_middle_start_text, y_middle_start_text = self.pos_text
+            x_later_start_text, y_later_start_text = render_words(texts_display=texts_middle,
+                                                                  x_text=x_middle_start_text,
+                                                                  y_text=y_middle_start_text,
+                                                                  opacity=self.opacity_texts_contextual_adaptive)
+            render_words(texts_display=texts_later_context_display,
+                         x_text=x_later_start_text,
+                         y_text=y_later_start_text,
+                         opacity=self.opacity_texts_contextual_adaptive_context)
+        elif self.mode_text_update is MODE_PRESENT_ALL:
+            render_words(texts_display=texts_middle,
+                         x_text=self.pos_text[0],
+                         y_text=self.pos_text[1],
+                         opacity=self.opacity_texts_present_all)
 
     def get_num_pages(self):
         """
@@ -770,11 +839,14 @@ class Runner:
                 f.write("\n")
                 for i in range(len(self.texts_chunks)):
                     f.write("The " + str(i + 1) + " attention shift: " + "\n")
-                    if self.mode_text_update is MODE_ADAPTIVE:
+                    if (self.mode_text_update is MODE_ADAPTIVE) or (self.mode_text_update is MODE_CONTEXTUAL):
                         f.write("Amount of texts in this chunk: " + str(self.log_actual_amounts_texts[i]) +
                                 "    Time spent: " + str(self.log_time_elapsed_read_text_mode_rsvp[i]) + " ms" + "\n")
                         # Log the text chunks if the current mode is Adaptive.
-                        f.write(self.texts_chunks[i] + "\n")
+                        texts_display_log = ""
+                        for j in range(len(self.texts_chunks[i])):
+                            texts_display_log += self.texts_chunks[i][j]
+                        f.write(texts_display_log + "\n")
                     elif self.mode_text_update is MODE_MANUAL:
                         if i < len(self.log_time_elapsed_read_text_mode_manual):
                             f.write("Amount of texts in this chunk: " + str(self.log_actual_amounts_texts[i]) +
@@ -841,7 +913,7 @@ def run_pilots(name, time, id_participant):
                                          condition_exp=CONDITION_POS_HOR,
                                          color_background="black", color_text=(73, 232, 56),
                                          size_text=60, size_gap=64,
-                                         pos_text=(50, 150), pos_gap=(0, 0))
+                                         pos_text=(50, 50), pos_gap=(0, 0))
 
         print("During the trainging session.......Now is the training: " + str(
             i + 1) + " .........")
@@ -908,7 +980,7 @@ def run_pilots(name, time, id_participant):
                                       condition_exp=CONDITION_POS_HOR,
                                       color_background="black", color_text=(73, 232, 56),
                                       size_text=60, size_gap=64,
-                                      pos_text=(50, 150), pos_gap=(0, 0))
+                                      pos_text=(50, 50), pos_gap=(0, 0))
 
         print("During the study.......Now is the condition: " + str(
             index_current_participant_in_conditions) + " .........")
