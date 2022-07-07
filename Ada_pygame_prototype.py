@@ -382,7 +382,8 @@ class Runner:
                             is_questions_finished = True
                         elif is_questions_finished:
                             self.surface.fill("black")
-                            texts_guide_to_next_study_surface = self.font_text.render("Start next study, click [R] on the ring", True, self.color_text)
+                            texts_guide_to_next_study_surface = self.font_text.render(
+                                "To start the next trial, click [R] on the ring", True, self.color_text)
                             self.surface.blit(texts_guide_to_next_study_surface, (575, 350))
                             # Update the flag.
                             is_waiting_experimenter_questions = False
@@ -604,7 +605,8 @@ class Runner:
         if self.index_content_texts == 0:
             for i in range(len(self.content_text_temp) - 1):
                 texts_middle += self.content_text_temp[i]
-            texts_later_context_display = self.content_text_temp[-1]
+            texts_later_context_display = self.content_text_temp[
+                -1]  # TODO: some bugs here if I press the esc button during the gap task.
         # The last chunk.
         elif self.index_content_texts == (len(self.texts_chunks) - 1):
             texts_earlier_context_display = self.content_text_temp[0]
@@ -925,7 +927,8 @@ def run_pilots(name, time, id_participant):
 
     waiting_surface = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
     waiting_font_text = pygame.font.SysFont("arial", 50)
-    image_text = waiting_font_text.render("That is the end of training session. Can we proceed to formal studies?", True, (73, 232, 56))
+    image_text = waiting_font_text.render(
+        "This is the end of the training session. Can we proceed to the formal study?", True, (73, 232, 56))
     waiting_surface.blit(image_text, (300, 350))
 
     pygame.display.flip()
