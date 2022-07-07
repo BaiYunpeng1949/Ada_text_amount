@@ -38,39 +38,39 @@ CONDITIOMS_TRAININGS = {
 }
 CONDITIONS_STUDIES = {
     1: {
-        "duration_gap": 4000,
+        "duration_gap": 5000,
         "mode_update": MODE_PRESENT_ALL
     },
     2: {
-        "duration_gap": 12000,
-        "mode_update": MODE_ADAPTIVE
+        "duration_gap": 15000,
+        "mode_update": MODE_CONTEXTUAL
     },
     3: {
-        "duration_gap": 12000,
-        "mode_update": MODE_PRESENT_ALL
+        "duration_gap": 5000,
+        "mode_update": MODE_ADAPTIVE
     },
     4: {
-        "duration_gap": 8000,
-        "mode_update": MODE_PRESENT_ALL
+        "duration_gap": 5000,
+        "mode_update": MODE_CONTEXTUAL
     },
     5: {
-        "duration_gap": 8000,
+        "duration_gap": 15000,
         "mode_update": MODE_ADAPTIVE
     },
     6: {
-        "duration_gap": 4000,
-        "mode_update": MODE_ADAPTIVE
+        "duration_gap": 15000,
+        "mode_update": MODE_PRESENT_ALL
     }
 }
 # TODO: change this to ZC's texts later.
 SOURCE_TEXTS_PATH_LIST = [
-    "Reading Materials/Pilot version 1 July/Education_403.txt",  # This text is for the training session.
-    "Reading Materials/Pilot version 1 July/Youth_278.txt",
-    "Reading Materials/Pilot version 1 July/New York City_297.txt",
-    "Reading Materials/Pilot version 1 July/Elephants_232.txt",
-    "Reading Materials/Pilot version 1 July/What does cloud computing means_279.txt",
-    "Reading Materials/Pilot version 1 July/Easter day_228.txt",
-    "Reading Materials/Pilot version 1 July/Rainforests_223.txt"
+    "Reading Materials/Pilot version 6 July/Story02_366wrds_32sts_11.44wpst.txt",  # This text is for the training session.
+    "Reading Materials/Pilot version 6 July/Story03_372wrds_19sts_19.58wpst.txt",
+    "Reading Materials/Pilot version 6 July/Story05_351wrds_27sts_13wpst.txt",
+    "Reading Materials/Pilot version 6 July/Story06_355wrds_26sts_13.65wpst.txt",
+    "Reading Materials/Pilot version 6 July/Story07_367wrds_22sts_16.68wpst.txt",
+    "Reading Materials/Pilot version 6 July/Story10_347wrds_19sts_18.26wpst",
+    "Reading Materials/Pilot version 6 July/Story12_348wds_20sts_17.4wpst.txt"
 ]
 
 
@@ -177,7 +177,7 @@ class Runner:
         # index of items in a shift, and index of shifts.
         self.num_gap_count_task_shapes = int(math.floor(self.duration_gap / self.duration_count_gap_task_shapes_change))
 
-        self.content_text_temp = "Du Du Du"
+        self.content_text_temp = ""
         self.content_gap_temp = "Ga Ga Ga Ga Ga"
 
         self.font_type_selected = pygame.font.get_fonts()[0]  # We select the system's first font, "arial" font.
@@ -621,11 +621,9 @@ class Runner:
         def render_words(texts_display, x_text, y_text, opacity):
             words = texts_display.split(' ')
             space = self.font_text.size(' ')[0]
-            # x_text, y_text = self.pos_text
 
             # Some position related parameters update.
-            offset_y_texts_dynamical = (
-                                                   self.y_range_texts_display_present_all_mode + self.MARGIN_TOP) * self.num_scrolling_press_keys_present_all  # The page update. Page by page.
+            offset_y_texts_dynamical = (self.y_range_texts_display_present_all_mode + self.MARGIN_TOP) * self.num_scrolling_press_keys_present_all  # The page update. Page by page.
             offset_y_texts_static = self.offset_y_texts_static_present_all_mode
 
             # Render the texts word by word.
