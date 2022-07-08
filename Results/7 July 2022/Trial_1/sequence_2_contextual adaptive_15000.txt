@@ -1,0 +1,86 @@
+Participant Information: 
+Participant Name: Trial_1
+Experiment Time: 7 July 2022
+Trial Number / Condition: sequence_2_contextual adaptive_15000
+Text source path: Reading Materials/Pilot version 6 July/Story05_351wrds_27sts_13wpst.txt
+
+Configuration: 
+Duration of gap task: 15000 ms
+Duration of text reading: 9000 ms
+Amount of text in a chunk: 35 words
+Text read: Reading Materials/Pilot version 6 July/Story05_351wrds_27sts_13wpst.txt
+The type of task type: count task
+The number of attention shifts: 9
+The mode of text content update: contextual adaptive
+The color of OHMD background: black
+The color of OHMD texts: (73, 232, 56)
+The size of texts: 60 pixels
+The size of gap tasks: 64 pixels
+The position of texts: (50, 50)
+The position of gap tasks: (0, 0)
+
+Logs: 
+The 1 text chunk: 
+Gap task results: ['circle: 7 ', 'triangle: 14 ', 'rectangle: 9 ']
+Time elapsed while waiting before the new reading tiral: 922 ms.
+The total time spent on the non-reading trial: 15922 ms.
+The 2 text chunk: 
+Gap task results: ['circle: 11 ', 'triangle: 7 ', 'rectangle: 12 ']
+Time elapsed while waiting before the new reading tiral: 7332 ms.
+The total time spent on the non-reading trial: 22332 ms.
+The 3 text chunk: 
+Gap task results: ['circle: 10 ', 'triangle: 13 ', 'rectangle: 7 ']
+Time elapsed while waiting before the new reading tiral: 1447 ms.
+The total time spent on the non-reading trial: 16447 ms.
+The 4 text chunk: 
+Gap task results: ['circle: 12 ', 'triangle: 12 ', 'rectangle: 6 ']
+Time elapsed while waiting before the new reading tiral: 2254 ms.
+The total time spent on the non-reading trial: 17254 ms.
+The 5 text chunk: 
+Gap task results: ['circle: 14 ', 'triangle: 9 ', 'rectangle: 7 ']
+Time elapsed while waiting before the new reading tiral: 6068 ms.
+The total time spent on the non-reading trial: 21068 ms.
+The 6 text chunk: 
+Gap task results: ['circle: 11 ', 'triangle: 10 ', 'rectangle: 9 ']
+Time elapsed while waiting before the new reading tiral: 2330 ms.
+The total time spent on the non-reading trial: 17330 ms.
+The 7 text chunk: 
+Gap task results: ['circle: 7 ', 'triangle: 9 ', 'rectangle: 14 ']
+Time elapsed while waiting before the new reading tiral: 10831 ms.
+The total time spent on the non-reading trial: 25831 ms.
+The 8 text chunk: 
+Gap task results: ['circle: 11 ', 'triangle: 10 ', 'rectangle: 9 ']
+Time elapsed while waiting before the new reading tiral: 460 ms.
+The total time spent on the non-reading trial: 15460 ms.
+The 9 text chunk: 
+Gap task results: ['circle: 8 ', 'triangle: 12 ', 'rectangle: 10 ']
+Time elapsed while waiting before the new reading tiral: 726 ms.
+The total time spent on the non-reading trial: 15726 ms.
+
+The 1 attention shift: 
+Amount of texts in this chunk: 41    Time spent: 16000 ms
+Many people have wondered if life exists on planets other than our own. People have thought about it since the beginning of science fiction as a genre. That occurred in 160 A.D., when Lucien of Samosata wrote the story "True History." It was only recently, though, that new advancements in technology have allowed us to do more than just wonder. 
+The 2 attention shift: 
+Amount of texts in this chunk: 42    Time spent: 16000 ms
+That occurred in 160 A.D., when Lucien of Samosata wrote the story "True History." It was only recently, though, that new advancements in technology have allowed us to do more than just wonder. We can now detect possible signals coming from another intelligent life form. One of the earliest attempts at direct communication came in 1960. Frank D. Drake was an astronomer at the National Radio Astronomy Observatory in West Virginia. 
+The 3 attention shift: 
+Amount of texts in this chunk: 51    Time spent: 19000 ms
+One of the earliest attempts at direct communication came in 1960. Frank D. Drake was an astronomer at the National Radio Astronomy Observatory in West Virginia. His Project Ozma was a place "very far away, difficult to reach, and populated by strange and exotic beings." From April to July 1960, an 85-foot radio telescope searched the sky for six hours every day. It was looking for a wavelength unique to the cold hydrogen gas present in space. 
+The 4 attention shift: 
+Amount of texts in this chunk: 35    Time spent: 14000 ms
+From April to July 1960, an 85-foot radio telescope searched the sky for six hours every day. It was looking for a wavelength unique to the cold hydrogen gas present in space. The astronomers scanned the tapes for any repeated patterns or prime numbers. These might be a simple, but non-natural phenomenon. They would tell us that an intelligence outside our own sent a message. 
+The 5 attention shift: 
+Amount of texts in this chunk: 41    Time spent: 16000 ms
+These might be a simple, but non-natural phenomenon. They would tell us that an intelligence outside our own sent a message. Despite some tantalizing possibilities, though, no one found a clear pattern in the noise. Radio waves are not the only way we can see signs of extraterrestrial life. The array of X-ray, infrared, and ultraviolet telescopes, as well as the amazing Hubble telescope, give us unprecedented access to the universe. 
+The 6 attention shift: 
+Amount of texts in this chunk: 38    Time spent: 15000 ms
+Radio waves are not the only way we can see signs of extraterrestrial life. The array of X-ray, infrared, and ultraviolet telescopes, as well as the amazing Hubble telescope, give us unprecedented access to the universe. We also have a number of robotic probes passing the outer planets and digging up Mars. These have given scientists new hope that they can find the life they seek. 
+The 7 attention shift: 
+Amount of texts in this chunk: 35    Time spent: 14000 ms
+We also have a number of robotic probes passing the outer planets and digging up Mars. These have given scientists new hope that they can find the life they seek. In addition, sensitive new computer hardware and software allow us to more easily detect planets orbiting stars other than our own. Now we can calculate a planet's gravitational effect on the parent star. 
+The 8 attention shift: 
+Amount of texts in this chunk: 48    Time spent: 18000 ms
+In addition, sensitive new computer hardware and software allow us to more easily detect planets orbiting stars other than our own. Now we can calculate a planet's gravitational effect on the parent star. We can also detect molecules in their atmospheres. To date, hundreds of such planets have been discovered. None of these planets, though, seem able to support life as we know it, though some come very close. As our technology continues to improve, though, we may find that the possibility of life is, in fact, a reality. 
+The 9 attention shift: 
+Amount of texts in this chunk: 20    Time spent: 9000 ms
+None of these planets, though, seem able to support life as we know it, though some come very close. As our technology continues to improve, though, we may find that the possibility of life is, in fact, a reality. 

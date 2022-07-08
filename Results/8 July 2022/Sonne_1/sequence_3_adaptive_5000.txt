@@ -1,0 +1,86 @@
+Participant Information: 
+Participant Name: Sonne_1
+Experiment Time: 8 July 2022
+Trial Number / Condition: sequence_3_adaptive_5000
+Text source path: Reading Materials/Pilot version 6 July/Story06_355wrds_26sts_13.65wpst.txt
+
+Configuration: 
+Duration of gap task: 5000 ms
+Duration of text reading: 7000 ms
+Amount of text in a chunk: 35 words
+Text read: Reading Materials/Pilot version 6 July/Story06_355wrds_26sts_13.65wpst.txt
+The type of task type: count task
+The number of attention shifts: 9
+The mode of text content update: adaptive
+The color of OHMD background: black
+The color of OHMD texts: (73, 232, 56)
+The size of texts: 60 pixels
+The size of gap tasks: 64 pixels
+The position of texts: (50, 50)
+The position of gap tasks: (0, 0)
+
+Logs: 
+The 1 text chunk: 
+Gap task results: ['circle: 1 ', 'triangle: 4 ', 'rectangle: 5 ']
+Time elapsed while waiting before the new reading tiral: 2100 ms.
+The total time spent on the non-reading trial: 7100 ms.
+The 2 text chunk: 
+Gap task results: ['circle: 2 ', 'triangle: 2 ', 'rectangle: 6 ']
+Time elapsed while waiting before the new reading tiral: 2772 ms.
+The total time spent on the non-reading trial: 7772 ms.
+The 3 text chunk: 
+Gap task results: ['circle: 4 ', 'triangle: 2 ', 'rectangle: 4 ']
+Time elapsed while waiting before the new reading tiral: 2355 ms.
+The total time spent on the non-reading trial: 7355 ms.
+The 4 text chunk: 
+Gap task results: ['circle: 3 ', 'triangle: 4 ', 'rectangle: 3 ']
+Time elapsed while waiting before the new reading tiral: 2409 ms.
+The total time spent on the non-reading trial: 7409 ms.
+The 5 text chunk: 
+Gap task results: ['circle: 3 ', 'triangle: 3 ', 'rectangle: 4 ']
+Time elapsed while waiting before the new reading tiral: 2448 ms.
+The total time spent on the non-reading trial: 7448 ms.
+The 6 text chunk: 
+Gap task results: ['circle: 2 ', 'triangle: 5 ', 'rectangle: 3 ']
+Time elapsed while waiting before the new reading tiral: 2764 ms.
+The total time spent on the non-reading trial: 7764 ms.
+The 7 text chunk: 
+Gap task results: ['circle: 3 ', 'triangle: 4 ', 'rectangle: 3 ']
+Time elapsed while waiting before the new reading tiral: 2201 ms.
+The total time spent on the non-reading trial: 7201 ms.
+The 8 text chunk: 
+Gap task results: ['circle: 6 ', 'triangle: 3 ', 'rectangle: 1 ']
+Time elapsed while waiting before the new reading tiral: 1952 ms.
+The total time spent on the non-reading trial: 6952 ms.
+The 9 text chunk: 
+Gap task results: ['circle: 3 ', 'triangle: 4 ', 'rectangle: 3 ']
+Time elapsed while waiting before the new reading tiral: 1726 ms.
+The total time spent on the non-reading trial: 6726 ms.
+
+The 1 attention shift: 
+Amount of texts in this chunk: 48    Time spent: 18000 ms
+Cemeteries are businesses. They need to make money to stay open. There is a catch, though. Unlike other businesses, especially in highly populated areas like cities, they can only stay open for so long before they run out of their product - ground in which to put bodies. After all, once someone moves in, they generally don't move out. 
+The 2 attention shift: 
+Amount of texts in this chunk: 38    Time spent: 15000 ms
+Unlike other businesses, especially in highly populated areas like cities, they can only stay open for so long before they run out of their product - ground in which to put bodies. After all, once someone moves in, they generally don't move out. So what happens when the space runs out? One option is to use every bit of space possible. The Karrakatta Cemetery in Perth, Australia opened in 1899. It would have run out of space for new bodies in 2004, but it adopted a "renewal" program. 
+The 3 attention shift: 
+Amount of texts in this chunk: 41    Time spent: 16000 ms
+The Karrakatta Cemetery in Perth, Australia opened in 1899. It would have run out of space for new bodies in 2004, but it adopted a "renewal" program. It creates new plots in the small spaces between graves already there. It even uses what were walkways to get to the graves. Another idea is to reuse burial plots. 
+The 4 attention shift: 
+Amount of texts in this chunk: 41    Time spent: 16000 ms
+It even uses what were walkways to get to the graves. Another idea is to reuse burial plots. In this model, the person "leases" the plot for a given period of time. Once the lease is up, the occupant is removed and cremated, and a new body is buried in the space. This practice is common in Germany, Australia, and New Zealand. 
+The 5 attention shift: 
+Amount of texts in this chunk: 40    Time spent: 16000 ms
+Once the lease is up, the occupant is removed and cremated, and a new body is buried in the space. This practice is common in Germany, Australia, and New Zealand. Other cemeteries, such as those controlled by The Church of England, use many-leveled graveyards. The original body is exhumed and then reburied at a lower depth in the same plot. Another person is buried on top of the first. 
+The 6 attention shift: 
+Amount of texts in this chunk: 47    Time spent: 18000 ms
+The original body is exhumed and then reburied at a lower depth in the same plot. Another person is buried on top of the first. Sometimes what a cemetery needs is money to operate, not new bodies. One way to do this is to take a part of the money people pay for their burial plot to go into a "perpetual care fund." This money is then invested, providing more money in the long term. 
+The 7 attention shift: 
+Amount of texts in this chunk: 39    Time spent: 15000 ms
+One way to do this is to take a part of the money people pay for their burial plot to go into a "perpetual care fund." This money is then invested, providing more money in the long term. The cemetery can use these funds to pay groundskeepers to cut the grass, trim the shrubbery, and generally maintain a neat and pleasant appearance for the cemetery. Since many cemeteries are non-profit, they do not need to pay taxes on this money. 
+The 8 attention shift: 
+Amount of texts in this chunk: 47    Time spent: 18000 ms
+The cemetery can use these funds to pay groundskeepers to cut the grass, trim the shrubbery, and generally maintain a neat and pleasant appearance for the cemetery. Since many cemeteries are non-profit, they do not need to pay taxes on this money. That means that all of it can be used for the care of the grounds. If the money for perpetual care runs out and the grounds are full, the business may fail. The cemetery may eventually have to declare bankruptcy or be shut down and abandoned. 
+The 9 attention shift: 
+Amount of texts in this chunk: 14    Time spent: 7000 ms
+If the money for perpetual care runs out and the grounds are full, the business may fail. The cemetery may eventually have to declare bankruptcy or be shut down and abandoned. 

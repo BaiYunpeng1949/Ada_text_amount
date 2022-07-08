@@ -1,0 +1,79 @@
+Participant Information: 
+Participant Name: Sonne_1
+Experiment Time: 8 July 2022
+Trial Number / Condition: sequence_5_adaptive_15000
+Text source path: Reading Materials/Pilot version 6 July/Story10_347wrds_19sts_18.26wpst.txt
+
+Configuration: 
+Duration of gap task: 15000 ms
+Duration of text reading: 14000 ms
+Amount of text in a chunk: 35 words
+Text read: Reading Materials/Pilot version 6 July/Story10_347wrds_19sts_18.26wpst.txt
+The type of task type: count task
+The number of attention shifts: 8
+The mode of text content update: adaptive
+The color of OHMD background: black
+The color of OHMD texts: (73, 232, 56)
+The size of texts: 60 pixels
+The size of gap tasks: 64 pixels
+The position of texts: (50, 50)
+The position of gap tasks: (0, 0)
+
+Logs: 
+The 1 text chunk: 
+Gap task results: ['circle: 13 ', 'triangle: 10 ', 'rectangle: 7 ']
+Time elapsed while waiting before the new reading tiral: 3156 ms.
+The total time spent on the non-reading trial: 18156 ms.
+The 2 text chunk: 
+Gap task results: ['circle: 14 ', 'triangle: 7 ', 'rectangle: 9 ']
+Time elapsed while waiting before the new reading tiral: 2844 ms.
+The total time spent on the non-reading trial: 17844 ms.
+The 3 text chunk: 
+Gap task results: ['circle: 9 ', 'triangle: 14 ', 'rectangle: 7 ']
+Time elapsed while waiting before the new reading tiral: 2595 ms.
+The total time spent on the non-reading trial: 17595 ms.
+The 4 text chunk: 
+Gap task results: ['circle: 10 ', 'triangle: 11 ', 'rectangle: 9 ']
+Time elapsed while waiting before the new reading tiral: 1772 ms.
+The total time spent on the non-reading trial: 16772 ms.
+The 5 text chunk: 
+Gap task results: ['circle: 11 ', 'triangle: 11 ', 'rectangle: 8 ']
+Time elapsed while waiting before the new reading tiral: 2395 ms.
+The total time spent on the non-reading trial: 17395 ms.
+The 6 text chunk: 
+Gap task results: ['circle: 5 ', 'triangle: 15 ', 'rectangle: 10 ']
+Time elapsed while waiting before the new reading tiral: 2411 ms.
+The total time spent on the non-reading trial: 17411 ms.
+The 7 text chunk: 
+Gap task results: ['circle: 10 ', 'triangle: 11 ', 'rectangle: 9 ']
+Time elapsed while waiting before the new reading tiral: 2379 ms.
+The total time spent on the non-reading trial: 17379 ms.
+The 8 text chunk: 
+Gap task results: ['circle: 5 ', 'triangle: 14 ', 'rectangle: 11 ']
+Time elapsed while waiting before the new reading tiral: 3093 ms.
+The total time spent on the non-reading trial: 18093 ms.
+
+The 1 attention shift: 
+Amount of texts in this chunk: 53    Time spent: 20000 ms
+Have you ever wondered how birds keep their legs from freezing in the cold weather? Different birds do it in different ways, but all are effective. Many birds simply take their legs and feet off the cold ground and pull them close to their core, warming them with their feathers and body heat. Some birds crouch down and cover their feet with their feathers. 
+The 2 attention shift: 
+Amount of texts in this chunk: 37    Time spent: 15000 ms
+Many birds simply take their legs and feet off the cold ground and pull them close to their core, warming them with their feathers and body heat. Some birds crouch down and cover their feet with their feathers. If it is very cold, the birds can also "fluff up" their feathers, trapping air between the layers and keeping them toasty from head to toe. Sharing body heat by huddling with other birds is another great tactic and so is contracting their flight muscles to shiver. 
+The 3 attention shift: 
+Amount of texts in this chunk: 43    Time spent: 17000 ms
+If it is very cold, the birds can also "fluff up" their feathers, trapping air between the layers and keeping them toasty from head to toe. Sharing body heat by huddling with other birds is another great tactic and so is contracting their flight muscles to shiver. And, by gorging themselves before winter, the birds build up a layer of fat that insulates them and keeps their organs warm. What if the birds don't pull their legs up? 
+The 4 attention shift: 
+Amount of texts in this chunk: 42    Time spent: 16000 ms
+And, by gorging themselves before winter, the birds build up a layer of fat that insulates them and keeps their organs warm. What if the birds don't pull their legs up? Most birds' legs are covered with a rough, scaly skin that reduces heat loss. The legs and feet also often have a small surface area compared to the rest of the birds' bodies. This limits the amount of skin actually exposed to the cold. 
+The 5 attention shift: 
+Amount of texts in this chunk: 41    Time spent: 16000 ms
+The legs and feet also often have a small surface area compared to the rest of the birds' bodies. This limits the amount of skin actually exposed to the cold. So what about a duck, or other bird, that has enormous flat feet that may be submerged in ice-cold water? In these cases, the birds use a counter-current exchange system. What this means is that recently cooled blood from the feet is warmed before it reaches the birds' cores, while the blood from the cores is cooled significantly before it reaches the feet. 
+The 6 attention shift: 
+Amount of texts in this chunk: 48    Time spent: 18000 ms
+In these cases, the birds use a counter-current exchange system. What this means is that recently cooled blood from the feet is warmed before it reaches the birds' cores, while the blood from the cores is cooled significantly before it reaches the feet. Their capillaries resemble a lace-like formation that ensures their feet maintain a lower, stable temperature. Sometimes, as in the case of Emperor penguins or ducks swimming in ice water, that temperature is just above the freezing mark. 
+The 7 attention shift: 
+Amount of texts in this chunk: 47    Time spent: 18000 ms
+Their capillaries resemble a lace-like formation that ensures their feet maintain a lower, stable temperature. Sometimes, as in the case of Emperor penguins or ducks swimming in ice water, that temperature is just above the freezing mark. Birds with this evolutionary trait can also control blood flow to their extremities by manipulating a series of muscles at the top of their legs. In extreme cases, some can even cut off the flow of blood completely, though only for a short time without damage. 
+The 8 attention shift: 
+Amount of texts in this chunk: 36    Time spent: 14000 ms
+Birds with this evolutionary trait can also control blood flow to their extremities by manipulating a series of muscles at the top of their legs. In extreme cases, some can even cut off the flow of blood completely, though only for a short time without damage. This system can be used to cool their bodies down when they become overheated, too. 

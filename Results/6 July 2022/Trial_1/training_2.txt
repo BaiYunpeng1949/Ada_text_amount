@@ -1,0 +1,28 @@
+Participant Information: 
+Participant Name: Trial_1
+Experiment Time: 6 July 2022
+Trial Number / Condition: training_2
+Text source path: Reading Materials/Pilot version 1 July/Education_403.txt
+
+Configuration: 
+Duration of gap task: 2000 ms
+Duration of text reading: 13000 ms
+Amount of text in a chunk: 35 words
+Text read: Reading Materials/Pilot version 1 July/Education_403.txt
+The type of task type: count task
+The number of attention shifts: 12
+The mode of text content update: adaptive
+The color of OHMD background: black
+The color of OHMD texts: (73, 232, 56)
+The size of texts: 60 pixels
+The size of gap tasks: 64 pixels
+The position of texts: (50, 150)
+The position of gap tasks: (0, 0)
+
+Logs: 
+The 1 text chunk: 
+Gap task results: ['circle: 1 ', 'triangle: 2 ', 'rectangle: 1 ']
+Time elapsed while waiting before the new reading tiral: 621 ms.
+The total time spent on the non-reading trial: 2621 ms.
+The 2 text chunk: 
+Gap task results: ['circle: 1 ', 'triangle: 1 ', 'rectangle: 2 ']
