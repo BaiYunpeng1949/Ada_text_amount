@@ -62,7 +62,7 @@ CONDITIONS_STUDIES = {
         "mode_update": MODE_PRESENT_ALL
     }
 }
-# TODO: change this to ZC's texts later.
+# TODO: change the instructions position to be on the screen central itself.
 SOURCE_TEXTS_PATH_LIST = [
     "Reading Materials/Pilot version 6 July/Story02_366wrds_32sts_11.44wpst.txt",  # This text is for the training session.
     "Reading Materials/Pilot version 6 July/Story03_372wrds_19sts_19.58wpst.txt",
@@ -331,7 +331,7 @@ class Runner:
                         self.surface.fill(self.color_background)
                         texts_guide_to_next_study_surface = self.font_text.render(
                             "Start to read, click [R] on the ring", True, self.color_text)
-                        self.surface.blit(texts_guide_to_next_study_surface, (575, 350))
+                        self.surface.blit(texts_guide_to_next_study_surface, (450, 350)) # TODO: change this later.
                         pygame.display.flip()
                         # Pause here.
                         is_waiting_participant_next_trial = True
@@ -377,14 +377,14 @@ class Runner:
                             # Add feedback to the key pression for the experimenter. The feedback is the screen black out.
                             self.surface.fill("black")
                             texts_guide_to_tests_surface = self.font_text.render("Now please remove the glasses and answer questions", True, self.color_text)
-                            self.surface.blit(texts_guide_to_tests_surface, (375, 350))
+                            self.surface.blit(texts_guide_to_tests_surface, (250, 350)) # TODO: change these later to be robust
                             # Update the flag.
                             is_questions_finished = True
                         elif is_questions_finished:
                             self.surface.fill("black")
                             texts_guide_to_next_study_surface = self.font_text.render(
                                 "To start the next trial, click [R] on the ring", True, self.color_text)
-                            self.surface.blit(texts_guide_to_next_study_surface, (575, 350))
+                            self.surface.blit(texts_guide_to_next_study_surface, (450, 350))
                             # Update the flag.
                             is_waiting_experimenter_questions = False
                         # Update the scene.
@@ -601,23 +601,27 @@ class Runner:
         texts_middle = ""
         texts_later_context_display = ""
 
-        # The 1st chunk.
-        if self.index_content_texts == 0:
-            for i in range(len(self.content_text_temp) - 1):
-                texts_middle += self.content_text_temp[i]
-            texts_later_context_display = self.content_text_temp[
-                -1]  # TODO: some bugs here if I press the esc button during the gap task.
-        # The last chunk.
-        elif self.index_content_texts == (len(self.texts_chunks) - 1):
-            texts_earlier_context_display = self.content_text_temp[0]
-            for i in range(1, len(self.content_text_temp)):    # Change this
-                texts_middle += self.content_text_temp[i]
-        # Middle chunks.
-        else:
-            texts_earlier_context_display = self.content_text_temp[0]
-            for i in range(1, (len(self.content_text_temp) - 1)):  # Change this
-                texts_middle += self.content_text_temp[i]
-            texts_later_context_display = self.content_text_temp[-1]
+        # Only under the adaptive or contextual adaptive modes, sentences are stored in lists.
+        if self.mode_text_update is MODE_ADAPTIVE or self.mode_text_update is MODE_CONTEXTUAL:
+            # The 1st chunk.
+            if self.index_content_texts == 0:
+                for i in range(len(self.content_text_temp) - 1):
+                    texts_middle += self.content_text_temp[i]
+                texts_later_context_display = self.content_text_temp[
+                    -1]  # TODO: some bugs here if I press the esc button during the gap task.
+            # The last chunk.
+            elif self.index_content_texts == (len(self.texts_chunks) - 1):
+                texts_earlier_context_display = self.content_text_temp[0]
+                for i in range(1, len(self.content_text_temp)):    # Change this
+                    texts_middle += self.content_text_temp[i]
+            # Middle chunks.
+            else:
+                texts_earlier_context_display = self.content_text_temp[0]
+                for i in range(1, (len(self.content_text_temp) - 1)):  # Change this
+                    texts_middle += self.content_text_temp[i]
+                texts_later_context_display = self.content_text_temp[-1]
+        elif self.mode_text_update is MODE_PRESENT_ALL:
+            texts_middle = self.texts
 
         # Auxiliary tool for rendering texts.
         def render_words(texts_display, x_text, y_text, opacity):
@@ -929,7 +933,7 @@ def run_pilots(name, time, id_participant):
     waiting_font_text = pygame.font.SysFont("arial", 50)
     image_text = waiting_font_text.render(
         "This is the end of the training session. Can we proceed to the formal study?", True, (73, 232, 56))
-    waiting_surface.blit(image_text, (300, 350))
+    waiting_surface.blit(image_text, (225, 350))
 
     pygame.display.flip()
 
