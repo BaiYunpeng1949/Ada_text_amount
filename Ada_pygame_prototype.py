@@ -69,7 +69,7 @@ SOURCE_TEXTS_PATH_LIST = [
     "Reading Materials/Pilot version 6 July/Story05_351wrds_27sts_13wpst.txt",
     "Reading Materials/Pilot version 6 July/Story06_355wrds_26sts_13.65wpst.txt",
     "Reading Materials/Pilot version 6 July/Story07_367wrds_22sts_16.68wpst.txt",
-    "Reading Materials/Pilot version 6 July/Story10_347wrds_19sts_18.26wpst",
+    "Reading Materials/Pilot version 6 July/Story10_347wrds_19sts_18.26wpst.txt",
     "Reading Materials/Pilot version 6 July/Story12_348wds_20sts_17.4wpst.txt"
 ]
 
@@ -140,7 +140,7 @@ class Runner:
         self.threshold_bottom_num_text_reserve_sentence = 3     # If the words are less than 3, then reserve this sentence.
         self.threshold_top_num_text_abandon_sentence = 5        # If the words are more than 5, then abandon this sentence.
 
-        self.wps_dynamical_duration_text = 3  # Words per second for dynamically changing duration of text reading at different text chunks.
+        self.wps_dynamical_duration_text = 80  # Words per second for dynamically changing duration of text reading at different text chunks.
         self.offset_seconds_dynamical_duration_text = 2  # The unit is second.
 
         # Intialize logs.
