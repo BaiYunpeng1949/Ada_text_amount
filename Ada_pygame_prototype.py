@@ -1,17 +1,19 @@
 import math
-import os
-import random
-import sys
-
 import nltk
 import numpy as np
+import os
 import pygame
+import random
+import sys
 from nltk import tokenize
 
 # Avoid using string magic words. Declare global variables.
+
 # For prototypes.
 GAP_COUNT_TASK = "count task"
 GAP_MATH_TASK = "math task"
+# Global marks
+BLANK_LINE = ""
 # Modes.
 MODE_ADAPTIVE = "adaptive"
 MODE_MANUAL = "manual"
@@ -62,7 +64,7 @@ CONDITIONS_STUDIES = {
         "mode_update": MODE_PRESENT_ALL
     }
 }
-# TODO: change the instructions position to be on the screen central itself.
+
 SOURCE_TEXTS_PATH_LIST = [
     "Reading Materials/Pilot version 6 July/Story02_366wrds_32sts_11.44wpst.txt",  # This text is for the training session.
     "Reading Materials/Pilot version 6 July/Story03_372wrds_19sts_19.58wpst.txt",
@@ -98,6 +100,7 @@ class Runner:
         self.mode_text_update = mode_update
         self.condition_experiment = condition_exp
         self.color_background = color_background
+        self.color_stop_reminder_background = "white"
         self.color_text = color_text
         self.size_text = size_text
         self.size_gap = size_gap
@@ -177,7 +180,7 @@ class Runner:
         # index of items in a shift, and index of shifts.
         self.num_gap_count_task_shapes = int(math.floor(self.duration_gap / self.duration_count_gap_task_shapes_change))
 
-        self.content_text_temp = ""
+        self.content_text_temp = BLANK_LINE
         self.content_gap_temp = "Ga Ga Ga Ga Ga"
 
         self.font_type_selected = pygame.font.get_fonts()[0]  # We select the system's first font, "arial" font.
@@ -217,7 +220,7 @@ class Runner:
         self.prepare_materials_dynamically()
 
     def prepare_materials_dynamically(self):
-        # Run the whole materal prepare procedure here.
+        # Run the whole material prepare procedure here.
         # Split texts.
         self.split_full_sentences_chunks()
         # Allocate time.
@@ -226,6 +229,26 @@ class Runner:
         # self.split_short_sentences_texts() # Deprecated text split method. But it will be reserved here.
         # Generate the subtasks.
         self.generate_subtask()
+
+    def centralize_instructions_postition(self, text_instruction, y_pos_instruction):
+        """
+        The function dynamically put the text instruction on the center position.
+        :param text_instruction:
+        :return:
+        """
+        # Get the current canvas size.
+        canvas_width = self.surface.get_size()[0]
+        # Calculate the shown text instruction size (Assume one line).
+        surface_instruction = self.font_text.render(text_instruction, 0, self.color_text)
+        width_instruction = surface_instruction.get_size()[0]
+        # Calculate the text instruction position to make it is placed on the central horizontally.
+        half_width_instruction = width_instruction / 2
+        central_width_canvas = canvas_width / 2
+        x_pos_instruction = central_width_canvas - half_width_instruction
+
+        # Update on the canvas.
+        self.surface.blit(surface_instruction,
+                          (x_pos_instruction, y_pos_instruction))
 
     def mainloop(self):
         self.is_running = True
@@ -329,9 +352,9 @@ class Runner:
                         # Pause after the gap task is over, wait for the participant to start next reading session.
                         # Display information.
                         self.surface.fill(self.color_background)
-                        texts_guide_to_next_study_surface = self.font_text.render(
-                            "Start to read, click [R] on the ring", True, self.color_text)
-                        self.surface.blit(texts_guide_to_next_study_surface, (450, 350)) # TODO: change this later.
+                        self.centralize_instructions_postition(
+                            text_instruction="To start reading, click [R] on the ring",
+                            y_pos_instruction=350)
                         pygame.display.flip()
                         # Pause here.
                         is_waiting_participant_next_trial = True
@@ -346,7 +369,7 @@ class Runner:
                                     if event.button == 3:  # 3 stands for the right click.
                                         is_waiting_participant_next_trial = False  # Jump out of the loop.
                                         # Clear the scene.
-                                        self.surface.fill("black")
+                                        self.surface.fill(self.color_background)
                                         # Update the time elapsed while waiting
                                         self.log_time_elapsed_waiting_next_trial.append(timer_waiting)
 
@@ -374,17 +397,18 @@ class Runner:
                     if event.key == pygame.K_SPACE:
                         # If the questions are not finished, then show the instructions.
                         if is_questions_finished is False:
-                            # Add feedback to the key pression for the experimenter. The feedback is the screen black out.
-                            self.surface.fill("black")
-                            texts_guide_to_tests_surface = self.font_text.render("Now please remove the glasses and answer questions", True, self.color_text)
-                            self.surface.blit(texts_guide_to_tests_surface, (250, 350)) # TODO: change these later to be robust
+                            # Add feedback to the key press for the experimenter. The feedback is the screen black out.
+                            self.surface.fill(self.color_background)
+                            self.centralize_instructions_postition(
+                                text_instruction="Now please remove the glasses and answer questions",
+                                y_pos_instruction=350)
                             # Update the flag.
                             is_questions_finished = True
                         elif is_questions_finished:
-                            self.surface.fill("black")
-                            texts_guide_to_next_study_surface = self.font_text.render(
-                                "To start the next trial, click [R] on the ring", True, self.color_text)
-                            self.surface.blit(texts_guide_to_next_study_surface, (450, 350))
+                            self.surface.fill(self.color_background)
+                            self.centralize_instructions_postition(
+                                text_instruction="To start the next trial, click [R] on the ring",
+                                y_pos_instruction=350)
                             # Update the flag.
                             is_waiting_experimenter_questions = False
                         # Update the scene.
@@ -593,7 +617,12 @@ class Runner:
             self.surface.fill(self.color_background)
         elif self.is_running is False:
             # If the trial is stopped by Esc key. Or terminates normally. Display the white background to indicate participants to stop.
-            self.surface.fill("white")
+            self.surface.fill(self.color_stop_reminder_background)
+
+        # Add some texts into the buffer to counter errors when pressing the esc key in the first gap task.
+        if self.content_text_temp is BLANK_LINE:
+            # Display texts only when they were displayed.
+            self.content_text_temp = ["The experimenter stopped the trial in advance.", ""]
 
         # To be reminded that the displayed texts are stored in self.content_text_temp.
         # Determine the current texts to be displayed.
@@ -608,7 +637,7 @@ class Runner:
                 for i in range(len(self.content_text_temp) - 1):
                     texts_middle += self.content_text_temp[i]
                 texts_later_context_display = self.content_text_temp[
-                    -1]  # TODO: some bugs here if I press the esc button during the gap task.
+                    -1]  # TODO: some bugs here if I press the esc button during the 1st gap task.
             # The last chunk.
             elif self.index_content_texts == (len(self.texts_chunks) - 1):
                 texts_earlier_context_display = self.content_text_temp[0]
@@ -931,9 +960,10 @@ def run_pilots(name, time, id_participant):
 
     waiting_surface = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
     waiting_font_text = pygame.font.SysFont("arial", 50)
-    image_text = waiting_font_text.render(
+    surface_instruction = waiting_font_text.render(
         "This is the end of the training session. Can we proceed to the formal study?", True, (73, 232, 56))
-    waiting_surface.blit(image_text, (225, 350))
+    x_pos_centralization = (waiting_surface.get_size()[0] - surface_instruction.get_size()[0]) / 2
+    waiting_surface.blit(surface_instruction, (x_pos_centralization, 350))
 
     pygame.display.flip()
 
