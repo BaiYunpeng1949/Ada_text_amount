@@ -1,8 +1,13 @@
 # Avoid using string magic words. Declare global variables. Store configurations in a separate file.
 
-# For prototypes.
+# GAP TASK TYPES.
 GAP_COUNT_TASK = "count task"
 GAP_MATH_TASK = "math task"
+# GAP_TASK_SPECIFICATIONS.
+CIRCLE = "circle"
+RECT = "rectangle"
+TRIANG = "triangle"
+
 # Global marks
 BLANK_LINE = ""
 # Modes.
@@ -10,6 +15,7 @@ MODE_ADAPTIVE = "adaptive"
 MODE_MANUAL = "manual"
 MODE_PRESENT_ALL = "present all"
 MODE_CONTEXTUAL = "contextual adaptive"
+
 # Experiment conditions.
 CONDITION_POS_HOR = "position horizontal"
 

@@ -710,12 +710,12 @@ class Runner:
                 self.pos_gap_count_task_chunks.append(pos_shapes_current_shift)
 
                 # Collect the appearances of different shapes.
-                count_shape_circle = types_shapes_current_shift.count("circle")
-                count_shape_triangle = types_shapes_current_shift.count("triangle")
-                count_shape_rectangle = types_shapes_current_shift.count("rectangle")
-                results.append("circle: " + str(count_shape_circle) + " ")
-                results.append("triangle: " + str(count_shape_triangle) + " ")
-                results.append("rectangle: " + str(count_shape_rectangle) + " ")
+                count_shape_circle = types_shapes_current_shift.count(CONFIG.CIRCLE)
+                count_shape_triangle = types_shapes_current_shift.count(CONFIG.TRIANG)
+                count_shape_rectangle = types_shapes_current_shift.count(CONFIG.RECT)
+                results.append(CONFIG.CIRCLE + ": " + str(count_shape_circle) + " ")
+                results.append(CONFIG.TRIANG + ": " + str(count_shape_triangle) + " ")
+                results.append(CONFIG.RECT + ": " + str(count_shape_rectangle) + " ")
                 self.gap_math_task_chunks_results.append(results)
 
     def render_gap_tasks(self):
@@ -743,17 +743,17 @@ class Runner:
                 pos_shape = self.pos_gap_count_task_chunks[self.counter_attention_shifts][
                     self.counter_count_gap_task_shapes_change]
 
-                if type_shape == "circle":
+                if type_shape == CONFIG.CIRCLE:
                     pygame.draw.circle(self.surface, self.color_gap_count_task_shape,
                                        pos_shape, self.size_gap_count_task_shape)
-                elif type_shape == "triangle":
+                elif type_shape == CONFIG.TRIANG:
                     height = 2 * self.size_gap_count_task_shape
                     point_1 = (pos_shape[0], pos_shape[1])
                     point_2 = (pos_shape[0] - height / math.sqrt(3), pos_shape[1] - height)
                     point_3 = (pos_shape[0] + height / math.sqrt(3), pos_shape[1] - height)
                     pygame.draw.polygon(self.surface, color=self.color_gap_count_task_shape,
                                         points=[point_1, point_2, point_3])
-                elif type_shape == "rectangle":
+                elif type_shape == CONFIG.RECT:
                     width = 2 * self.size_gap_count_task_shape
                     height = width
                     pygame.draw.rect(self.surface, self.color_gap_count_task_shape,
