@@ -7,73 +7,7 @@ import random
 import sys
 from nltk import tokenize
 
-# Avoid using string magic words. Declare global variables.
-
-# For prototypes.
-GAP_COUNT_TASK = "count task"
-GAP_MATH_TASK = "math task"
-# Global marks
-BLANK_LINE = ""
-# Modes.
-MODE_ADAPTIVE = "adaptive"
-MODE_MANUAL = "manual"
-MODE_PRESENT_ALL = "present all"
-MODE_CONTEXTUAL = "contextual adaptive"
-# Experiment conditions.
-CONDITION_POS_HOR = "position horizontal"
-
-# For pilot studies.
-# Configurations. The condition number listed here are generated randomly. Use dictionary to store data.
-CONDITIOMS_TRAININGS = {
-    1: {
-        "duration_gap": 2000,
-        "mode_update": MODE_PRESENT_ALL
-    },
-    2: {
-        "duration_gap": 2000,
-        "mode_update": MODE_ADAPTIVE
-    },
-    3: {
-        "duration_gap": 2000,
-        "mode_update": MODE_CONTEXTUAL
-    }
-}
-CONDITIONS_STUDIES = {
-    1: {
-        "duration_gap": 5000,
-        "mode_update": MODE_PRESENT_ALL
-    },
-    2: {
-        "duration_gap": 15000,
-        "mode_update": MODE_CONTEXTUAL
-    },
-    3: {
-        "duration_gap": 5000,
-        "mode_update": MODE_ADAPTIVE
-    },
-    4: {
-        "duration_gap": 5000,
-        "mode_update": MODE_CONTEXTUAL
-    },
-    5: {
-        "duration_gap": 15000,
-        "mode_update": MODE_ADAPTIVE
-    },
-    6: {
-        "duration_gap": 15000,
-        "mode_update": MODE_PRESENT_ALL
-    }
-}
-
-SOURCE_TEXTS_PATH_LIST = [
-    "Reading Materials/Pilot version 6 July/Story02_366wrds_32sts_11.44wpst.txt",  # This text is for the training session.
-    "Reading Materials/Pilot version 6 July/Story03_372wrds_19sts_19.58wpst.txt",
-    "Reading Materials/Pilot version 6 July/Story05_351wrds_27sts_13wpst.txt",
-    "Reading Materials/Pilot version 6 July/Story06_355wrds_26sts_13.65wpst.txt",
-    "Reading Materials/Pilot version 6 July/Story07_367wrds_22sts_16.68wpst.txt",
-    "Reading Materials/Pilot version 6 July/Story10_347wrds_19sts_18.26wpst.txt",
-    "Reading Materials/Pilot version 6 July/Story12_348wds_20sts_17.4wpst.txt"
-]
+import CONFIG
 
 
 class Runner:
@@ -180,7 +114,7 @@ class Runner:
         # index of items in a shift, and index of shifts.
         self.num_gap_count_task_shapes = int(math.floor(self.duration_gap / self.duration_count_gap_task_shapes_change))
 
-        self.content_text_temp = BLANK_LINE
+        self.content_text_temp = CONFIG.BLANK_LINE
         self.content_gap_temp = "Ga Ga Ga Ga Ga"
 
         self.font_type_selected = pygame.font.get_fonts()[0]  # We select the system's first font, "arial" font.
@@ -263,7 +197,7 @@ class Runner:
                         self.is_running = False
                     elif event.key == pygame.K_SPACE:
                         # Only on the manual mode, can update the reading content by pressing the button.
-                        if self.is_text_showing and self.mode_text_update is MODE_MANUAL:
+                        if self.is_text_showing and self.mode_text_update is CONFIG.MODE_MANUAL:
                             # Clear up and update.
                             self.surface.fill(self.color_background)
                             self.is_text_showing = False
@@ -280,7 +214,7 @@ class Runner:
                             self.timer_elapsed_read_text_mode_manual = 0
                     # On the present-all mode, use up and down keys to scroll the texts.
                     elif event.key == pygame.K_PAGEUP or event.key == pygame.K_PAGEDOWN:
-                        if self.is_text_showing and self.mode_text_update is MODE_PRESENT_ALL:
+                        if self.is_text_showing and self.mode_text_update is CONFIG.MODE_PRESENT_ALL:
                             # Clear up to avoid occlusions.
                             self.surface.fill(self.color_background)
                             # Update the scrolling parameters, including how many lines are operated, scroll up or down.
@@ -305,10 +239,12 @@ class Runner:
                 if self.is_text_showing:
                     # Draw content.
                     # In the RSVP mode. Get the current texts. display different chunks of texts.
-                    if (self.mode_text_update is MODE_ADAPTIVE) or (self.mode_text_update is MODE_MANUAL) or (self.mode_text_update is MODE_CONTEXTUAL):
+                    if (self.mode_text_update is CONFIG.MODE_ADAPTIVE) or (
+                            self.mode_text_update is CONFIG.MODE_MANUAL) or (
+                            self.mode_text_update is CONFIG.MODE_CONTEXTUAL):
                         self.content_text_temp = self.texts_chunks[self.index_content_texts]
                     # In the Present-all mode, display all texts once.
-                    elif self.mode_text_update is MODE_PRESENT_ALL:
+                    elif self.mode_text_update is CONFIG.MODE_PRESENT_ALL:
                         self.content_text_temp = self.texts
 
                     # Adaptively arrange the duration of the text reading. The global variable duration_text is updated.
@@ -319,7 +255,9 @@ class Runner:
 
                     # Update the status automatically if in the rsvp mode or in the present-all mode.
                     if self.timer > self.duration_text:
-                        if (self.mode_text_update is MODE_ADAPTIVE) or (self.mode_text_update is MODE_PRESENT_ALL) or (self.mode_text_update is MODE_CONTEXTUAL):
+                        if (self.mode_text_update is CONFIG.MODE_ADAPTIVE) or (
+                                self.mode_text_update is CONFIG.MODE_PRESENT_ALL) or (
+                                self.mode_text_update is CONFIG.MODE_CONTEXTUAL):
                             self.counter_attention_shifts += 1
                             self.is_text_showing = False
                             self.timer = 0
@@ -331,12 +269,12 @@ class Runner:
                             # Update log file for the RSVP mode and present all mode.
                             self.log_time_elapsed_read_text_mode_rsvp.append(self.duration_text)
                         # Record the time spent on a certain amount of words in the manual mode.
-                        elif self.mode_text_update is MODE_MANUAL:
+                        elif self.mode_text_update is CONFIG.MODE_MANUAL:
                             self.timer_elapsed_read_text_mode_manual += self.time_elapsed
 
                 # Display the gap content.
                 elif self.is_text_showing is False:
-                    if self.task_type_gap == GAP_MATH_TASK:
+                    if self.task_type_gap == CONFIG.GAP_MATH_TASK:
                         self.content_gap_temp = self.gap_math_task_chunks[self.counter_attention_shifts]
                         self.image_gap = self.font_gap.render(self.content_gap_temp, True, self.color_text)
 
@@ -620,7 +558,7 @@ class Runner:
             self.surface.fill(self.color_stop_reminder_background)
 
         # Add some texts into the buffer to counter errors when pressing the esc key in the first gap task.
-        if self.content_text_temp is BLANK_LINE:
+        if self.content_text_temp is CONFIG.BLANK_LINE:
             # Display texts only when they were displayed.
             self.content_text_temp = ["The experimenter stopped the trial in advance.", ""]
 
@@ -631,17 +569,17 @@ class Runner:
         texts_later_context_display = ""
 
         # Only under the adaptive or contextual adaptive modes, sentences are stored in lists.
-        if self.mode_text_update is MODE_ADAPTIVE or self.mode_text_update is MODE_CONTEXTUAL:
+        if self.mode_text_update is CONFIG.MODE_ADAPTIVE or self.mode_text_update is CONFIG.MODE_CONTEXTUAL:
             # The 1st chunk.
             if self.index_content_texts == 0:
                 for i in range(len(self.content_text_temp) - 1):
                     texts_middle += self.content_text_temp[i]
                 texts_later_context_display = self.content_text_temp[
-                    -1]  # TODO: some bugs here if I press the esc button during the 1st gap task.
+                    -1]
             # The last chunk.
             elif self.index_content_texts == (len(self.texts_chunks) - 1):
                 texts_earlier_context_display = self.content_text_temp[0]
-                for i in range(1, len(self.content_text_temp)):    # Change this
+                for i in range(1, len(self.content_text_temp)):  # Change this
                     texts_middle += self.content_text_temp[i]
             # Middle chunks.
             else:
@@ -649,7 +587,7 @@ class Runner:
                 for i in range(1, (len(self.content_text_temp) - 1)):  # Change this
                     texts_middle += self.content_text_temp[i]
                 texts_later_context_display = self.content_text_temp[-1]
-        elif self.mode_text_update is MODE_PRESENT_ALL:
+        elif self.mode_text_update is CONFIG.MODE_PRESENT_ALL:
             texts_middle = self.texts
 
         # Auxiliary tool for rendering texts.
@@ -684,12 +622,12 @@ class Runner:
             return x_text, y_text
 
         # Distinguish between different modes: adaptive and contextual adaptive.
-        if self.mode_text_update is MODE_ADAPTIVE:
+        if self.mode_text_update is CONFIG.MODE_ADAPTIVE:
             render_words(texts_display=texts_middle,
                          x_text=self.pos_text[0],
                          y_text=self.pos_text[1],
                          opacity=self.opacity_texts_adaptive)
-        elif self.mode_text_update is MODE_CONTEXTUAL:
+        elif self.mode_text_update is CONFIG.MODE_CONTEXTUAL:
             # texts_display = texts_earlier_context_display + texts_middle + texts_later_context_display
             if self.index_content_texts > 0:
                 x_middle_start_text, y_middle_start_text = render_words(texts_display=texts_earlier_context_display,
@@ -706,7 +644,7 @@ class Runner:
                          x_text=x_later_start_text,
                          y_text=y_later_start_text,
                          opacity=self.opacity_texts_contextual_adaptive_context)
-        elif self.mode_text_update is MODE_PRESENT_ALL:
+        elif self.mode_text_update is CONFIG.MODE_PRESENT_ALL:
             render_words(texts_display=texts_middle,
                          x_text=self.pos_text[0],
                          y_text=self.pos_text[1],
@@ -741,7 +679,7 @@ class Runner:
         Please specify tasks' parameters here.
         :return: subtasks' answers.
         """
-        if self.task_type_gap == GAP_MATH_TASK:
+        if self.task_type_gap == CONFIG.GAP_MATH_TASK:
             # Task type 1: mathematical tasks - several double-digit multiplication tasks.
             ROW_EQUATIONS = 5
             for i in range(self.num_attention_shifts):
@@ -757,7 +695,7 @@ class Runner:
                 self.gap_math_task_chunks.append(gap_task)
                 self.gap_math_task_chunks_results.append(results)
 
-        elif self.task_type_gap == GAP_COUNT_TASK:
+        elif self.task_type_gap == CONFIG.GAP_COUNT_TASK:
             # Task type 2: count task - count the number of a certain shape, e.g., circle, triangle, and rectangle.
             for j in range(self.num_attention_shifts):
                 types_shapes_current_shift = []
@@ -781,7 +719,7 @@ class Runner:
                 self.gap_math_task_chunks_results.append(results)
 
     def render_gap_tasks(self):
-        if self.task_type_gap == GAP_MATH_TASK:
+        if self.task_type_gap == CONFIG.GAP_MATH_TASK:
             line_list = self.gap_math_task_chunks[self.counter_attention_shifts].splitlines()
             x_line, y_line = self.pos_gap
             for line in line_list:
@@ -790,7 +728,7 @@ class Runner:
                 self.surface.blit(line_surface, (x_line, y_line))
                 y_line += line_height
 
-        elif self.task_type_gap == GAP_COUNT_TASK:
+        elif self.task_type_gap == CONFIG.GAP_COUNT_TASK:
             # Update the timer
             self.timer_count_gap_task += self.time_elapsed
             if self.timer_count_gap_task >= self.duration_count_gap_task_shapes_change:
@@ -833,7 +771,7 @@ class Runner:
         if os.path.exists(folder_path) is False:
             os.makedirs(folder_path)
 
-        if self.condition_experiment == CONDITION_POS_HOR:
+        if self.condition_experiment == CONFIG.CONDITION_POS_HOR:
             # file_path = folder_path + self.trial_information + "_pos" + str(self.pos_text[0]) + ".txt"
             file_path = folder_path + self.trial_information + ".txt"
         if not os.path.exists(file_path):
@@ -872,7 +810,8 @@ class Runner:
                 f.write("\n")
                 for i in range(len(self.texts_chunks)):
                     f.write("The " + str(i + 1) + " attention shift: " + "\n")
-                    if (self.mode_text_update is MODE_ADAPTIVE) or (self.mode_text_update is MODE_CONTEXTUAL):
+                    if (self.mode_text_update is CONFIG.MODE_ADAPTIVE) or (
+                            self.mode_text_update is CONFIG.MODE_CONTEXTUAL):
                         f.write("Amount of texts in this chunk: " + str(self.log_actual_amounts_texts[i]) +
                                 "    Time spent: " + str(self.log_time_elapsed_read_text_mode_rsvp[i]) + " ms" + "\n")
                         # Log the text chunks if the current mode is Adaptive.
@@ -880,7 +819,7 @@ class Runner:
                         for j in range(len(self.texts_chunks[i])):
                             texts_display_log += self.texts_chunks[i][j]
                         f.write(texts_display_log + "\n")
-                    elif self.mode_text_update is MODE_MANUAL:
+                    elif self.mode_text_update is CONFIG.MODE_MANUAL:
                         if i < len(self.log_time_elapsed_read_text_mode_manual):
                             f.write("Amount of texts in this chunk: " + str(self.log_actual_amounts_texts[i]) +
                                     "    Time spent: " + str(
@@ -890,7 +829,7 @@ class Runner:
 
                         f.write("The average elapsed time is: " +
                                 str(np.mean(self.log_time_elapsed_read_text_mode_manual)) + " ms")
-                    elif self.mode_text_update is MODE_PRESENT_ALL:
+                    elif self.mode_text_update is CONFIG.MODE_PRESENT_ALL:
                         f.write("    Time spent: " + str(self.log_time_elapsed_read_text_mode_rsvp[i]) + " ms" + "\n")
 
 
@@ -904,9 +843,9 @@ def run_prototype():
                           duration_text=5000,
                           amount_text=35,
                           source_text_path="Reading Materials/Pilot version 1 July/Education_403.txt",
-                          task_type_gap=GAP_COUNT_TASK,
-                          mode_update=MODE_PRESENT_ALL,
-                          condition_exp=CONDITION_POS_HOR,
+                          task_type_gap=CONFIG.GAP_COUNT_TASK,
+                          mode_update=CONFIG.MODE_PRESENT_ALL,
+                          condition_exp=CONFIG.CONDITION_POS_HOR,
                           color_background="black", color_text=(73, 232, 56),
                           size_text=60, size_gap=64,
                           pos_text=(50, 50), pos_gap=(0, 0))
@@ -922,10 +861,10 @@ def run_pilots(name, time, id_participant):
         return [row[i:] + row[:i] for i in range(n)]
 
     # Start the training session.
-    num_conditions_trainings = len(CONDITIOMS_TRAININGS)
+    num_conditions_trainings = len(CONFIG.CONDITIOMS_TRAININGS)
     for i in range(num_conditions_trainings):
-        duration_gap_current_condition_training = CONDITIOMS_TRAININGS[(i + 1)]["duration_gap"]
-        mode_update_current_condition_training = CONDITIOMS_TRAININGS[(i + 1)]["mode_update"]
+        duration_gap_current_condition_training = CONFIG.CONDITIOMS_TRAININGS[(i + 1)]["duration_gap"]
+        mode_update_current_condition_training = CONFIG.CONDITIOMS_TRAININGS[(i + 1)]["mode_update"]
         # The training session starts
         print("The training session starts.")
 
@@ -939,11 +878,11 @@ def run_pilots(name, time, id_participant):
                                          duration_gap=duration_gap_current_condition_training,
                                          duration_text=5000,
                                          amount_text=35,
-                                         source_text_path=SOURCE_TEXTS_PATH_LIST[0],
+                                         source_text_path=CONFIG.SOURCE_TEXTS_PATH_LIST[0],
                                          # The first text is for training session.
-                                         task_type_gap=GAP_COUNT_TASK,
+                                         task_type_gap=CONFIG.GAP_COUNT_TASK,
                                          mode_update=mode_update_current_condition_training,
-                                         condition_exp=CONDITION_POS_HOR,
+                                         condition_exp=CONFIG.CONDITION_POS_HOR,
                                          color_background="black", color_text=(73, 232, 56),
                                          size_text=60, size_gap=64,
                                          pos_text=(50, 50), pos_gap=(0, 0))
@@ -978,7 +917,7 @@ def run_pilots(name, time, id_participant):
 
     # Start the studies.
     # Get the number of conditions.
-    num_conditions_studies = len(CONDITIONS_STUDIES)
+    num_conditions_studies = len(CONFIG.CONDITIONS_STUDIES)
 
     # Get the latin square sequence.
     sequences_latin_square = generate_latin_square(n=num_conditions_studies)
@@ -991,9 +930,9 @@ def run_pilots(name, time, id_participant):
     for i in range(num_conditions_studies):
         # Determine the pilot study condition according to the participant's id.
         index_current_participant_in_conditions = sequence_current_participant[i]
-        duration_gap_current_condition_studies = CONDITIONS_STUDIES[index_current_participant_in_conditions][
+        duration_gap_current_condition_studies = CONFIG.CONDITIONS_STUDIES[index_current_participant_in_conditions][
             "duration_gap"]
-        mode_update_current_condition_studies = CONDITIONS_STUDIES[index_current_participant_in_conditions][
+        mode_update_current_condition_studies = CONFIG.CONDITIONS_STUDIES[index_current_participant_in_conditions][
             "mode_update"]
 
         # Initiate.
@@ -1008,11 +947,11 @@ def run_pilots(name, time, id_participant):
                                       duration_gap=duration_gap_current_condition_studies,
                                       duration_text=5000,
                                       amount_text=35,
-                                      source_text_path=SOURCE_TEXTS_PATH_LIST[i + 1],
+                                      source_text_path=CONFIG.SOURCE_TEXTS_PATH_LIST[i + 1],
                                       # The first text is for training session.
-                                      task_type_gap=GAP_COUNT_TASK,
+                                      task_type_gap=CONFIG.GAP_COUNT_TASK,
                                       mode_update=mode_update_current_condition_studies,
-                                      condition_exp=CONDITION_POS_HOR,
+                                      condition_exp=CONFIG.CONDITION_POS_HOR,
                                       color_background="black", color_text=(73, 232, 56),
                                       size_text=60, size_gap=64,
                                       pos_text=(50, 50), pos_gap=(0, 0))
