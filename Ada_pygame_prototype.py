@@ -44,8 +44,6 @@ class Runner:
         self.title = title
 
         # Constant values
-        WIDTH_SURFACE = 800
-        HEIGHT_SURFACE = 800
         FPS = 60
         ANCHOR = "topleft"
         self.MARGIN_RIGHT = 50
@@ -71,14 +69,15 @@ class Runner:
 
         # Parameters for text reading.
         self.texts = Util.read_from_file(path_text=self.texts_path)
-        self.index_content_texts = 0
+        self.index_current_chunk = 0  # The "clock" that should not be messed up with. Records actual chunks on the global timeline.
+        self.index_displayed_chunk_adaptive = 0  # Added this parameter because the scrolling function is enabled for adaptive modes. It saves the chunk that is displayed currently.
         self.texts_chunks = []
 
-        self.marks = [",", ".", "!", "?", ";", ":", "'", '"']   # Take care of "'" and '"'. Kind of tricky here.
-        self.threshold_bottom_num_text_reserve_sentence = 3     # If the words are less than 3, then reserve this sentence.
-        self.threshold_top_num_text_abandon_sentence = 5        # If the words are more than 5, then abandon this sentence.
+        self.marks = [",", ".", "!", "?", ";", ":", "'", '"']  # Take care of "'" and '"'. Kind of tricky here.
+        self.threshold_bottom_num_text_reserve_sentence = 3  # If the words are less than 3, then reserve this sentence.
+        self.threshold_top_num_text_abandon_sentence = 5  # If the words are more than 5, then abandon this sentence.
 
-        self.wps_dynamical_duration_text = 80  # Words per second for dynamically changing duration of text reading at different text chunks.
+        self.wps_dynamical_duration_text = 7  # Words per second for dynamically changing duration of text reading at different text chunks.
         self.offset_seconds_dynamical_duration_text = 2  # The unit is second.
 
         # Intialize logs.
@@ -115,7 +114,7 @@ class Runner:
         # index of items in a shift, and index of shifts.
         self.num_gap_count_task_shapes = int(math.floor(self.duration_gap / self.duration_count_gap_task_shapes_change))
 
-        self.content_text_temp = CONFIG.BLANK_LINE
+        self.content_text_temp = Config.BLANK_LINE
         self.content_gap_temp = "Ga Ga Ga Ga Ga"
 
         self.font_type_selected = pygame.font.get_fonts()[0]  # We select the system's first font, "arial" font.
@@ -135,8 +134,6 @@ class Runner:
         self.num_lines_tolerated_present_all_mode = int(
             math.floor(self.y_range_texts_display_present_all_mode / self.height_line))
         self.offset_y_texts_static_present_all_mode = self.y_range_texts_display_present_all_mode - self.num_lines_tolerated_present_all_mode * self.height_line + self.MARGIN_TOP
-
-        self.boundary_num_pages = self.get_num_pages()
 
         # Settings for the "contextual adaptive" mode.
         self.opacity_texts_contextual_adaptive_context = 135
@@ -160,6 +157,9 @@ class Runner:
         self.split_full_sentences_chunks()
         # Allocate time.
         self.allocate_time_adaptively()
+        # Calculate the number of fragments.
+        self.boundary_num_fragments = self.get_num_fragments()
+
         # Split the text according to the given chunk size.
         # self.split_short_sentences_texts() # Deprecated text split method. But it will be reserved here.
         # Generate the subtasks.
@@ -198,14 +198,14 @@ class Runner:
                         self.is_running = False
                     elif event.key == pygame.K_SPACE:
                         # Only on the manual mode, can update the reading content by pressing the button.
-                        if self.is_text_showing and self.mode_text_update is CONFIG.MODE_MANUAL:
+                        if self.is_text_showing and self.mode_text_update is Config.MODE_MANUAL:
                             # Clear up and update.
                             self.surface.fill(self.color_background)
                             self.is_text_showing = False
                             self.timer = 0
                             # Index for the text display, could be added.
-                            if self.index_content_texts < len(self.texts_chunks) - 1:
-                                self.index_content_texts += 1
+                            if self.index_current_chunk < len(self.texts_chunks) - 1:
+                                self.index_current_chunk += 1
                             # Index of the gap task, could not be added with the last one.
                             if self.counter_attention_shifts < self.num_attention_shifts:
                                 self.counter_attention_shifts += 1
@@ -215,7 +215,7 @@ class Runner:
                             self.timer_elapsed_read_text_mode_manual = 0
                     # On the present-all mode, use up and down keys to scroll the texts.
                     elif event.key == pygame.K_PAGEUP or event.key == pygame.K_PAGEDOWN:
-                        if self.is_text_showing and self.mode_text_update is CONFIG.MODE_PRESENT_ALL:
+                        if self.is_text_showing and self.mode_text_update is Config.MODE_PRESENT_ALL:
                             # Clear up to avoid occlusions.
                             self.surface.fill(self.color_background)
                             # Update the scrolling parameters, including how many lines are operated, scroll up or down.
@@ -223,11 +223,24 @@ class Runner:
                                 # Scrolling up. But not exceed the upper boundary.
                                 if self.num_scrolling_press_keys_present_all < 0:
                                     self.num_scrolling_press_keys_present_all += 1
+
                             elif event.key == pygame.K_PAGEDOWN:
                                 # Scrolling down. Not exceed the lower boundary.
-                                if self.num_scrolling_press_keys_present_all > (-(self.boundary_num_pages - 1)):
+                                if self.num_scrolling_press_keys_present_all > (-(self.boundary_num_fragments - 1)):
                                     # Minus 1 because initially participants are in the 1st page, and parameter self.num_scrolling_press_keys_present_all starts from 0.
                                     self.num_scrolling_press_keys_present_all -= 1
+
+                        elif self.is_text_showing and (
+                                self.mode_text_update is Config.MODE_ADAPTIVE or self.mode_text_update is Config.MODE_CONTEXTUAL):
+                            # Clear up to avoid occlusions.
+                            self.surface.fill(self.color_background)
+
+                            if event.key == pygame.K_PAGEUP:
+                                if self.index_displayed_chunk_adaptive > 0:
+                                    self.index_displayed_chunk_adaptive -= 1
+                            elif event.key == pygame.K_PAGEDOWN:
+                                if self.index_displayed_chunk_adaptive < (self.boundary_num_fragments - 1):
+                                    self.index_displayed_chunk_adaptive += 1
 
             # Count the time elapsed.
             self.time_elapsed = self.clock.tick(self.fps)
@@ -240,42 +253,42 @@ class Runner:
                 if self.is_text_showing:
                     # Draw content.
                     # In the RSVP mode. Get the current texts. display different chunks of texts.
-                    if (self.mode_text_update is CONFIG.MODE_ADAPTIVE) or (
-                            self.mode_text_update is CONFIG.MODE_MANUAL) or (
-                            self.mode_text_update is CONFIG.MODE_CONTEXTUAL):
-                        self.content_text_temp = self.texts_chunks[self.index_content_texts]
+                    if (self.mode_text_update is Config.MODE_ADAPTIVE) or (
+                            self.mode_text_update is Config.MODE_MANUAL) or (
+                            self.mode_text_update is Config.MODE_CONTEXTUAL):
+                        self.content_text_temp = self.texts_chunks[self.index_displayed_chunk_adaptive]
                     # In the Present-all mode, display all texts once.
-                    elif self.mode_text_update is CONFIG.MODE_PRESENT_ALL:
+                    elif self.mode_text_update is Config.MODE_PRESENT_ALL:
                         self.content_text_temp = self.texts
 
                     # Adaptively arrange the duration of the text reading. The global variable duration_text is updated.
-                    self.duration_text = self.log_time_elapsed_read_text_mode_rsvp[self.index_content_texts]
+                    self.duration_text = self.log_time_elapsed_read_text_mode_rsvp[self.index_current_chunk]
 
                     # Display texts. No matter which mode.
                     self.render_texts_multiple_lines()  # Render text content word by word, line by line.
 
                     # Update the status automatically if in the rsvp mode or in the present-all mode.
                     if self.timer > self.duration_text:
-                        if (self.mode_text_update is CONFIG.MODE_ADAPTIVE) or (
-                                self.mode_text_update is CONFIG.MODE_PRESENT_ALL) or (
-                                self.mode_text_update is CONFIG.MODE_CONTEXTUAL):
+                        if (self.mode_text_update is Config.MODE_ADAPTIVE) or (
+                                self.mode_text_update is Config.MODE_PRESENT_ALL) or (
+                                self.mode_text_update is Config.MODE_CONTEXTUAL):
                             self.counter_attention_shifts += 1
                             self.is_text_showing = False
                             self.timer = 0
                             self.surface.fill(self.color_background)
 
                             # RSVP update mode for text display.
-                            self.index_content_texts += 1
+                            self.index_current_chunk += 1
 
                             # Update log file for the RSVP mode and present all mode.
                             self.log_time_elapsed_read_text_mode_rsvp.append(self.duration_text)
                         # Record the time spent on a certain amount of words in the manual mode.
-                        elif self.mode_text_update is CONFIG.MODE_MANUAL:
+                        elif self.mode_text_update is Config.MODE_MANUAL:
                             self.timer_elapsed_read_text_mode_manual += self.time_elapsed
 
                 # Display the gap content.
                 elif self.is_text_showing is False:
-                    if self.task_type_gap == CONFIG.GAP_MATH_TASK:
+                    if self.task_type_gap == Config.GAP_MATH_TASK:
                         self.content_gap_temp = self.gap_math_task_chunks[self.counter_attention_shifts]
                         self.image_gap = self.font_gap.render(self.content_gap_temp, True, self.color_text)
 
@@ -287,6 +300,8 @@ class Runner:
                         self.surface.fill(self.color_background)
                         # Flush the counter for gap task type 2: count task.
                         self.counter_count_gap_task_shapes_change = 0
+                        # Flush the number of fragments scrolling up/down. Synchronize up to the present one.
+                        self.index_displayed_chunk_adaptive = self.index_current_chunk
 
                         # Pause after the gap task is over, wait for the participant to start next reading session.
                         # Display information.
@@ -553,7 +568,7 @@ class Runner:
             self.surface.fill(self.color_stop_reminder_background)
 
         # Add some texts into the buffer to counter errors when pressing the esc key in the first gap task.
-        if self.content_text_temp is CONFIG.BLANK_LINE:
+        if self.content_text_temp is Config.BLANK_LINE:
             # Display texts only when they were displayed.
             self.content_text_temp = ["The experimenter stopped the trial in advance.", ""]
 
@@ -564,15 +579,15 @@ class Runner:
         texts_later_context_display = ""
 
         # Only under the adaptive or contextual adaptive modes, sentences are stored in lists.
-        if self.mode_text_update is CONFIG.MODE_ADAPTIVE or self.mode_text_update is CONFIG.MODE_CONTEXTUAL:
+        if self.mode_text_update is Config.MODE_ADAPTIVE or self.mode_text_update is Config.MODE_CONTEXTUAL:
             # The 1st chunk.
-            if self.index_content_texts == 0:
+            if self.index_displayed_chunk_adaptive == 0:
                 for i in range(len(self.content_text_temp) - 1):
                     texts_middle += self.content_text_temp[i]
                 texts_later_context_display = self.content_text_temp[
                     -1]
             # The last chunk.
-            elif self.index_content_texts == (len(self.texts_chunks) - 1):
+            elif self.index_displayed_chunk_adaptive == (len(self.texts_chunks) - 1):
                 texts_earlier_context_display = self.content_text_temp[0]
                 for i in range(1, len(self.content_text_temp)):  # Change this
                     texts_middle += self.content_text_temp[i]
@@ -582,7 +597,7 @@ class Runner:
                 for i in range(1, (len(self.content_text_temp) - 1)):  # Change this
                     texts_middle += self.content_text_temp[i]
                 texts_later_context_display = self.content_text_temp[-1]
-        elif self.mode_text_update is CONFIG.MODE_PRESENT_ALL:
+        elif self.mode_text_update is Config.MODE_PRESENT_ALL:
             texts_middle = self.texts
 
         # Auxiliary tool for rendering texts.
@@ -590,8 +605,10 @@ class Runner:
             words = texts_display.split(' ')
             space = self.font_text.size(' ')[0]
 
+            # Determine the current page/chunk position.
             # Some position related parameters update.
-            offset_y_texts_dynamical = (self.y_range_texts_display_present_all_mode + self.MARGIN_TOP) * self.num_scrolling_press_keys_present_all  # The page update. Page by page.
+            offset_y_texts_dynamical = (
+                                               self.y_range_texts_display_present_all_mode + self.MARGIN_TOP) * self.num_scrolling_press_keys_present_all  # The page update. Page by page.
             offset_y_texts_static = self.offset_y_texts_static_present_all_mode
 
             # Render the texts word by word.
@@ -617,19 +634,19 @@ class Runner:
             return x_text, y_text
 
         # Distinguish between different modes: adaptive and contextual adaptive.
-        if self.mode_text_update is CONFIG.MODE_ADAPTIVE:
+        if self.mode_text_update is Config.MODE_ADAPTIVE:
             render_words(texts_display=texts_middle,
                          x_text=self.pos_text[0],
                          y_text=self.pos_text[1],
                          opacity=self.opacity_texts_adaptive)
-        elif self.mode_text_update is CONFIG.MODE_CONTEXTUAL:
+        elif self.mode_text_update is Config.MODE_CONTEXTUAL:
             # texts_display = texts_earlier_context_display + texts_middle + texts_later_context_display
-            if self.index_content_texts > 0:
+            if self.index_displayed_chunk_adaptive > 0:
                 x_middle_start_text, y_middle_start_text = render_words(texts_display=texts_earlier_context_display,
                                                                         x_text=self.pos_text[0],
                                                                         y_text=self.pos_text[1],
                                                                         opacity=self.opacity_texts_contextual_adaptive_context)
-            elif self.index_content_texts == 0:
+            elif self.index_displayed_chunk_adaptive == 0:
                 x_middle_start_text, y_middle_start_text = self.pos_text
             x_later_start_text, y_later_start_text = render_words(texts_display=texts_middle,
                                                                   x_text=x_middle_start_text,
@@ -639,34 +656,39 @@ class Runner:
                          x_text=x_later_start_text,
                          y_text=y_later_start_text,
                          opacity=self.opacity_texts_contextual_adaptive_context)
-        elif self.mode_text_update is CONFIG.MODE_PRESENT_ALL:
+        elif self.mode_text_update is Config.MODE_PRESENT_ALL:
             render_words(texts_display=texts_middle,
                          x_text=self.pos_text[0],
                          y_text=self.pos_text[1],
                          opacity=self.opacity_texts_present_all)
 
-    def get_num_pages(self):
+    def get_num_fragments(self):
         """
-        Get the number of lines and number of pages when displaying all texts at once. Especially in the "present all" mode.
-        :return: count_num_lines
+        Get the number of lines and number of pages/chunks (fragments) when displaying all texts at once. Especially in the "present all" mode.
+        :return: count_num_fragments.
         """
-        words = self.texts.split(' ')
-        space = self.font_text.size(' ')[0]
-        x_text, y_text = self.pos_text
+        if self.mode_text_update is Config.MODE_PRESENT_ALL:
+            # Present all mode, count the number of pages.
+            words = self.texts.split(' ')
+            space = self.font_text.size(' ')[0]
+            x_text, y_text = self.pos_text
 
-        # Render word by word.
-        count_num_lines = 1  # Have to start from 1!
-        for word in words:
-            word_surface = self.font_text.render(word, 0, self.color_text)
-            word_width, word_height = word_surface.get_size()
-            if x_text + word_width >= self.max_width:
-                # Update the counter. Already starts from the second line.
-                count_num_lines += 1
-                x_text = self.pos_text[0]
-            x_text += word_width + space
+            # Render word by word.
+            count_num_lines = 1  # Have to start from 1!
+            for word in words:
+                word_surface = self.font_text.render(word, 0, self.color_text)
+                word_width, word_height = word_surface.get_size()
+                if x_text + word_width >= self.max_width:
+                    # Update the counter. Already starts from the second line.
+                    count_num_lines += 1
+                    x_text = self.pos_text[0]
+                x_text += word_width + space
 
-        num_pages = int(math.ceil(count_num_lines / self.num_lines_tolerated_present_all_mode))
-        return num_pages
+            num_fragments = int(math.ceil(count_num_lines / self.num_lines_tolerated_present_all_mode))
+        elif self.mode_text_update is Config.MODE_ADAPTIVE or self.mode_text_update is Config.MODE_CONTEXTUAL:
+            # Adaptive and contextual adaptive mode, count the number of chunks.
+            num_fragments = int(len(self.texts_chunks))
+        return num_fragments
 
     def generate_subtask(self):
         """
@@ -674,7 +696,7 @@ class Runner:
         Please specify tasks' parameters here.
         :return: subtasks' answers.
         """
-        if self.task_type_gap == CONFIG.GAP_MATH_TASK:
+        if self.task_type_gap == Config.GAP_MATH_TASK:
             # Task type 1: mathematical tasks - several double-digit multiplication tasks.
             ROW_EQUATIONS = 5
             for i in range(self.num_attention_shifts):
@@ -690,7 +712,7 @@ class Runner:
                 self.gap_math_task_chunks.append(gap_task)
                 self.gap_math_task_chunks_results.append(results)
 
-        elif self.task_type_gap == CONFIG.GAP_COUNT_TASK:
+        elif self.task_type_gap == Config.GAP_COUNT_TASK:
             # Task type 2: count task - count the number of a certain shape, e.g., circle, triangle, and rectangle.
             for j in range(self.num_attention_shifts):
                 types_shapes_current_shift = []
@@ -705,16 +727,16 @@ class Runner:
                 self.pos_gap_count_task_chunks.append(pos_shapes_current_shift)
 
                 # Collect the appearances of different shapes.
-                count_shape_circle = types_shapes_current_shift.count(CONFIG.CIRCLE)
-                count_shape_triangle = types_shapes_current_shift.count(CONFIG.TRIANG)
-                count_shape_rectangle = types_shapes_current_shift.count(CONFIG.RECT)
-                results.append(CONFIG.CIRCLE + ": " + str(count_shape_circle) + " ")
-                results.append(CONFIG.TRIANG + ": " + str(count_shape_triangle) + " ")
-                results.append(CONFIG.RECT + ": " + str(count_shape_rectangle) + " ")
+                count_shape_circle = types_shapes_current_shift.count(Config.CIRCLE)
+                count_shape_triangle = types_shapes_current_shift.count(Config.TRIANG)
+                count_shape_rectangle = types_shapes_current_shift.count(Config.RECT)
+                results.append(Config.CIRCLE + ": " + str(count_shape_circle) + " ")
+                results.append(Config.TRIANG + ": " + str(count_shape_triangle) + " ")
+                results.append(Config.RECT + ": " + str(count_shape_rectangle) + " ")
                 self.gap_math_task_chunks_results.append(results)
 
     def render_gap_tasks(self):
-        if self.task_type_gap == CONFIG.GAP_MATH_TASK:
+        if self.task_type_gap == Config.GAP_MATH_TASK:
             line_list = self.gap_math_task_chunks[self.counter_attention_shifts].splitlines()
             x_line, y_line = self.pos_gap
             for line in line_list:
@@ -723,7 +745,7 @@ class Runner:
                 self.surface.blit(line_surface, (x_line, y_line))
                 y_line += line_height
 
-        elif self.task_type_gap == CONFIG.GAP_COUNT_TASK:
+        elif self.task_type_gap == Config.GAP_COUNT_TASK:
             # Update the timer
             self.timer_count_gap_task += self.time_elapsed
             if self.timer_count_gap_task >= self.duration_count_gap_task_shapes_change:
@@ -738,17 +760,17 @@ class Runner:
                 pos_shape = self.pos_gap_count_task_chunks[self.counter_attention_shifts][
                     self.counter_count_gap_task_shapes_change]
 
-                if type_shape == CONFIG.CIRCLE:
+                if type_shape == Config.CIRCLE:
                     pygame.draw.circle(self.surface, self.color_gap_count_task_shape,
                                        pos_shape, self.size_gap_count_task_shape)
-                elif type_shape == CONFIG.TRIANG:
+                elif type_shape == Config.TRIANG:
                     height = 2 * self.size_gap_count_task_shape
                     point_1 = (pos_shape[0], pos_shape[1])
                     point_2 = (pos_shape[0] - height / math.sqrt(3), pos_shape[1] - height)
                     point_3 = (pos_shape[0] + height / math.sqrt(3), pos_shape[1] - height)
                     pygame.draw.polygon(self.surface, color=self.color_gap_count_task_shape,
                                         points=[point_1, point_2, point_3])
-                elif type_shape == CONFIG.RECT:
+                elif type_shape == Config.RECT:
                     width = 2 * self.size_gap_count_task_shape
                     height = width
                     pygame.draw.rect(self.surface, self.color_gap_count_task_shape,
@@ -766,7 +788,7 @@ class Runner:
         if os.path.exists(folder_path) is False:
             os.makedirs(folder_path)
 
-        if self.condition_experiment == CONFIG.CONDITION_POS_HOR:
+        if self.condition_experiment == Config.CONDITION_POS_HOR:
             # file_path = folder_path + self.trial_information + "_pos" + str(self.pos_text[0]) + ".txt"
             file_path = folder_path + self.trial_information + ".txt"
         if not os.path.exists(file_path):
@@ -805,8 +827,8 @@ class Runner:
                 f.write("\n")
                 for i in range(len(self.texts_chunks)):
                     f.write("The " + str(i + 1) + " attention shift: " + "\n")
-                    if (self.mode_text_update is CONFIG.MODE_ADAPTIVE) or (
-                            self.mode_text_update is CONFIG.MODE_CONTEXTUAL):
+                    if (self.mode_text_update is Config.MODE_ADAPTIVE) or (
+                            self.mode_text_update is Config.MODE_CONTEXTUAL):
                         f.write("Amount of texts in this chunk: " + str(self.log_actual_amounts_texts[i]) +
                                 "    Time spent: " + str(self.log_time_elapsed_read_text_mode_rsvp[i]) + " ms" + "\n")
                         # Log the text chunks if the current mode is Adaptive.
@@ -814,7 +836,7 @@ class Runner:
                         for j in range(len(self.texts_chunks[i])):
                             texts_display_log += self.texts_chunks[i][j]
                         f.write(texts_display_log + "\n")
-                    elif self.mode_text_update is CONFIG.MODE_MANUAL:
+                    elif self.mode_text_update is Config.MODE_MANUAL:
                         if i < len(self.log_time_elapsed_read_text_mode_manual):
                             f.write("Amount of texts in this chunk: " + str(self.log_actual_amounts_texts[i]) +
                                     "    Time spent: " + str(
@@ -824,7 +846,7 @@ class Runner:
 
                         f.write("The average elapsed time is: " +
                                 str(np.mean(self.log_time_elapsed_read_text_mode_manual)) + " ms")
-                    elif self.mode_text_update is CONFIG.MODE_PRESENT_ALL:
+                    elif self.mode_text_update is Config.MODE_PRESENT_ALL:
                         f.write("    Time spent: " + str(self.log_time_elapsed_read_text_mode_rsvp[i]) + " ms" + "\n")
 
 
@@ -838,9 +860,9 @@ def run_prototype():
                           duration_text=5000,
                           amount_text=35,
                           source_text_path="Reading Materials/Pilot version 1 July/Education_403.txt",
-                          task_type_gap=CONFIG.GAP_COUNT_TASK,
-                          mode_update=CONFIG.MODE_PRESENT_ALL,
-                          condition_exp=CONFIG.CONDITION_POS_HOR,
+                          task_type_gap=Config.GAP_COUNT_TASK,
+                          mode_update=Config.MODE_PRESENT_ALL,
+                          condition_exp=Config.CONDITION_POS_HOR,
                           color_background="black", color_text=(73, 232, 56),
                           size_text=60, size_gap=64,
                           pos_text=(50, 50), pos_gap=(0, 0))
@@ -856,10 +878,10 @@ def run_pilots(name, time, id_participant):
         return [row[i:] + row[:i] for i in range(n)]
 
     # Start the training session.
-    num_conditions_trainings = len(CONFIG.CONDITIOMS_TRAININGS)
+    num_conditions_trainings = len(Config.CONDITIOMS_TRAININGS)
     for i in range(num_conditions_trainings):
-        duration_gap_current_condition_training = CONFIG.CONDITIOMS_TRAININGS[(i + 1)]["duration_gap"]
-        mode_update_current_condition_training = CONFIG.CONDITIOMS_TRAININGS[(i + 1)]["mode_update"]
+        duration_gap_current_condition_training = Config.CONDITIOMS_TRAININGS[(i + 1)]["duration_gap"]
+        mode_update_current_condition_training = Config.CONDITIOMS_TRAININGS[(i + 1)]["mode_update"]
         # The training session starts
         print("The training session starts.")
 
@@ -873,11 +895,11 @@ def run_pilots(name, time, id_participant):
                                          duration_gap=duration_gap_current_condition_training,
                                          duration_text=5000,
                                          amount_text=35,
-                                         source_text_path=CONFIG.SOURCE_TEXTS_PATH_LIST[0],
+                                         source_text_path=Config.SOURCE_TEXTS_PATH_LIST[0],
                                          # The first text is for training session.
-                                         task_type_gap=CONFIG.GAP_COUNT_TASK,
+                                         task_type_gap=Config.GAP_COUNT_TASK,
                                          mode_update=mode_update_current_condition_training,
-                                         condition_exp=CONFIG.CONDITION_POS_HOR,
+                                         condition_exp=Config.CONDITION_POS_HOR,
                                          color_background="black", color_text=(73, 232, 56),
                                          size_text=60, size_gap=64,
                                          pos_text=(50, 50), pos_gap=(0, 0))
@@ -912,7 +934,7 @@ def run_pilots(name, time, id_participant):
 
     # Start the studies.
     # Get the number of conditions.
-    num_conditions_studies = len(CONFIG.CONDITIONS_STUDIES)
+    num_conditions_studies = len(Config.CONDITIONS_STUDIES)
 
     # Get the latin square sequence.
     sequences_latin_square = generate_latin_square(n=num_conditions_studies)
@@ -925,9 +947,9 @@ def run_pilots(name, time, id_participant):
     for i in range(num_conditions_studies):
         # Determine the pilot study condition according to the participant's id.
         index_current_participant_in_conditions = sequence_current_participant[i]
-        duration_gap_current_condition_studies = CONFIG.CONDITIONS_STUDIES[index_current_participant_in_conditions][
+        duration_gap_current_condition_studies = Config.CONDITIONS_STUDIES[index_current_participant_in_conditions][
             "duration_gap"]
-        mode_update_current_condition_studies = CONFIG.CONDITIONS_STUDIES[index_current_participant_in_conditions][
+        mode_update_current_condition_studies = Config.CONDITIONS_STUDIES[index_current_participant_in_conditions][
             "mode_update"]
 
         # Initiate.
@@ -942,11 +964,11 @@ def run_pilots(name, time, id_participant):
                                       duration_gap=duration_gap_current_condition_studies,
                                       duration_text=5000,
                                       amount_text=35,
-                                      source_text_path=CONFIG.SOURCE_TEXTS_PATH_LIST[i + 1],
+                                      source_text_path=Config.SOURCE_TEXTS_PATH_LIST[i + 1],
                                       # The first text is for training session.
-                                      task_type_gap=CONFIG.GAP_COUNT_TASK,
+                                      task_type_gap=Config.GAP_COUNT_TASK,
                                       mode_update=mode_update_current_condition_studies,
-                                      condition_exp=CONFIG.CONDITION_POS_HOR,
+                                      condition_exp=Config.CONDITION_POS_HOR,
                                       color_background="black", color_text=(73, 232, 56),
                                       size_text=60, size_gap=64,
                                       pos_text=(50, 50), pos_gap=(0, 0))
