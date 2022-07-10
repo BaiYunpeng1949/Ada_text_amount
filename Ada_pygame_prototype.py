@@ -7,7 +7,8 @@ import random
 import sys
 from nltk import tokenize
 
-import CONFIG
+import Config
+import Util
 
 
 class Runner:
@@ -69,7 +70,7 @@ class Runner:
         self.counter_attention_shifts = 0
 
         # Parameters for text reading.
-        self.texts = self.read_from_file()
+        self.texts = Util.read_from_file(path_text=self.texts_path)
         self.index_content_texts = 0
         self.texts_chunks = []
 
@@ -362,12 +363,6 @@ class Runner:
 
         # Quit the game at the main method.
         pygame.quit()
-
-    def read_from_file(self):
-        # Read materials from a text file. While the texts are all stacked up in one line.
-        with open(self.texts_path) as f:
-            texts = f.read()
-        return texts
 
     def allocate_time_adaptively(self):
         """
