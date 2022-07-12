@@ -77,7 +77,7 @@ class Runner:
         self.threshold_bottom_num_text_reserve_sentence = 3  # If the words are less than 3, then reserve this sentence.
         self.threshold_top_num_text_abandon_sentence = 5  # If the words are more than 5, then abandon this sentence.
 
-        self.wps_dynamical_duration_text = 7  # Words per second for dynamically changing duration of text reading at different text chunks.
+        self.wps_dynamical_duration_text = 3 # Words per second for dynamically changing duration of text reading at different text chunks.
         self.offset_seconds_dynamical_duration_text = 2  # The unit is second.
 
         # Intialize logs.

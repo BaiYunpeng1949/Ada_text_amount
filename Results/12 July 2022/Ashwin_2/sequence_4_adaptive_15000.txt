@@ -1,0 +1,84 @@
+Participant Information: 
+Participant Name: Ashwin_2
+Experiment Time: 12 July 2022
+Trial Number / Condition: sequence_4_adaptive_15000
+Text source path: Reading Materials/Pilot version 6 July/Story07_367wrds_22sts_16.68wpst.txt
+
+Configuration: 
+Duration of gap task: 15000 ms
+Duration of text reading: 15000 ms
+Amount of text in a chunk: 35 words
+Text read: Reading Materials/Pilot version 6 July/Story07_367wrds_22sts_16.68wpst.txt
+The type of task type: count task
+The number of attention shifts: 9
+The mode of text content update: adaptive
+The color of OHMD background: black
+The color of OHMD texts: (73, 232, 56)
+The size of texts: 60 pixels
+The size of gap tasks: 64 pixels
+The position of texts: (50, 50)
+The position of gap tasks: (0, 0)
+
+Logs: 
+The 1 text chunk: 
+Gap task results: ['circle: 11 ', 'triangle: 10 ', 'rectangle: 9 ']
+Time elapsed while waiting before the new reading tiral: 2294 ms.
+The total time spent on the non-reading trial: 17294 ms.
+The 2 text chunk: 
+Gap task results: ['circle: 9 ', 'triangle: 8 ', 'rectangle: 13 ']
+Time elapsed while waiting before the new reading tiral: 2980 ms.
+The total time spent on the non-reading trial: 17980 ms.
+The 3 text chunk: 
+Gap task results: ['circle: 11 ', 'triangle: 9 ', 'rectangle: 10 ']
+Time elapsed while waiting before the new reading tiral: 3275 ms.
+The total time spent on the non-reading trial: 18275 ms.
+The 4 text chunk: 
+Gap task results: ['circle: 9 ', 'triangle: 9 ', 'rectangle: 12 ']
+Time elapsed while waiting before the new reading tiral: 1708 ms.
+The total time spent on the non-reading trial: 16708 ms.
+The 5 text chunk: 
+Gap task results: ['circle: 7 ', 'triangle: 13 ', 'rectangle: 10 ']
+Time elapsed while waiting before the new reading tiral: 2657 ms.
+The total time spent on the non-reading trial: 17657 ms.
+The 6 text chunk: 
+Gap task results: ['circle: 14 ', 'triangle: 6 ', 'rectangle: 10 ']
+Time elapsed while waiting before the new reading tiral: 3194 ms.
+The total time spent on the non-reading trial: 18194 ms.
+The 7 text chunk: 
+Gap task results: ['circle: 13 ', 'triangle: 9 ', 'rectangle: 8 ']
+Time elapsed while waiting before the new reading tiral: 2504 ms.
+The total time spent on the non-reading trial: 17504 ms.
+The 8 text chunk: 
+Gap task results: ['circle: 11 ', 'triangle: 11 ', 'rectangle: 8 ']
+Time elapsed while waiting before the new reading tiral: 7109 ms.
+The total time spent on the non-reading trial: 22109 ms.
+The 9 text chunk: 
+Gap task results: ['circle: 8 ', 'triangle: 13 ', 'rectangle: 9 ']
+
+The 1 attention shift: 
+Amount of texts in this chunk: 46    Time spent: 18000 ms
+Dry-wood termites are the bane of house owners everywhere. They not only burrow in trees, but they also burrow into the wooden frames on which houses are built, causing them to collapse. They gnaw away at the inside but leave the outer hull or bark intact. Termites are virtually blind, and they are about the size of a rice grain. 
+The 2 attention shift: 
+Amount of texts in this chunk: 39    Time spent: 15000 ms
+They gnaw away at the inside but leave the outer hull or bark intact. Termites are virtually blind, and they are about the size of a rice grain. They operate almost entirely by smell and touch. Some species will build their nests above the ground in gigantic anthills known as termitaria, or "cathedrals." They can have spires 12-20 feet high, and measure 10 feet in diameter. 
+The 3 attention shift: 
+Amount of texts in this chunk: 45    Time spent: 17000 ms
+Some species will build their nests above the ground in gigantic anthills known as termitaria, or "cathedrals." They can have spires 12-20 feet high, and measure 10 feet in diameter. The largest of the termitaria are located in Africa, where they may be 30 feet high and 100 feet in diameter. Within the mound is a system of tunnels and connecting spaces. The entire structure may take a colony eight years to build. 
+The 4 attention shift: 
+Amount of texts in this chunk: 45    Time spent: 17000 ms
+Within the mound is a system of tunnels and connecting spaces. The entire structure may take a colony eight years to build. Almost all termites are sterile. However, after a colony has existed for a while, sexual forms, or "nymphs," emerge. These termites have wings and are responsible for perpetuating the species by establishing new colonies. No one knows for sure what triggers the event, but when the nymphs are ready to leave, workers drill holes through the cathedrals to the outside, complete with miniature liftoff platforms. 
+The 5 attention shift: 
+Amount of texts in this chunk: 55    Time spent: 21000 ms
+These termites have wings and are responsible for perpetuating the species by establishing new colonies. No one knows for sure what triggers the event, but when the nymphs are ready to leave, workers drill holes through the cathedrals to the outside, complete with miniature liftoff platforms. Probably only about one in a million makes it to safety; the rest are eaten by other animals, such as lizards, frogs, and birds. When a female nymph touches down, she releases a scent to attract a male. 
+The 6 attention shift: 
+Amount of texts in this chunk: 43    Time spent: 17000 ms
+Probably only about one in a million makes it to safety; the rest are eaten by other animals, such as lizards, frogs, and birds. When a female nymph touches down, she releases a scent to attract a male. When he arrives, they both break off their wings then search for a nesting place, preferably in soil or in rotting wood, with the female making the final selection. The pair burrow until they have formed a dark, moist nest, where they finally mate and begin the cycle all over again. 
+The 7 attention shift: 
+Amount of texts in this chunk: 38    Time spent: 15000 ms
+When he arrives, they both break off their wings then search for a nesting place, preferably in soil or in rotting wood, with the female making the final selection. The pair burrow until they have formed a dark, moist nest, where they finally mate and begin the cycle all over again. A colony of termites can contain up to three million individuals, ruled by one dictatorial queen. Most of the worker insects toil 24 hours a day, tending fungus gardens or collecting wood and grass, until they die. 
+The 8 attention shift: 
+Amount of texts in this chunk: 37    Time spent: 15000 ms
+A colony of termites can contain up to three million individuals, ruled by one dictatorial queen. Most of the worker insects toil 24 hours a day, tending fungus gardens or collecting wood and grass, until they die. Some die from sheer exhaustion, while others, lacking warmth or moisture, may die from the elements. If food is in short supply, the end result is simple - the termites just eat their own young. 
+The 9 attention shift: 
+Amount of texts in this chunk: 19    Time spent: 9000 ms
+Some die from sheer exhaustion, while others, lacking warmth or moisture, may die from the elements. If food is in short supply, the end result is simple - the termites just eat their own young. 

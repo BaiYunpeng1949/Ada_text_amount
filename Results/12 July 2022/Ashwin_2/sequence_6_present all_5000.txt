@@ -1,0 +1,61 @@
+Participant Information: 
+Participant Name: Ashwin_2
+Experiment Time: 12 July 2022
+Trial Number / Condition: sequence_6_present all_5000
+Text source path: Reading Materials/Pilot version 6 July/Story12_348wds_20sts_17.4wpst.txt
+
+Configuration: 
+Duration of gap task: 5000 ms
+Duration of text reading: 19000 ms
+Amount of text in a chunk: 35 words
+Text read: Reading Materials/Pilot version 6 July/Story12_348wds_20sts_17.4wpst.txt
+The type of task type: count task
+The number of attention shifts: 7
+The mode of text content update: present all
+The color of OHMD background: black
+The color of OHMD texts: (73, 232, 56)
+The size of texts: 60 pixels
+The size of gap tasks: 64 pixels
+The position of texts: (50, 50)
+The position of gap tasks: (0, 0)
+
+Logs: 
+The 1 text chunk: 
+Gap task results: ['circle: 4 ', 'triangle: 5 ', 'rectangle: 1 ']
+Time elapsed while waiting before the new reading tiral: 2341 ms.
+The total time spent on the non-reading trial: 7341 ms.
+The 2 text chunk: 
+Gap task results: ['circle: 3 ', 'triangle: 5 ', 'rectangle: 2 ']
+Time elapsed while waiting before the new reading tiral: 1555 ms.
+The total time spent on the non-reading trial: 6555 ms.
+The 3 text chunk: 
+Gap task results: ['circle: 3 ', 'triangle: 2 ', 'rectangle: 5 ']
+Time elapsed while waiting before the new reading tiral: 2269 ms.
+The total time spent on the non-reading trial: 7269 ms.
+The 4 text chunk: 
+Gap task results: ['circle: 6 ', 'triangle: 1 ', 'rectangle: 3 ']
+Time elapsed while waiting before the new reading tiral: 2342 ms.
+The total time spent on the non-reading trial: 7342 ms.
+The 5 text chunk: 
+Gap task results: ['circle: 6 ', 'triangle: 1 ', 'rectangle: 3 ']
+Time elapsed while waiting before the new reading tiral: 2521 ms.
+The total time spent on the non-reading trial: 7521 ms.
+The 6 text chunk: 
+Gap task results: ['circle: 3 ', 'triangle: 5 ', 'rectangle: 2 ']
+The 7 text chunk: 
+Gap task results: ['circle: 3 ', 'triangle: 4 ', 'rectangle: 3 ']
+
+The 1 attention shift: 
+    Time spent: 16000 ms
+The 2 attention shift: 
+    Time spent: 14000 ms
+The 3 attention shift: 
+    Time spent: 27000 ms
+The 4 attention shift: 
+    Time spent: 25000 ms
+The 5 attention shift: 
+    Time spent: 19000 ms
+The 6 attention shift: 
+    Time spent: 22000 ms
+The 7 attention shift: 
+    Time spent: 9000 ms
