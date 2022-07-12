@@ -1,0 +1,72 @@
+Participant Information: 
+Participant Name: Junzhe_3
+Experiment Time: 12 July 2022
+Trial Number / Condition: sequence_6_contextual adaptive_15000
+Text source path: Reading Materials/Pilot version 6 July/Story12_348wds_20sts_17.4wpst.txt
+
+Configuration: 
+Duration of gap task: 15000 ms
+Duration of text reading: 9000 ms
+Amount of text in a chunk: 35 words
+Text read: Reading Materials/Pilot version 6 July/Story12_348wds_20sts_17.4wpst.txt
+The type of task type: count task
+The number of attention shifts: 7
+The mode of text content update: contextual adaptive
+The color of OHMD background: black
+The color of OHMD texts: (73, 232, 56)
+The size of texts: 60 pixels
+The size of gap tasks: 64 pixels
+The position of texts: (50, 50)
+The position of gap tasks: (0, 0)
+
+Logs: 
+The 1 text chunk: 
+Gap task results: ['circle: 16 ', 'triangle: 9 ', 'rectangle: 5 ']
+Time elapsed while waiting before the new reading tiral: 6000 ms.
+The total time spent on the non-reading trial: 21000 ms.
+The 2 text chunk: 
+Gap task results: ['circle: 9 ', 'triangle: 10 ', 'rectangle: 11 ']
+Time elapsed while waiting before the new reading tiral: 2195 ms.
+The total time spent on the non-reading trial: 17195 ms.
+The 3 text chunk: 
+Gap task results: ['circle: 10 ', 'triangle: 10 ', 'rectangle: 10 ']
+Time elapsed while waiting before the new reading tiral: 3570 ms.
+The total time spent on the non-reading trial: 18570 ms.
+The 4 text chunk: 
+Gap task results: ['circle: 11 ', 'triangle: 9 ', 'rectangle: 10 ']
+Time elapsed while waiting before the new reading tiral: 2442 ms.
+The total time spent on the non-reading trial: 17442 ms.
+The 5 text chunk: 
+Gap task results: ['circle: 13 ', 'triangle: 11 ', 'rectangle: 6 ']
+Time elapsed while waiting before the new reading tiral: 2239 ms.
+The total time spent on the non-reading trial: 17239 ms.
+The 6 text chunk: 
+Gap task results: ['circle: 5 ', 'triangle: 12 ', 'rectangle: 13 ']
+Time elapsed while waiting before the new reading tiral: 2053 ms.
+The total time spent on the non-reading trial: 17053 ms.
+The 7 text chunk: 
+Gap task results: ['circle: 10 ', 'triangle: 10 ', 'rectangle: 10 ']
+Time elapsed while waiting before the new reading tiral: 1904 ms.
+The total time spent on the non-reading trial: 16904 ms.
+
+The 1 attention shift: 
+Amount of texts in this chunk: 40    Time spent: 16000 ms
+Tobacco is a cash crop. The plant is green and leafy and grown in warm climates. Once picked, it is dried and ground and used in a number of ways. Primarily, it is smoked in a cigarette, pipe, or cigar. It can also be chewed (which is known as smokeless or chewing tobacco) or sniffed through the nose (referred to as snuff). 
+The 2 attention shift: 
+Amount of texts in this chunk: 36    Time spent: 14000 ms
+Primarily, it is smoked in a cigarette, pipe, or cigar. It can also be chewed (which is known as smokeless or chewing tobacco) or sniffed through the nose (referred to as snuff). Cigarettes and their smoke contain over 4,000 different chemicals, of which nicotine is one. This is the substance responsible for making tobacco either habit-forming or addictive in some cases. 
+The 3 attention shift: 
+Amount of texts in this chunk: 75    Time spent: 27000 ms
+Cigarettes and their smoke contain over 4,000 different chemicals, of which nicotine is one. This is the substance responsible for making tobacco either habit-forming or addictive in some cases. By inhaling the smoke or ingesting the juice, the nicotine enters the bloodstream, making the body crave more. Since nicotine is a stimulant drug (it alters our body's chemistry), it acts to speed up the nervous system, making us feel as if we have more energy; in addition, it makes the heart beat faster and raises the body's blood pressure. Tobacco has been grown in the Americas for quite some time. 
+The 4 attention shift: 
+Amount of texts in this chunk: 68    Time spent: 25000 ms
+Since nicotine is a stimulant drug (it alters our body's chemistry), it acts to speed up the nervous system, making us feel as if we have more energy; in addition, it makes the heart beat faster and raises the body's blood pressure. Tobacco has been grown in the Americas for quite some time. In what is now Mexico, the Mayan Indians carved drawings in stone showing tobacco use which date back to somewhere between 600 to 900 A.D. Tobacco was grown by Native Americans before the Europeans came to the New World, and they primarily smoked it through a pipe for religious and medical purposes, not as an everyday habit. In 1612, the settlers in Jamestown, Virginia grew tobacco as a cash crop, the first such instance in this country. 
+The 5 attention shift: 
+Amount of texts in this chunk: 50    Time spent: 19000 ms
+In what is now Mexico, the Mayan Indians carved drawings in stone showing tobacco use which date back to somewhere between 600 to 900 A.D. Tobacco was grown by Native Americans before the Europeans came to the New World, and they primarily smoked it through a pipe for religious and medical purposes, not as an everyday habit. In 1612, the settlers in Jamestown, Virginia grew tobacco as a cash crop, the first such instance in this country. Sales helped pay for the American Revolution against England. By the 1800s, many people had begun using small amounts of tobacco, smoking about 40 cigarettes a year they rolled themselves. It wasn't until 1865 that the first commercial cigarettes were made, by Washington Duke in Raleigh, North Carolina. 
+The 6 attention shift: 
+Amount of texts in this chunk: 60    Time spent: 22000 ms
+By the 1800s, many people had begun using small amounts of tobacco, smoking about 40 cigarettes a year they rolled themselves. It wasn't until 1865 that the first commercial cigarettes were made, by Washington Duke in Raleigh, North Carolina. His hand-rolled cigarettes were sold to soldiers at the end of the Civil War. Smoking did not become widespread, though, until 1881, when James Bonsack invented the cigarette-making machine, which made 120,000 cigarettes a day and 10 million in its first year. The first brand was called "Duke of Durham," and the cigarettes came packaged in a box with baseball cards. 
+The 7 attention shift: 
+Amount of texts in this chunk: 19    Time spent: 9000 ms
+Smoking did not become widespread, though, until 1881, when James Bonsack invented the cigarette-making machine, which made 120,000 cigarettes a day and 10 million in its first year. The first brand was called "Duke of Durham," and the cigarettes came packaged in a box with baseball cards. 
