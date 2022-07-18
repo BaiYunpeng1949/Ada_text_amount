@@ -766,6 +766,7 @@ class Runner:
             else:
                 type_shape = self.shapes_gap_count_task_chunks[self.counter_attention_shifts][
                     self.counter_count_gap_task_shapes_change]
+
                 pos_shape = self.pos_gap_count_task_chunks[self.counter_attention_shifts][
                     self.counter_count_gap_task_shapes_change]
 
@@ -914,7 +915,7 @@ def run_pilots(name, time, id_participant):
             offset_reading_speed=Config.OFFSET_READING_SPEED,
             duration_gap=duration_gap_current_condition_data_collection,
             amount_text=Config.AMOUNT_WORDS,
-            source_text_path=Config.SOURCE_TEXTS_PATH_LIST[0],
+            source_text_path=Config.SOURCE_TEXTS_PATH_LIST_DATA_COLLECTION[i],
             # The first text is for training session.
             task_type_gap=Config.GAP_COUNT_TASK,
             mode_update=mode_update_current_condition_data_collection,
@@ -954,7 +955,7 @@ def run_pilots(name, time, id_participant):
                                          offset_reading_speed=Config.OFFSET_READING_SPEED,
                                          duration_gap=duration_gap_current_condition_training,
                                          amount_text=Config.AMOUNT_WORDS,
-                                         source_text_path=Config.SOURCE_TEXTS_PATH_LIST[0],
+                                         source_text_path=Config.SOURCE_TEXTS_PATH_LIST_TRAINING[0],
                                          # The first text is for training session.
                                          task_type_gap=Config.GAP_COUNT_TASK,
                                          mode_update=mode_update_current_condition_training,
@@ -1009,7 +1010,7 @@ def run_pilots(name, time, id_participant):
                                       offset_reading_speed=Config.OFFSET_READING_SPEED,
                                       duration_gap=duration_gap_current_condition_studies,
                                       amount_text=Config.AMOUNT_WORDS,
-                                      source_text_path=Config.SOURCE_TEXTS_PATH_LIST[i + 1],
+                                      source_text_path=Config.SOURCE_TEXTS_PATH_LIST[i],
                                       # The first text is for training session.
                                       task_type_gap=Config.GAP_COUNT_TASK,
                                       mode_update=mode_update_current_condition_studies,

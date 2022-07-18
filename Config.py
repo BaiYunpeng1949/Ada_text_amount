@@ -21,8 +21,13 @@ CONDITION_POS_HOR = "position horizontal"
 
 # For pilot studies.
 # Configurations. The condition number listed here are generated randomly. Use dictionary to store data.
+# WARNING: if the attention duration of secondary(gap) task time is too short, then there will be invalid gap task buffers.
 CONDITIONS_DATA_COLLECTION = {
     1: {
+        "duration_gap": 2000,
+        "mode_update": MODE_MANUAL
+    },
+    2: {
         "duration_gap": 2000,
         "mode_update": MODE_MANUAL
     }
@@ -69,9 +74,20 @@ CONDITIONS_STUDIES = {
     }
 }
 
-SOURCE_TEXTS_PATH_LIST = [
+SOURCE_TEXTS_PATH_LIST_DATA_COLLECTION = [
+    # Text for testing on data-collection session.
+    "Reading Materials/Pilot version 6 July/Story19_375wrds_34sts_11.03wpst.txt",
+    # Text for formal data-collection session and training session.
     "Reading Materials/Pilot version 6 July/Story02_366wrds_32sts_11.44wpst.txt",
-    # This text is for the data collection session and training session.
+]
+
+SOURCE_TEXTS_PATH_LIST_TRAINING = [
+    # Text for formal data-collection session and training session.
+    "Reading Materials/Pilot version 6 July/Story02_366wrds_32sts_11.44wpst.txt",
+]
+
+SOURCE_TEXTS_PATH_LIST_FORMAL_STUDIES = [
+    # Text for formal studies.
     "Reading Materials/Pilot version 6 July/Story03_372wrds_19sts_19.58wpst.txt",
     "Reading Materials/Pilot version 6 July/Story05_351wrds_27sts_13wpst.txt",
     "Reading Materials/Pilot version 6 July/Story06_355wrds_26sts_13.65wpst.txt",
@@ -81,7 +97,7 @@ SOURCE_TEXTS_PATH_LIST = [
 ]
 
 # Runners (instances)' argument settings.
-AMOUNT_WORDS = 35   # The number of words.
+AMOUNT_WORDS = 35  # The number of words.
 COLOR_TEXTS = (73, 232, 56)     # The color of texts displayed: green.
 COLOR_BACKGROUND = "black"
 SIZE_TEXTS = 60     # The size of texts displayed.
