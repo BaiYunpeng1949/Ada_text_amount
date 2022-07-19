@@ -47,10 +47,10 @@ class Runner:
         # Constant values
         FPS = 60
         ANCHOR = "topleft"
-        self.MARGIN_RIGHT = 50
         self.MARGIN_LEFT = self.pos_text[0]
-        self.MARGIN_BOTTOM = 0
+        self.MARGIN_RIGHT = self.MARGIN_LEFT
         self.MARGIN_TOP = self.pos_text[1]
+        self.MARGIN_BOTTOM = 0
 
         # Create the canvas.
         # Setup pygame
@@ -97,7 +97,7 @@ class Runner:
 
         # Declare the drawing space.
         surface_width, surface_height = self.surface.get_size()
-        self.max_width = surface_width - self.MARGIN_RIGHT - self.MARGIN_LEFT
+        self.max_width_from_left = surface_width - self.MARGIN_RIGHT
         self.max_height = surface_height - self.MARGIN_BOTTOM - self.MARGIN_TOP
 
         self.MARGIN_COO_LEFT_GAP_COUNT_TASK = 30
@@ -624,7 +624,7 @@ class Runner:
                 word_surface.set_alpha(opacity)
 
                 word_width, word_height = word_surface.get_size()
-                if x_text + word_width >= self.max_width:
+                if x_text + word_width >= self.max_width_from_left:
                     # Update the counter. Already starts from the second line.
                     count_num_lines += 1
                     # Update the position.
@@ -687,7 +687,7 @@ class Runner:
             for word in words:
                 word_surface = self.font_text.render(word, 0, self.color_text)
                 word_width, word_height = word_surface.get_size()
-                if x_text + word_width >= self.max_width:
+                if x_text + word_width >= self.max_width_from_left:
                     # Update the counter. Already starts from the second line.
                     count_num_lines += 1
                     x_text = self.pos_text[0]
@@ -868,6 +868,7 @@ class Runner:
                 if self.mode_text_update is Config.MODE_MANUAL:
                     f.write("The average elapsed time is: " +
                             str(np.mean(self.log_time_elapsed_read_text_mode_manual)) + " ms" + "\n")
+                    f.write("The average reading speed is: " + str(self.get_average_wps_manual_mode()) + "words per second" + "\n")
 
 
 def run_prototype():
@@ -931,6 +932,7 @@ def run_pilots(name, time, id_participant):
 
         # Get the specific participant's reading speed.
         wps = runner_data_collection_current.get_average_wps_manual_mode()
+
 
     # Create a waiting canvas, then proceed to the training session.
     content_text_data_collection_2_training = "This is the end of the warm up session. Can we proceed?"
@@ -1013,7 +1015,7 @@ def run_pilots(name, time, id_participant):
                                       offset_reading_speed=Config.OFFSET_READING_SPEED,
                                       duration_gap=duration_gap_current_condition_studies,
                                       amount_text=num_words_current_condition_studies,
-                                      source_text_path=Config.SOURCE_TEXTS_PATH_LIST[i],
+                                      source_text_path=Config.SOURCE_TEXTS_PATH_LIST_FORMAL_STUDIES[i],
                                       # The first text is for training session.
                                       task_type_gap=Config.GAP_COUNT_TASK,
                                       mode_update=mode_update_current_condition_studies,
