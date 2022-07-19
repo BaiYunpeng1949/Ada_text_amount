@@ -902,6 +902,7 @@ def run_pilots(name, time, id_participant):
     for i in range(num_conditions_data_collection):
         duration_gap_current_condition_data_collection = Config.CONDITIONS_DATA_COLLECTION[(i + 1)]["duration_gap"]
         mode_update_current_condition_data_collection = Config.CONDITIONS_DATA_COLLECTION[(i + 1)]["mode_update"]
+        num_words_current_condition_data_collection = Config.CONDITIONS_DATA_COLLECTION[(i+1)]["number of words"]
         print("The data collection session starts.")
         # Initiate
         pygame.init()
@@ -914,7 +915,7 @@ def run_pilots(name, time, id_participant):
             wps_reading_speed=Config.WPS_READING_SPEED_INITIAL,
             offset_reading_speed=Config.OFFSET_READING_SPEED,
             duration_gap=duration_gap_current_condition_data_collection,
-            amount_text=Config.AMOUNT_WORDS,
+            amount_text=num_words_current_condition_data_collection,
             source_text_path=Config.SOURCE_TEXTS_PATH_LIST_DATA_COLLECTION[i],
             # The first text is for training session.
             task_type_gap=Config.GAP_COUNT_TASK,
@@ -941,6 +942,7 @@ def run_pilots(name, time, id_participant):
     for i in range(num_conditions_trainings):
         duration_gap_current_condition_training = Config.CONDITIOMS_TRAININGS[(i + 1)]["duration_gap"]
         mode_update_current_condition_training = Config.CONDITIOMS_TRAININGS[(i + 1)]["mode_update"]
+        num_words_current_condition_training = Config.CONDITIOMS_TRAININGS[(i+1)]["number of words"]
         # The training session starts
         print("The training session starts.")
 
@@ -954,7 +956,7 @@ def run_pilots(name, time, id_participant):
                                          wps_reading_speed=wps,
                                          offset_reading_speed=Config.OFFSET_READING_SPEED,
                                          duration_gap=duration_gap_current_condition_training,
-                                         amount_text=Config.AMOUNT_WORDS,
+                                         amount_text=num_words_current_condition_training,
                                          source_text_path=Config.SOURCE_TEXTS_PATH_LIST_TRAINING[0],
                                          # The first text is for training session.
                                          task_type_gap=Config.GAP_COUNT_TASK,
@@ -996,6 +998,7 @@ def run_pilots(name, time, id_participant):
             "duration_gap"]
         mode_update_current_condition_studies = Config.CONDITIONS_STUDIES[index_current_participant_in_conditions][
             "mode_update"]
+        num_words_current_condition_studies = Config.CONDITIONS_STUDIES[index_current_participant_in_conditions]["number of words"]
 
         # Initiate.
         pygame.init()
@@ -1009,7 +1012,7 @@ def run_pilots(name, time, id_participant):
                                       wps_reading_speed=wps,
                                       offset_reading_speed=Config.OFFSET_READING_SPEED,
                                       duration_gap=duration_gap_current_condition_studies,
-                                      amount_text=Config.AMOUNT_WORDS,
+                                      amount_text=num_words_current_condition_studies,
                                       source_text_path=Config.SOURCE_TEXTS_PATH_LIST[i],
                                       # The first text is for training session.
                                       task_type_gap=Config.GAP_COUNT_TASK,

@@ -25,58 +25,69 @@ CONDITION_POS_HOR = "position horizontal"
 CONDITIONS_DATA_COLLECTION = {
     1: {
         "duration_gap": 2000,
-        "mode_update": MODE_MANUAL
+        "mode_update": MODE_MANUAL,
+        "number of words": 10
     },
     2: {
         "duration_gap": 2000,
-        "mode_update": MODE_MANUAL
+        "mode_update": MODE_MANUAL,
+        "number of words": 35
     }
 }
 
 CONDITIOMS_TRAININGS = {
     1: {
         "duration_gap": 2000,
-        "mode_update": MODE_PRESENT_ALL
+        "mode_update": MODE_PRESENT_ALL,
+        "number of words": 35
     },
     2: {
         "duration_gap": 2000,
-        "mode_update": MODE_ADAPTIVE
+        "mode_update": MODE_ADAPTIVE,
+        "number of words": 35
     },
     3: {
         "duration_gap": 2000,
-        "mode_update": MODE_CONTEXTUAL
+        "mode_update": MODE_CONTEXTUAL,
+        "number of words": 35
     }
 }
 CONDITIONS_STUDIES = {
     1: {
         "duration_gap": 5000,
-        "mode_update": MODE_PRESENT_ALL
+        "mode_update": MODE_PRESENT_ALL,
+        "number of words": 35
     },
     2: {
         "duration_gap": 15000,
-        "mode_update": MODE_CONTEXTUAL
+        "mode_update": MODE_CONTEXTUAL,
+        "number of words": 35
     },
     3: {
         "duration_gap": 5000,
-        "mode_update": MODE_ADAPTIVE
+        "mode_update": MODE_ADAPTIVE,
+        "number of words": 35
     },
     4: {
         "duration_gap": 5000,
-        "mode_update": MODE_CONTEXTUAL
+        "mode_update": MODE_CONTEXTUAL,
+        "number of words": 35
     },
     5: {
         "duration_gap": 15000,
-        "mode_update": MODE_ADAPTIVE
+        "mode_update": MODE_ADAPTIVE,
+        "number of words": 35
     },
     6: {
         "duration_gap": 15000,
-        "mode_update": MODE_PRESENT_ALL
+        "mode_update": MODE_PRESENT_ALL,
+        "number of words": 35
     }
 }
 
 SOURCE_TEXTS_PATH_LIST_DATA_COLLECTION = [
     # Text for testing on data-collection session.
-    "Reading Materials/Pilot version 6 July/Story19_375wrds_34sts_11.03wpst.txt",
+    "Reading Materials/Pilot version 1 July/Earth day_144.txt",
     # Text for formal data-collection session and training session.
     "Reading Materials/Pilot version 6 July/Story02_366wrds_32sts_11.44wpst.txt",
 ]
@@ -97,7 +108,6 @@ SOURCE_TEXTS_PATH_LIST_FORMAL_STUDIES = [
 ]
 
 # Runners (instances)' argument settings.
-AMOUNT_WORDS = 35  # The number of words.
 COLOR_TEXTS = (73, 232, 56)     # The color of texts displayed: green.
 COLOR_BACKGROUND = "black"
 SIZE_TEXTS = 60     # The size of texts displayed.
@@ -105,4 +115,4 @@ SIZE_GAP_TASK = 64  # The size of elements in secondary tasks.
 POS_TEXTS = (50, 50)        # The starting position of texts displayed: x_pixels and y_pixels.
 POS_GAP = (0, 0)            # The starting position of gap task displayed.
 OFFSET_READING_SPEED = 0    # The offset of specific participant's reading speed.
-WPS_READING_SPEED_INITIAL = 9   # The reading speed initialization of a specific participant.
+WPS_READING_SPEED_INITIAL = 19   # The reading speed initialization of a specific participant.
