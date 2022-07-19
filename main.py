@@ -5,6 +5,6 @@ if __name__ == '__main__':
     # Ada_pygame_prototype.run_prototype()
 
     # Do the pilot studies. Do not run this with prototype.
-    Ada_pygame_prototype.run_pilots(name="Trial2",
+    Ada_pygame_prototype.run_pilots(name="Trial3",
                                     time="19 July 2022",
                                     id_participant=1)
