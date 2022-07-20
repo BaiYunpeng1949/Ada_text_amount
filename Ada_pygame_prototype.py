@@ -683,37 +683,6 @@ class Runner:
                          y_text=self.pos_text[1],
                          opacity=self.opacity_texts_present_all)
 
-    def get_num_fragments(self):
-        """
-        Get the number of lines and number of pages/chunks (fragments) when displaying all texts at once. Especially in the "present all" mode.
-        :return: count_num_fragments.
-        """
-        # Initialize the argument.
-        num_fragments = 0
-
-        if self.mode_text_update is Config.MODE_PRESENT_ALL:
-            # Present all mode, count the number of pages.
-            words = self.texts.split(' ')
-            space = self.font_text.size(' ')[0]
-            x_text, y_text = self.pos_text
-
-            # Render word by word.
-            count_num_lines = 1  # Have to start from 1!
-            for word in words:
-                word_surface = self.font_text.render(word, 0, self.color_text)
-                word_width, word_height = word_surface.get_size()
-                if x_text + word_width >= self.max_width_from_left:
-                    # Update the counter. Already starts from the second line.
-                    count_num_lines += 1
-                    x_text = self.pos_text[0]
-                x_text += word_width + space
-
-            num_fragments = int(math.ceil(count_num_lines / self.num_lines_tolerated_present_all_mode))
-        elif self.mode_text_update is Config.MODE_ADAPTIVE or self.mode_text_update is Config.MODE_CONTEXTUAL or self.mode_text_update is Config.MODE_MANUAL:
-            # Adaptive and contextual adaptive mode, count the number of chunks.
-            num_fragments = int(len(self.texts_chunks))
-        return num_fragments
-
     def generate_subtask(self):
         """
         Generate different types of subtasks.
@@ -801,12 +770,44 @@ class Runner:
                     pygame.draw.rect(self.surface, self.color_gap_count_task_shape,
                                      [pos_shape[0], pos_shape[1], width, height], 0)
 
+    def get_num_fragments(self):
+        """
+        Get the number of lines and number of pages/chunks (fragments) when displaying all texts at once. Especially in the "present all" mode.
+        :return: count_num_fragments.
+        """
+        # Initialize the argument.
+        num_fragments = 0
+
+        if self.mode_text_update is Config.MODE_PRESENT_ALL:
+            # Present all mode, count the number of pages.
+            words = self.texts.split(' ')
+            space = self.font_text.size(' ')[0]
+            x_text, y_text = self.pos_text
+
+            # Render word by word.
+            count_num_lines = 1  # Have to start from 1!
+            for word in words:
+                word_surface = self.font_text.render(word, 0, self.color_text)
+                word_width, word_height = word_surface.get_size()
+                if x_text + word_width >= self.max_width_from_left:
+                    # Update the counter. Already starts from the second line.
+                    count_num_lines += 1
+                    x_text = self.pos_text[0]
+                x_text += word_width + space
+
+            num_fragments = int(math.ceil(count_num_lines / self.num_lines_tolerated_present_all_mode))
+        elif self.mode_text_update is Config.MODE_ADAPTIVE or self.mode_text_update is Config.MODE_CONTEXTUAL or self.mode_text_update is Config.MODE_MANUAL:
+            # Adaptive and contextual adaptive mode, count the number of chunks.
+            num_fragments = int(len(self.texts_chunks))
+        return num_fragments
+
     def get_average_wps_manual_mode(self):
         """
         This function calculate the average words read per second from the log files under "Manual mode".
         :return: the class parameter / instance - wps_dynamic for the following up trials.
         """
-        wps_dynamical = np.mean(np.array(self.log_actual_amounts_texts) / np.array(self.log_time_elapsed_read_text_mode_manual)) * 1000   # The unit is: number of words per second.
+        wps_dynamical = np.mean(np.array(self.log_actual_amounts_texts) / np.array(
+            self.log_time_elapsed_read_text_mode_manual)) * 1000  # The unit is: number of words per second.
         return wps_dynamical
 
     def generate_log_file(self):
