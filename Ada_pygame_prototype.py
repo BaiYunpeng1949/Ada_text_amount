@@ -896,42 +896,6 @@ class Runner:
 
 
 def run_pilots(name, time, id_participant):
-    # ############################################## Session 1: data collection ###########################################################
-    # # Start the data collection session for obtaining participants' basic reading speed (for parameter: words per second).
-    # num_conditions_data_collection = len(Config.CONDITIONS_DATA_COLLECTION)
-    # for i in range(num_conditions_data_collection):
-    #     duration_gap_current_condition_data_collection = Config.CONDITIONS_DATA_COLLECTION[(i + 1)]["duration_gap"]
-    #     mode_update_current_condition_data_collection = Config.CONDITIONS_DATA_COLLECTION[(i + 1)]["mode_update"]
-    #     num_words_current_condition_data_collection = Config.CONDITIONS_DATA_COLLECTION[(i+1)]["number of words"]
-    #     print("The data collection session starts.")
-    #     # Initiate
-    #     pygame.init()
-    #
-    #     # Initiate the data collection instance runner.
-    #     runner_data_collection_current = Runner(
-    #         participant_name=name + "_" + str(id_participant),
-    #         experiment_time=time,
-    #         trial_information="Data collection_" + str(i + 1),
-    #         wps_reading_speed=Config.WPS_READING_SPEED_INITIAL,
-    #         offset_reading_speed=Config.OFFSET_READING_SPEED,
-    #         duration_gap=duration_gap_current_condition_data_collection,
-    #         amount_text=num_words_current_condition_data_collection,
-    #         source_text_path=Config.SOURCE_TEXTS_PATH_LIST_DATA_COLLECTION[i],
-    #         # The first text is for training session.
-    #         task_type_gap=Config.GAP_COUNT_TASK,
-    #         mode_update=mode_update_current_condition_data_collection,
-    #         condition_exp=Config.CONDITION_POS_HOR,
-    #         color_background=Config.COLOR_BACKGROUND, color_text=Config.COLOR_TEXTS,
-    #         size_text=Config.SIZE_TEXTS, size_gap=Config.SIZE_GAP_TASK,
-    #         pos_text=Config.POS_TEXTS, pos_gap=Config.POS_GAP
-    #     )
-    #
-    #     # Run the instance.
-    #     runner_data_collection_current.mainloop()
-    #
-    #     # Get the specific participant's reading speed.
-    #     wps = runner_data_collection_current.get_average_wps_manual_mode()
-
     # Create a waiting canvas, then proceed to the training session.
     content_text_before_training = "To start reading, click [R]"
     Util.create_waiting_canvas(content_texts=content_text_before_training,
