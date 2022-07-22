@@ -1,5 +1,5 @@
 import pygame
-
+from nltk import tokenize
 
 def read_from_file(path_text):
     # Read materials from a text file. While the texts are all stacked up in one line.
@@ -9,6 +9,11 @@ def read_from_file(path_text):
 
 
 def create_waiting_canvas(content_texts):
+    """
+    Create a waiting canvas/widget to wait for experimenter's operations to proceed.
+    :param content_texts:
+    :return:
+    """
     # Initiate the parameters
     pos_surface = (0, 0)
     font = "arial"
@@ -35,3 +40,48 @@ def create_waiting_canvas(content_texts):
                     is_waiting = False
 
     pygame.quit()
+
+
+def split_reading_texts(num_sentences, reading_material):
+    """
+    Split the reading texts into a certain amount of texts. Currently refers to the number of full sentences.
+    :param num_sentences: The amount of texts. Indicating the number of information. Will add sentence processing later.
+    :param reading_material: The text reading material.
+    :return: The split reading text material.
+    """
+    # Split the reading material into full sentences.
+    generated_full_sentences = tokenize.sent_tokenize(reading_material)
+    num_sentences_total = len(generated_full_sentences)
+
+    # Allocate assigned number of texts into chunks.
+    chunks = []
+    counter_added_num_sentences = 0
+    current_chunk = ""
+    index_pointer_sentences = 0
+    while True:
+        current_chunk = current_chunk + generated_full_sentences[index_pointer_sentences] + " "
+
+        # Update local variables.
+        counter_added_num_sentences += 1
+        index_pointer_sentences += 1
+
+        # The legitimacy of the current chunk.
+        if counter_added_num_sentences >= num_sentences:
+            chunks.append(current_chunk)
+            counter_added_num_sentences = 0
+            current_chunk = ""
+
+        # The legitimacy of the usage of the whole reading texts.
+        if index_pointer_sentences >= num_sentences_total - 1:
+            if counter_added_num_sentences < num_sentences:     # The chunk has not been extended yet.
+                chunks.append(current_chunk)
+            break
+
+    # Texts info record.
+    num_words_chunks = []   # Get the number of words per chunk
+    for chunk in chunks:
+        num_words_chunk = len(chunk.split())
+        num_words_chunks.append(num_words_chunk)
+
+    num_chunks = len(chunks)    # Get the number of chunks.
+    return chunks, num_chunks, num_words_chunks

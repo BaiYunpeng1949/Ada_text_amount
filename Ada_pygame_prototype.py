@@ -197,7 +197,7 @@ class Runner:
                             if event.key == pygame.K_PAGEDOWN:
                                 # Clear up to avoid occlusions.
                                 self.surface.fill(self.color_background)
-                                self.is_text_showing = False    # Force jump into the next gap (secondary) task.
+                                self.is_text_showing = False  # Force jump into the next gap (secondary) task.
                                 self.counter_attention_shifts += 1  # Update the global counter.
                                 self.timer = 0
 
@@ -351,10 +351,17 @@ class Runner:
 
     def prepare_materials_dynamically(self):
         # Run the whole material prepare procedure here.
-        # Split texts.
-        self.split_full_sentences_chunks()
+
+        # # Split texts.
+        # self.split_full_sentences_chunks()
+
+        # Split texts into certain amounts of sentences.
+        self.texts_chunks, self.num_attention_shifts, self.log_actual_amounts_texts = Util.split_reading_texts(num_sentences=self.amount_text,
+                                                                                                               reading_material=self.texts)
+
         # Allocate time.
         self.allocate_time_adaptively()
+
         # Calculate the number of fragments.
         self.boundary_num_fragments = self.get_num_fragments()
 
@@ -396,7 +403,7 @@ class Runner:
 
     def split_full_sentences_chunks(self):
         """
-        This function split texts with full stops, i.e., stop with ".".
+        This function split texts with full stops, i.e., stop with ".", according to the given number of words.
         And allocate different text chunks with our proposed idea of adaptive and contextual adaptive methods.
         :return: text chunks, time allocated, and some log files.
         """
@@ -791,7 +798,8 @@ class Runner:
         This function calculate the average words read per second from the log files under "Manual mode".
         :return: the class parameter / instance - wps_dynamic for the following up trials.
         """
-        wps_dynamical = np.mean(np.array(self.log_actual_amounts_texts) / np.array(self.log_time_elapsed_read_text_mode_manual)) * 1000   # The unit is: number of words per second.
+        wps_dynamical = np.mean(np.array(self.log_actual_amounts_texts) / np.array(
+            self.log_time_elapsed_read_text_mode_manual)) * 1000  # The unit is: number of words per second.
         return wps_dynamical
 
     def generate_log_file(self):
@@ -868,7 +876,8 @@ class Runner:
                 if self.mode_text_update is Config.MODE_MANUAL:
                     f.write("The average elapsed time is: " +
                             str(np.mean(self.log_time_elapsed_read_text_mode_manual)) + " ms" + "\n")
-                    f.write("The average reading speed is: " + str(self.get_average_wps_manual_mode()) + "words per second" + "\n")
+                    f.write("The average reading speed is: " + str(
+                        self.get_average_wps_manual_mode()) + "words per second" + "\n")
 
 
 def run_prototype():
@@ -903,7 +912,7 @@ def run_pilots(name, time, id_participant):
     for i in range(num_conditions_data_collection):
         duration_gap_current_condition_data_collection = Config.CONDITIONS_DATA_COLLECTION[(i + 1)]["duration_gap"]
         mode_update_current_condition_data_collection = Config.CONDITIONS_DATA_COLLECTION[(i + 1)]["mode_update"]
-        num_words_current_condition_data_collection = Config.CONDITIONS_DATA_COLLECTION[(i+1)]["number of words"]
+        num_words_current_condition_data_collection = Config.CONDITIONS_DATA_COLLECTION[(i + 1)]["number of words"]
         print("The data collection session starts.")
         # Initiate
         pygame.init()
@@ -933,7 +942,6 @@ def run_pilots(name, time, id_participant):
         # Get the specific participant's reading speed.
         wps = runner_data_collection_current.get_average_wps_manual_mode()
 
-
     # Create a waiting canvas, then proceed to the training session.
     content_text_data_collection_2_training = "This is the end of the warm up session. Can we proceed?"
     Util.create_waiting_canvas(content_texts=content_text_data_collection_2_training)
@@ -944,7 +952,7 @@ def run_pilots(name, time, id_participant):
     for i in range(num_conditions_trainings):
         duration_gap_current_condition_training = Config.CONDITIOMS_TRAININGS[(i + 1)]["duration_gap"]
         mode_update_current_condition_training = Config.CONDITIOMS_TRAININGS[(i + 1)]["mode_update"]
-        num_words_current_condition_training = Config.CONDITIOMS_TRAININGS[(i+1)]["number of words"]
+        num_words_current_condition_training = Config.CONDITIOMS_TRAININGS[(i + 1)]["number of words"]
         # The training session starts
         print("The training session starts.")
 
@@ -1000,7 +1008,8 @@ def run_pilots(name, time, id_participant):
             "duration_gap"]
         mode_update_current_condition_studies = Config.CONDITIONS_STUDIES[index_current_participant_in_conditions][
             "mode_update"]
-        num_words_current_condition_studies = Config.CONDITIONS_STUDIES[index_current_participant_in_conditions]["number of words"]
+        num_words_current_condition_studies = Config.CONDITIONS_STUDIES[index_current_participant_in_conditions][
+            "number of words"]
 
         # Initiate.
         pygame.init()

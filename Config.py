@@ -26,62 +26,62 @@ CONDITIONS_DATA_COLLECTION = {
     1: {
         "duration_gap": 2000,
         "mode_update": MODE_MANUAL,
-        "number of words": 10
+        "number of words": 3
     },
     2: {
         "duration_gap": 2000,
         "mode_update": MODE_MANUAL,
-        "number of words": 35
+        "number of words": 3
     }
 }
 
 CONDITIOMS_TRAININGS = {
     1: {
         "duration_gap": 2000,
-        "mode_update": MODE_PRESENT_ALL,
-        "number of words": 35
+        "mode_update": MODE_MANUAL,
+        "number of words": 3
     },
     2: {
         "duration_gap": 2000,
-        "mode_update": MODE_ADAPTIVE,
-        "number of words": 35
+        "mode_update": MODE_MANUAL,
+        "number of words": 3
     },
     3: {
         "duration_gap": 2000,
-        "mode_update": MODE_CONTEXTUAL,
-        "number of words": 35
+        "mode_update": MODE_MANUAL,
+        "number of words": 3
     }
 }
 CONDITIONS_STUDIES = {
     1: {
         "duration_gap": 5000,
-        "mode_update": MODE_PRESENT_ALL,
-        "number of words": 35
+        "mode_update": MODE_MANUAL,
+        "number of words": 3
     },
     2: {
-        "duration_gap": 15000,
-        "mode_update": MODE_CONTEXTUAL,
-        "number of words": 35
+        "duration_gap": 5000,
+        "mode_update": MODE_MANUAL,
+        "number of words": 3
     },
     3: {
         "duration_gap": 5000,
-        "mode_update": MODE_ADAPTIVE,
-        "number of words": 35
+        "mode_update": MODE_MANUAL,
+        "number of words": 3
     },
     4: {
         "duration_gap": 5000,
-        "mode_update": MODE_CONTEXTUAL,
-        "number of words": 35
+        "mode_update": MODE_MANUAL,
+        "number of words": 3
     },
     5: {
-        "duration_gap": 15000,
-        "mode_update": MODE_ADAPTIVE,
-        "number of words": 35
+        "duration_gap": 5000,
+        "mode_update": MODE_MANUAL,
+        "number of words": 3
     },
     6: {
-        "duration_gap": 15000,
-        "mode_update": MODE_PRESENT_ALL,
-        "number of words": 35
+        "duration_gap": 5000,
+        "mode_update": MODE_MANUAL,
+        "number of words": 3
     }
 }
 
