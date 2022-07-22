@@ -155,59 +155,8 @@ class Runner:
     def mainloop(self):
         self.is_running = True
         while self.is_running:
-            for event in pygame.event.get():
-                # Normally close the game.
-                if event.type == pygame.QUIT:
-                    self.is_running = False
-                # Key press detection.
-                elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
-                        self.is_running = False
-                    # On the present-all mode, use up and down keys to scroll the texts.
-                    elif event.key == pygame.K_PAGEUP or event.key == pygame.K_PAGEDOWN:
-                        if self.is_text_showing and self.mode_text_update is Config.MODE_PRESENT_ALL:
-                            # Clear up to avoid occlusions.
-                            self.surface.fill(self.color_background)
-                            # Update the scrolling parameters, including how many lines are operated, scroll up or down.
-                            if event.key == pygame.K_PAGEUP:
-                                # Scrolling up. But not exceed the upper boundary.
-                                if self.num_scrolling_press_keys_present_all < 0:
-                                    self.num_scrolling_press_keys_present_all += 1
-
-                            elif event.key == pygame.K_PAGEDOWN:
-                                # Scrolling down. Not exceed the lower boundary.
-                                if self.num_scrolling_press_keys_present_all > (-(self.boundary_num_fragments - 1)):
-                                    # Minus 1 because initially participants are in the 1st page, and parameter self.num_scrolling_press_keys_present_all starts from 0.
-                                    self.num_scrolling_press_keys_present_all -= 1
-                        # On the 2 adaptive modes. We also enabled the scrolling function to make conditions fair.
-                        elif self.is_text_showing and (
-                                self.mode_text_update is Config.MODE_ADAPTIVE or self.mode_text_update is Config.MODE_CONTEXTUAL):
-                            # Clear up to avoid occlusions.
-                            self.surface.fill(self.color_background)
-
-                            if event.key == pygame.K_PAGEUP:
-                                if self.index_displayed_chunk > 0:
-                                    self.index_displayed_chunk -= 1
-                            elif event.key == pygame.K_PAGEDOWN:
-                                if self.index_displayed_chunk < (self.boundary_num_fragments - 1):
-                                    self.index_displayed_chunk += 1
-
-                        # On the manual mode.
-                        elif self.is_text_showing and self.mode_text_update is Config.MODE_MANUAL:
-                            if event.key == pygame.K_PAGEDOWN:
-                                # Clear up to avoid occlusions.
-                                self.surface.fill(self.color_background)
-                                self.is_text_showing = False  # Force jump into the next gap (secondary) task.
-                                self.counter_attention_shifts += 1  # Update the global counter.
-                                self.timer = 0
-
-                                if self.index_displayed_chunk < (self.boundary_num_fragments - 1):
-                                    self.index_displayed_chunk += 1
-
-                                # Collect the time spent on the certain amount of text.
-                                self.log_time_elapsed_read_text_mode_manual.append(
-                                    self.timer_elapsed_read_text_mode_manual)
-                                self.timer_elapsed_read_text_mode_manual = 0
+            # Key press / button click detection.
+            self.detect_key_press_events()
 
             # Count the time elapsed.
             self.time_elapsed = self.clock.tick(self.fps)
@@ -215,97 +164,16 @@ class Runner:
             self.timer += self.time_elapsed
 
             # Display text content. Check the legimacy of indicies, in case of index out of range.
-            if self.counter_attention_shifts < self.num_attention_shifts:
-                # Display the texts and gap task.
-                if self.is_text_showing:
-                    # Draw content.
-                    # In the RSVP mode. Get the current texts. display different chunks of texts.
-                    if (self.mode_text_update is Config.MODE_ADAPTIVE) or (
-                            self.mode_text_update is Config.MODE_CONTEXTUAL):
-                        self.content_text_temp = self.texts_chunks[self.index_displayed_chunk]
-                    # For the manual mode.
-                    elif self.mode_text_update is Config.MODE_MANUAL:
-                        # Timer update, only works when reading. Only record reading time.
-                        self.timer_elapsed_read_text_mode_manual += self.time_elapsed
-                        self.content_text_temp = self.texts_chunks[self.index_displayed_chunk]
-                    # In the Present-all mode, display all texts once.
-                    elif self.mode_text_update is Config.MODE_PRESENT_ALL:
-                        self.content_text_temp = self.texts
+            self.update_tasks()
 
-                    # Adaptively arrange the duration of the text reading. The global variable duration_text is updated.
-                    self.duration_text_current_chunk = self.log_time_elapsed_read_text_mode_rsvp[
-                        self.index_current_chunk]
-
-                    # Display texts. No matter which mode.
-                    self.render_texts_multiple_lines()  # Render text content word by word, line by line.
-
-                    # Update the status automatically if in the rsvp mode or in the present-all mode.
-                    if self.timer > self.duration_text_current_chunk:
-                        if (self.mode_text_update is Config.MODE_ADAPTIVE) or (
-                                self.mode_text_update is Config.MODE_PRESENT_ALL) or (
-                                self.mode_text_update is Config.MODE_CONTEXTUAL):
-                            self.surface.fill(self.color_background)
-                            self.counter_attention_shifts += 1
-                            self.is_text_showing = False
-                            self.timer = 0
-
-                            # RSVP update mode for text display.
-                            self.index_current_chunk += 1
-
-                            # Update log file for the RSVP mode and present all mode.
-                            self.log_time_elapsed_read_text_mode_rsvp.append(self.duration_text_current_chunk)
-
-                # Display the gap content.
-                elif self.is_text_showing is False:
-                    if self.task_type_gap == Config.GAP_MATH_TASK:
-                        self.content_gap_temp = self.gap_math_task_chunks[self.counter_attention_shifts]
-                        self.image_gap = self.font_gap.render(self.content_gap_temp, True, self.color_text)
-
-                    self.render_gap_tasks()  # Render content according to task type.
-
-                    if self.timer > self.duration_gap:
-                        self.is_text_showing = True
-                        self.timer = 0
-                        self.surface.fill(self.color_background)
-                        # Flush the counter for gap task type 2: count task.
-                        self.counter_count_gap_task_shapes_change = 0
-                        # Flush the number of fragments scrolling up/down. Synchronize up to the present one.
-                        if self.mode_text_update is not Config.MODE_MANUAL:
-                            self.index_displayed_chunk = self.index_current_chunk
-
-                        # Pause after the gap task is over, wait for the participant to start next reading session.
-                        # Display information.
-                        self.surface.fill(self.color_background)
-                        self.centralize_instructions_postition(
-                            text_instruction="To start reading, click [R] on the ring",
-                            y_pos_instruction=350)
-                        pygame.display.flip()
-                        # Pause here.
-                        is_waiting_participant_next_trial = True
-                        # Timer settings
-                        timer_waiting = 0
-                        while is_waiting_participant_next_trial:
-                            # Timer update.
-                            time_elapsed_waiting = self.clock.tick(self.fps)
-                            timer_waiting = timer_waiting + time_elapsed_waiting
-                            for event in pygame.event.get():
-                                if event.type == pygame.MOUSEBUTTONDOWN:
-                                    if event.button == 3:  # 3 stands for the right click.
-                                        is_waiting_participant_next_trial = False  # Jump out of the loop.
-                                        # Clear the scene.
-                                        self.surface.fill(self.color_background)
-                                        # Update the time elapsed while waiting
-                                        self.log_time_elapsed_waiting_next_trial.append(timer_waiting)
-
-            pygame.display.flip()
-
-            # The experiment is over with exceeding the iteration times. It only works in rsvp mode.
+            # Check the loop jump legitimacy.
             if self.counter_attention_shifts >= self.num_attention_shifts:
                 self.is_running = False
 
         # Log here, once the tial is over. In case data lost due to following wrong operations.
         self.generate_log_file()
 
+        # Interaction parts, intervals between trials.
         # Show the last scene to help with record where the reader stopped.
         # Display the white background to indicate participants to stop.
         self.render_texts_multiple_lines()
@@ -349,19 +217,159 @@ class Runner:
         # Quit the game at the main method.
         pygame.quit()
 
+    def detect_key_press_events(self):
+        """
+        Put this method/function in the loop, detect the key press events.
+        :return:
+        """
+        for event in pygame.event.get():
+            # Normally close the game.
+            if event.type == pygame.QUIT:
+                self.is_running = False
+            # Key press detection.
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    self.is_running = False
+                # On the present-all mode, use up and down keys to scroll the texts.
+                elif event.key == pygame.K_PAGEUP or event.key == pygame.K_PAGEDOWN:
+                    if self.is_text_showing and self.mode_text_update is Config.MODE_PRESENT_ALL:
+                        # Clear up to avoid occlusions.
+                        self.surface.fill(self.color_background)
+                        # Update the scrolling parameters, including how many lines are operated, scroll up or down.
+                        if event.key == pygame.K_PAGEUP:
+                            # Scrolling up. But not exceed the upper boundary.
+                            if self.num_scrolling_press_keys_present_all < 0:
+                                self.num_scrolling_press_keys_present_all += 1
+
+                        elif event.key == pygame.K_PAGEDOWN:
+                            # Scrolling down. Not exceed the lower boundary.
+                            if self.num_scrolling_press_keys_present_all > (-(self.boundary_num_fragments - 1)):
+                                # Minus 1 because initially participants are in the 1st page, and parameter self.num_scrolling_press_keys_present_all starts from 0.
+                                self.num_scrolling_press_keys_present_all -= 1
+                    # On the 2 adaptive modes. We also enabled the scrolling function to make conditions fair.
+                    elif self.is_text_showing and (
+                            self.mode_text_update is Config.MODE_ADAPTIVE or self.mode_text_update is Config.MODE_CONTEXTUAL):
+                        # Clear up to avoid occlusions.
+                        self.surface.fill(self.color_background)
+
+                        if event.key == pygame.K_PAGEUP:
+                            if self.index_displayed_chunk > 0:
+                                self.index_displayed_chunk -= 1
+                        elif event.key == pygame.K_PAGEDOWN:
+                            if self.index_displayed_chunk < (self.boundary_num_fragments - 1):
+                                self.index_displayed_chunk += 1
+
+                    # On the manual mode.
+                    elif self.is_text_showing and self.mode_text_update is Config.MODE_MANUAL:
+                        if event.key == pygame.K_PAGEDOWN:
+                            # Clear up to avoid occlusions.
+                            self.surface.fill(self.color_background)
+                            self.is_text_showing = False  # Force jump into the next gap (secondary) task.
+                            self.counter_attention_shifts += 1  # Update the global counter.
+                            self.timer = 0
+
+                            if self.index_displayed_chunk < (self.boundary_num_fragments - 1):
+                                self.index_displayed_chunk += 1
+
+                            # Collect the time spent on the certain amount of text.
+                            self.log_time_elapsed_read_text_mode_manual.append(
+                                self.timer_elapsed_read_text_mode_manual)
+                            self.timer_elapsed_read_text_mode_manual = 0
+
+    def update_tasks(self):
+        """
+        Put this function/mainloop into the mainloop, generate text display tasks and fake secondary tasks sequentially.
+        :return:
+        """
+        if self.counter_attention_shifts < self.num_attention_shifts:
+            # Display the texts and gap task.
+            if self.is_text_showing:
+                # Draw content.
+                # In the RSVP mode. Get the current texts. display different chunks of texts.
+                if (self.mode_text_update is Config.MODE_ADAPTIVE) or (
+                        self.mode_text_update is Config.MODE_CONTEXTUAL):
+                    self.content_text_temp = self.texts_chunks[self.index_displayed_chunk]
+                # For the manual mode.
+                elif self.mode_text_update is Config.MODE_MANUAL:
+                    # Timer update, only works when reading. Only record reading time.
+                    self.timer_elapsed_read_text_mode_manual += self.time_elapsed
+                    self.content_text_temp = self.texts_chunks[self.index_displayed_chunk]
+                # In the Present-all mode, display all texts once.
+                elif self.mode_text_update is Config.MODE_PRESENT_ALL:
+                    self.content_text_temp = self.texts
+
+                # Adaptively arrange the duration of the text reading. The global variable duration_text is updated.
+                self.duration_text_current_chunk = self.log_time_elapsed_read_text_mode_rsvp[
+                    self.index_current_chunk]
+
+                # Display texts. No matter which mode.
+                self.render_texts_multiple_lines()  # Render text content word by word, line by line.
+
+                # Update the status automatically if in the rsvp mode or in the present-all mode.
+                if self.timer > self.duration_text_current_chunk:
+                    if (self.mode_text_update is Config.MODE_ADAPTIVE) or (
+                            self.mode_text_update is Config.MODE_PRESENT_ALL) or (
+                            self.mode_text_update is Config.MODE_CONTEXTUAL):
+                        self.surface.fill(self.color_background)
+                        self.counter_attention_shifts += 1
+                        self.is_text_showing = False
+                        self.timer = 0
+
+                        # RSVP update mode for text display.
+                        self.index_current_chunk += 1
+
+                        # Update log file for the RSVP mode and present all mode.
+                        self.log_time_elapsed_read_text_mode_rsvp.append(self.duration_text_current_chunk)
+
+            # Display the gap content.
+            elif self.is_text_showing is False:
+                if self.task_type_gap == Config.GAP_MATH_TASK:
+                    self.content_gap_temp = self.gap_math_task_chunks[self.counter_attention_shifts]
+                    self.image_gap = self.font_gap.render(self.content_gap_temp, True, self.color_text)
+
+                self.render_gap_tasks()  # Render content according to task type.
+
+                if self.timer > self.duration_gap:
+                    self.is_text_showing = True
+                    self.timer = 0
+                    self.surface.fill(self.color_background)
+                    # Flush the counter for gap task type 2: count task.
+                    self.counter_count_gap_task_shapes_change = 0
+                    # Flush the number of fragments scrolling up/down. Synchronize up to the present one.
+                    if self.mode_text_update is not Config.MODE_MANUAL:
+                        self.index_displayed_chunk = self.index_current_chunk
+
+                    # Pause after the gap task is over, wait for the participant to start next reading session.
+                    # Display information.
+                    self.surface.fill(self.color_background)
+                    self.centralize_instructions_postition(
+                        text_instruction="To start reading, click [R] on the ring",
+                        y_pos_instruction=350)
+                    pygame.display.flip()
+                    # Pause here.
+                    is_waiting_participant_next_trial = True
+                    # Timer settings
+                    timer_waiting = 0
+                    while is_waiting_participant_next_trial:
+                        # Timer update.
+                        time_elapsed_waiting = self.clock.tick(self.fps)
+                        timer_waiting = timer_waiting + time_elapsed_waiting
+                        for event in pygame.event.get():
+                            if event.type == pygame.MOUSEBUTTONDOWN:
+                                if event.button == 3:  # 3 stands for the right click.
+                                    is_waiting_participant_next_trial = False  # Jump out of the loop.
+                                    # Clear the scene.
+                                    self.surface.fill(self.color_background)
+                                    # Update the time elapsed while waiting
+                                    self.log_time_elapsed_waiting_next_trial.append(timer_waiting)
+        pygame.display.flip()
+
     def prepare_materials_dynamically(self):
         # Run the whole material prepare procedure here.
-
-        # # Split texts.
-        # self.split_full_sentences_chunks()
-
-        # Split texts into certain amounts of sentences.
-        self.texts_chunks, self.num_attention_shifts, self.log_actual_amounts_texts = Util.split_reading_texts(num_sentences=self.amount_text,
-                                                                                                               reading_material=self.texts)
-
+        # Split texts.
+        self.split_full_sentences_chunks()
         # Allocate time.
         self.allocate_time_adaptively()
-
         # Calculate the number of fragments.
         self.boundary_num_fragments = self.get_num_fragments()
 
@@ -403,7 +411,7 @@ class Runner:
 
     def split_full_sentences_chunks(self):
         """
-        This function split texts with full stops, i.e., stop with ".", according to the given number of words.
+        This function split texts with full stops, i.e., stop with ".".
         And allocate different text chunks with our proposed idea of adaptive and contextual adaptive methods.
         :return: text chunks, time allocated, and some log files.
         """
@@ -675,37 +683,6 @@ class Runner:
                          y_text=self.pos_text[1],
                          opacity=self.opacity_texts_present_all)
 
-    def get_num_fragments(self):
-        """
-        Get the number of lines and number of pages/chunks (fragments) when displaying all texts at once. Especially in the "present all" mode.
-        :return: count_num_fragments.
-        """
-        # Initialize the argument.
-        num_fragments = 0
-
-        if self.mode_text_update is Config.MODE_PRESENT_ALL:
-            # Present all mode, count the number of pages.
-            words = self.texts.split(' ')
-            space = self.font_text.size(' ')[0]
-            x_text, y_text = self.pos_text
-
-            # Render word by word.
-            count_num_lines = 1  # Have to start from 1!
-            for word in words:
-                word_surface = self.font_text.render(word, 0, self.color_text)
-                word_width, word_height = word_surface.get_size()
-                if x_text + word_width >= self.max_width_from_left:
-                    # Update the counter. Already starts from the second line.
-                    count_num_lines += 1
-                    x_text = self.pos_text[0]
-                x_text += word_width + space
-
-            num_fragments = int(math.ceil(count_num_lines / self.num_lines_tolerated_present_all_mode))
-        elif self.mode_text_update is Config.MODE_ADAPTIVE or self.mode_text_update is Config.MODE_CONTEXTUAL or self.mode_text_update is Config.MODE_MANUAL:
-            # Adaptive and contextual adaptive mode, count the number of chunks.
-            num_fragments = int(len(self.texts_chunks))
-        return num_fragments
-
     def generate_subtask(self):
         """
         Generate different types of subtasks.
@@ -793,6 +770,37 @@ class Runner:
                     pygame.draw.rect(self.surface, self.color_gap_count_task_shape,
                                      [pos_shape[0], pos_shape[1], width, height], 0)
 
+    def get_num_fragments(self):
+        """
+        Get the number of lines and number of pages/chunks (fragments) when displaying all texts at once. Especially in the "present all" mode.
+        :return: count_num_fragments.
+        """
+        # Initialize the argument.
+        num_fragments = 0
+
+        if self.mode_text_update is Config.MODE_PRESENT_ALL:
+            # Present all mode, count the number of pages.
+            words = self.texts.split(' ')
+            space = self.font_text.size(' ')[0]
+            x_text, y_text = self.pos_text
+
+            # Render word by word.
+            count_num_lines = 1  # Have to start from 1!
+            for word in words:
+                word_surface = self.font_text.render(word, 0, self.color_text)
+                word_width, word_height = word_surface.get_size()
+                if x_text + word_width >= self.max_width_from_left:
+                    # Update the counter. Already starts from the second line.
+                    count_num_lines += 1
+                    x_text = self.pos_text[0]
+                x_text += word_width + space
+
+            num_fragments = int(math.ceil(count_num_lines / self.num_lines_tolerated_present_all_mode))
+        elif self.mode_text_update is Config.MODE_ADAPTIVE or self.mode_text_update is Config.MODE_CONTEXTUAL or self.mode_text_update is Config.MODE_MANUAL:
+            # Adaptive and contextual adaptive mode, count the number of chunks.
+            num_fragments = int(len(self.texts_chunks))
+        return num_fragments
+
     def get_average_wps_manual_mode(self):
         """
         This function calculate the average words read per second from the log files under "Manual mode".
@@ -876,8 +884,7 @@ class Runner:
                 if self.mode_text_update is Config.MODE_MANUAL:
                     f.write("The average elapsed time is: " +
                             str(np.mean(self.log_time_elapsed_read_text_mode_manual)) + " ms" + "\n")
-                    f.write("The average reading speed is: " + str(
-                        self.get_average_wps_manual_mode()) + "words per second" + "\n")
+                    f.write("The average reading speed is: " + str(self.get_average_wps_manual_mode()) + "words per second" + "\n")
 
 
 def run_prototype():
@@ -912,7 +919,7 @@ def run_pilots(name, time, id_participant):
     for i in range(num_conditions_data_collection):
         duration_gap_current_condition_data_collection = Config.CONDITIONS_DATA_COLLECTION[(i + 1)]["duration_gap"]
         mode_update_current_condition_data_collection = Config.CONDITIONS_DATA_COLLECTION[(i + 1)]["mode_update"]
-        num_words_current_condition_data_collection = Config.CONDITIONS_DATA_COLLECTION[(i + 1)]["number of words"]
+        num_words_current_condition_data_collection = Config.CONDITIONS_DATA_COLLECTION[(i+1)]["number of words"]
         print("The data collection session starts.")
         # Initiate
         pygame.init()
@@ -942,6 +949,7 @@ def run_pilots(name, time, id_participant):
         # Get the specific participant's reading speed.
         wps = runner_data_collection_current.get_average_wps_manual_mode()
 
+
     # Create a waiting canvas, then proceed to the training session.
     content_text_data_collection_2_training = "This is the end of the warm up session. Can we proceed?"
     Util.create_waiting_canvas(content_texts=content_text_data_collection_2_training)
@@ -952,7 +960,7 @@ def run_pilots(name, time, id_participant):
     for i in range(num_conditions_trainings):
         duration_gap_current_condition_training = Config.CONDITIOMS_TRAININGS[(i + 1)]["duration_gap"]
         mode_update_current_condition_training = Config.CONDITIOMS_TRAININGS[(i + 1)]["mode_update"]
-        num_words_current_condition_training = Config.CONDITIOMS_TRAININGS[(i + 1)]["number of words"]
+        num_words_current_condition_training = Config.CONDITIOMS_TRAININGS[(i+1)]["number of words"]
         # The training session starts
         print("The training session starts.")
 
@@ -1008,8 +1016,7 @@ def run_pilots(name, time, id_participant):
             "duration_gap"]
         mode_update_current_condition_studies = Config.CONDITIONS_STUDIES[index_current_participant_in_conditions][
             "mode_update"]
-        num_words_current_condition_studies = Config.CONDITIONS_STUDIES[index_current_participant_in_conditions][
-            "number of words"]
+        num_words_current_condition_studies = Config.CONDITIONS_STUDIES[index_current_participant_in_conditions]["number of words"]
 
         # Initiate.
         pygame.init()
