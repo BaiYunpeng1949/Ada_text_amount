@@ -92,7 +92,8 @@ SOURCE_TEXTS_PATH_LIST_DATA_COLLECTION = [
 
 SOURCE_TEXTS_PATH_LIST_TRAINING = [
     # Text for formal data-collection session and training session.
-    "Reading Materials/Pilot version 6 July/Story02_366wrds_32sts_11.44wpst.txt",
+    "Reading Materials/Pilot version 1 July/Earth day_144.txt",
+    # "Reading Materials/Pilot version 6 July/Story02_366wrds_32sts_11.44wpst.txt",
 ]
 
 SOURCE_TEXTS_PATH_LIST_FORMAL_STUDIES = [

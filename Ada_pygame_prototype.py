@@ -371,7 +371,14 @@ class Runner:
     def prepare_materials_dynamically(self):
         # Run the whole material prepare procedure here.
         # Split texts.
-        self.split_full_sentences_chunks()
+        # self.split_full_sentences_chunks()
+
+        self.texts_chunks, self.num_attention_shifts, self.log_actual_amounts_texts = Util.split_reading_texts(
+            num_sentences=self.amount_text,
+            reading_material=self.texts)
+        for chunk in self.texts_chunks:  # TODO: debug, delete
+            print(chunk)
+
         # Allocate time.
         self.allocate_time_adaptively()
         # Calculate the number of fragments.
@@ -604,7 +611,7 @@ class Runner:
 
         # Allocate texts into different (3: 1st, last, middle) parts.
         # Only under the adaptive or contextual adaptive modes, and manual mode, sentences are stored in lists.
-        if self.mode_text_update is Config.MODE_ADAPTIVE or self.mode_text_update is Config.MODE_CONTEXTUAL or self.mode_text_update is Config.MODE_MANUAL:
+        if self.mode_text_update is Config.MODE_ADAPTIVE or self.mode_text_update is Config.MODE_CONTEXTUAL:
             # The 1st chunk.
             if self.index_displayed_chunk == 0:
                 for i in range(len(self.content_text_temp) - 1):
@@ -624,6 +631,8 @@ class Runner:
                 texts_later_context_display = self.content_text_temp[-1]
         elif self.mode_text_update is Config.MODE_PRESENT_ALL:
             texts_middle = self.texts
+        elif self.mode_text_update is Config.MODE_MANUAL:
+            texts_middle = self.content_text_temp
 
         # Auxiliary tool for rendering texts.
         def render_words(texts_display, x_text, y_text, opacity):
@@ -908,7 +917,7 @@ def run_pilots(name, time, id_participant):
     for i in range(num_conditions_trainings):
         duration_gap_current_condition_training = Config.CONDITIOMS_TRAININGS[(i + 1)]["duration_gap"]
         mode_update_current_condition_training = Config.CONDITIOMS_TRAININGS[(i + 1)]["mode_update"]
-        num_words_current_condition_training = Config.CONDITIOMS_TRAININGS[(i + 1)]["number of words"]
+        num_texts_current_condition_training = Config.CONDITIOMS_TRAININGS[(i + 1)]["number of words"]
         # The training session starts
         print("The training session starts.")
 
@@ -922,7 +931,7 @@ def run_pilots(name, time, id_participant):
                                          wps_reading_speed=Config.WPS_READING_SPEED_INITIAL,
                                          offset_reading_speed=Config.OFFSET_READING_SPEED,
                                          duration_gap=duration_gap_current_condition_training,
-                                         amount_text=num_words_current_condition_training,
+                                         amount_text=num_texts_current_condition_training,
                                          source_text_path=Config.SOURCE_TEXTS_PATH_LIST_TRAINING[0],
                                          # The first text is for training session.
                                          task_type_gap=Config.GAP_COUNT_TASK,
@@ -966,7 +975,7 @@ def run_pilots(name, time, id_participant):
             "duration_gap"]
         mode_update_current_condition_studies = Config.CONDITIONS_STUDIES[index_current_participant_in_conditions][
             "mode_update"]
-        num_words_current_condition_studies = Config.CONDITIONS_STUDIES[index_current_participant_in_conditions][
+        amount_texts_current_condition_studies = Config.CONDITIONS_STUDIES[index_current_participant_in_conditions][
             "number of words"]
 
         # Initiate.
@@ -981,7 +990,7 @@ def run_pilots(name, time, id_participant):
                                       wps_reading_speed=Config.WPS_READING_SPEED_INITIAL,
                                       offset_reading_speed=Config.OFFSET_READING_SPEED,
                                       duration_gap=duration_gap_current_condition_studies,
-                                      amount_text=num_words_current_condition_studies,
+                                      amount_text=amount_texts_current_condition_studies,
                                       source_text_path=Config.SOURCE_TEXTS_PATH_LIST_FORMAL_STUDIES[i],
                                       # The first text is for training session.
                                       task_type_gap=Config.GAP_COUNT_TASK,

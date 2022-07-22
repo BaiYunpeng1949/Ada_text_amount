@@ -20,7 +20,8 @@ def generate_latin_square(n: int, start_el: int = 1):  # Create the latin-square
 def create_waiting_canvas(content_texts, key_or_button, key_pressed):
     """
     Create a waiting canvas/widget to wait for experimenter's operations to proceed.
-    :param content_texts:
+    :param key_or_button: Determine its key press event or mouse click event.
+    :param content_texts: the instruction content.
     :return:
     """
     # Initiate the parameters
