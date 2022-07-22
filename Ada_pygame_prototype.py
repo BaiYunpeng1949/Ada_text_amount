@@ -62,7 +62,12 @@ class Runner:
         # Initialize global variables
         self.is_running = False
         self.fps = FPS
-        self.is_text_showing = False
+
+        if self.mode_text_update is Config.MODE_MANUAL:
+            self.is_text_showing = True
+        else:
+            self.is_text_showing = False
+
         self.timer = 0
         self.time_elapsed = 0
         self.timer_elapsed_read_text_mode_manual = 0
@@ -81,7 +86,7 @@ class Runner:
         self.threshold_bottom_num_text_reserve_sentence = 3  # If the words are less than 3, then reserve this sentence.
         self.threshold_top_num_text_abandon_sentence = 5  # If the words are more than 5, then abandon this sentence.
 
-        # Intialize logs.
+        # Initialize logs.
         self.log_actual_amounts_texts = []
         self.log_time_elapsed_read_text_mode_manual = []  # Store participants' reading speed: how many time for a certain amount of words.
         self.log_time_elapsed_read_text_mode_rsvp = []  # Self update time chunk allocation.
@@ -163,7 +168,7 @@ class Runner:
             # Update the timer.
             self.timer += self.time_elapsed
 
-            # Display text content. Check the legimacy of indicies, in case of index out of range.
+            # Display text content. Check the legitimacy of indicies, in case of index out of range.
             self.update_tasks()
 
             # Check the loop jump legitimacy.
@@ -211,7 +216,7 @@ class Runner:
         while is_waiting_participant_next_study:
             for event in pygame.event.get():
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    if event.button == 3:  # 3 stands for the right click.
+                    if event.button == Config.RIGHT_CLICK_RING_MOUSE:  # 3 stands for the right click.
                         is_waiting_participant_next_study = False  # Jump out of the loop.
 
         # Quit the game at the main method.
@@ -261,10 +266,9 @@ class Runner:
 
                     # On the manual mode.
                     elif self.is_text_showing and self.mode_text_update is Config.MODE_MANUAL:
-                        if event.key == pygame.K_PAGEDOWN:
+                        if event.key == pygame.K_PAGEDOWN:  # TODO: think about whether to add back the scroll back function. Modify DVs - time calculation.
                             # Clear up to avoid occlusions.
                             self.surface.fill(self.color_background)
-                            self.is_text_showing = False  # Force jump into the next gap (secondary) task.
                             self.counter_attention_shifts += 1  # Update the global counter.
                             self.timer = 0
 
@@ -321,8 +325,8 @@ class Runner:
                         # Update log file for the RSVP mode and present all mode.
                         self.log_time_elapsed_read_text_mode_rsvp.append(self.duration_text_current_chunk)
 
-            # Display the gap content.
-            elif self.is_text_showing is False:
+            # Display the gap content. And the gap task only appears on non-manual modes.
+            elif self.is_text_showing is False and self.mode_text_update is not Config.MODE_MANUAL:
                 if self.task_type_gap == Config.GAP_MATH_TASK:
                     self.content_gap_temp = self.gap_math_task_chunks[self.counter_attention_shifts]
                     self.image_gap = self.font_gap.render(self.content_gap_temp, True, self.color_text)
@@ -336,8 +340,8 @@ class Runner:
                     # Flush the counter for gap task type 2: count task.
                     self.counter_count_gap_task_shapes_change = 0
                     # Flush the number of fragments scrolling up/down. Synchronize up to the present one.
-                    if self.mode_text_update is not Config.MODE_MANUAL:
-                        self.index_displayed_chunk = self.index_current_chunk
+                    # if self.mode_text_update is not Config.MODE_MANUAL:
+                    self.index_displayed_chunk = self.index_current_chunk
 
                     # Pause after the gap task is over, wait for the participant to start next reading session.
                     # Display information.
@@ -356,7 +360,7 @@ class Runner:
                         timer_waiting = timer_waiting + time_elapsed_waiting
                         for event in pygame.event.get():
                             if event.type == pygame.MOUSEBUTTONDOWN:
-                                if event.button == 3:  # 3 stands for the right click.
+                                if event.button == Config.RIGHT_CLICK_RING_MOUSE:  # 3 stands for the right click.
                                     is_waiting_participant_next_trial = False  # Jump out of the loop.
                                     # Clear the scene.
                                     self.surface.fill(self.color_background)
@@ -806,8 +810,12 @@ class Runner:
         This function calculate the average words read per second from the log files under "Manual mode".
         :return: the class parameter / instance - wps_dynamic for the following up trials.
         """
-        wps_dynamical = np.mean(np.array(self.log_actual_amounts_texts) / np.array(
-            self.log_time_elapsed_read_text_mode_manual)) * 1000  # The unit is: number of words per second.
+        if len(self.log_time_elapsed_read_text_mode_manual) > 0:
+            wps_dynamical = np.mean(
+                np.array(self.log_actual_amounts_texts[:len(self.log_time_elapsed_read_text_mode_manual)]) / np.array(
+                    self.log_time_elapsed_read_text_mode_manual)) * 1000  # The unit is: number of words per second. Some times the system might be interrupted during running.
+        else:
+            wps_dynamical = 0
         return wps_dynamical
 
     def generate_log_file(self):
@@ -887,80 +895,56 @@ class Runner:
                     f.write("The average reading speed is: " + str(self.get_average_wps_manual_mode()) + "words per second" + "\n")
 
 
-def run_prototype():
-    # Run the prototype.
-    pygame.init()
-    runner_trial = Runner(participant_name="Bai Yunpeng",
-                          experiment_time="28 June 2022",
-                          trial_information="trial1",
-                          duration_gap=500,
-                          amount_text=35,
-                          source_text_path="Reading Materials/Pilot version 1 July/Education_403.txt",
-                          task_type_gap=Config.GAP_COUNT_TASK,
-                          mode_update=Config.MODE_PRESENT_ALL,
-                          condition_exp=Config.CONDITION_POS_HOR,
-                          color_background="black", color_text=(73, 232, 56),
-                          size_text=60, size_gap=64,
-                          pos_text=(50, 50), pos_gap=(0, 0))
-    runner_trial.mainloop()
-
-
 def run_pilots(name, time, id_participant):
-    # Auxiliary functions.
-    # Create the latin-square sequence.
-    def generate_latin_square(n: int, start_el: int = 1):
-        row = [i for i in range(1, n + 1)]
-        row = row[start_el - 1:] + row[:start_el - 1]
-        return [row[i:] + row[:i] for i in range(n)]
-
-    ############################################## Session 1: data collection ###########################################################
-    # Start the data collection session for obtaining participants' basic reading speed (for parameter: words per second).
-    num_conditions_data_collection = len(Config.CONDITIONS_DATA_COLLECTION)
-    for i in range(num_conditions_data_collection):
-        duration_gap_current_condition_data_collection = Config.CONDITIONS_DATA_COLLECTION[(i + 1)]["duration_gap"]
-        mode_update_current_condition_data_collection = Config.CONDITIONS_DATA_COLLECTION[(i + 1)]["mode_update"]
-        num_words_current_condition_data_collection = Config.CONDITIONS_DATA_COLLECTION[(i+1)]["number of words"]
-        print("The data collection session starts.")
-        # Initiate
-        pygame.init()
-
-        # Initiate the data collection instance runner.
-        runner_data_collection_current = Runner(
-            participant_name=name + "_" + str(id_participant),
-            experiment_time=time,
-            trial_information="Data collection_" + str(i + 1),
-            wps_reading_speed=Config.WPS_READING_SPEED_INITIAL,
-            offset_reading_speed=Config.OFFSET_READING_SPEED,
-            duration_gap=duration_gap_current_condition_data_collection,
-            amount_text=num_words_current_condition_data_collection,
-            source_text_path=Config.SOURCE_TEXTS_PATH_LIST_DATA_COLLECTION[i],
-            # The first text is for training session.
-            task_type_gap=Config.GAP_COUNT_TASK,
-            mode_update=mode_update_current_condition_data_collection,
-            condition_exp=Config.CONDITION_POS_HOR,
-            color_background=Config.COLOR_BACKGROUND, color_text=Config.COLOR_TEXTS,
-            size_text=Config.SIZE_TEXTS, size_gap=Config.SIZE_GAP_TASK,
-            pos_text=Config.POS_TEXTS, pos_gap=Config.POS_GAP
-        )
-
-        # Run the instance.
-        runner_data_collection_current.mainloop()
-
-        # Get the specific participant's reading speed.
-        wps = runner_data_collection_current.get_average_wps_manual_mode()
-
+    # ############################################## Session 1: data collection ###########################################################
+    # # Start the data collection session for obtaining participants' basic reading speed (for parameter: words per second).
+    # num_conditions_data_collection = len(Config.CONDITIONS_DATA_COLLECTION)
+    # for i in range(num_conditions_data_collection):
+    #     duration_gap_current_condition_data_collection = Config.CONDITIONS_DATA_COLLECTION[(i + 1)]["duration_gap"]
+    #     mode_update_current_condition_data_collection = Config.CONDITIONS_DATA_COLLECTION[(i + 1)]["mode_update"]
+    #     num_words_current_condition_data_collection = Config.CONDITIONS_DATA_COLLECTION[(i+1)]["number of words"]
+    #     print("The data collection session starts.")
+    #     # Initiate
+    #     pygame.init()
+    #
+    #     # Initiate the data collection instance runner.
+    #     runner_data_collection_current = Runner(
+    #         participant_name=name + "_" + str(id_participant),
+    #         experiment_time=time,
+    #         trial_information="Data collection_" + str(i + 1),
+    #         wps_reading_speed=Config.WPS_READING_SPEED_INITIAL,
+    #         offset_reading_speed=Config.OFFSET_READING_SPEED,
+    #         duration_gap=duration_gap_current_condition_data_collection,
+    #         amount_text=num_words_current_condition_data_collection,
+    #         source_text_path=Config.SOURCE_TEXTS_PATH_LIST_DATA_COLLECTION[i],
+    #         # The first text is for training session.
+    #         task_type_gap=Config.GAP_COUNT_TASK,
+    #         mode_update=mode_update_current_condition_data_collection,
+    #         condition_exp=Config.CONDITION_POS_HOR,
+    #         color_background=Config.COLOR_BACKGROUND, color_text=Config.COLOR_TEXTS,
+    #         size_text=Config.SIZE_TEXTS, size_gap=Config.SIZE_GAP_TASK,
+    #         pos_text=Config.POS_TEXTS, pos_gap=Config.POS_GAP
+    #     )
+    #
+    #     # Run the instance.
+    #     runner_data_collection_current.mainloop()
+    #
+    #     # Get the specific participant's reading speed.
+    #     wps = runner_data_collection_current.get_average_wps_manual_mode()
 
     # Create a waiting canvas, then proceed to the training session.
-    content_text_data_collection_2_training = "This is the end of the warm up session. Can we proceed?"
-    Util.create_waiting_canvas(content_texts=content_text_data_collection_2_training)
+    content_text_before_training = "To start reading, click [R]"
+    Util.create_waiting_canvas(content_texts=content_text_before_training,
+                               key_or_button=pygame.MOUSEBUTTONDOWN,
+                               key_pressed=Config.RIGHT_CLICK_RING_MOUSE)
 
-    ############################################## Session 2: training session ###########################################################
+    ############################################## Session 1: training session ###########################################################
     # Start the training session.
     num_conditions_trainings = len(Config.CONDITIOMS_TRAININGS)
     for i in range(num_conditions_trainings):
         duration_gap_current_condition_training = Config.CONDITIOMS_TRAININGS[(i + 1)]["duration_gap"]
         mode_update_current_condition_training = Config.CONDITIOMS_TRAININGS[(i + 1)]["mode_update"]
-        num_words_current_condition_training = Config.CONDITIOMS_TRAININGS[(i+1)]["number of words"]
+        num_words_current_condition_training = Config.CONDITIOMS_TRAININGS[(i + 1)]["number of words"]
         # The training session starts
         print("The training session starts.")
 
@@ -971,7 +955,7 @@ def run_pilots(name, time, id_participant):
         runner_training_current = Runner(participant_name=name + "_" + str(id_participant),
                                          experiment_time=time,
                                          trial_information="training_" + str(i + 1),
-                                         wps_reading_speed=wps,
+                                         wps_reading_speed=Config.WPS_READING_SPEED_INITIAL,
                                          offset_reading_speed=Config.OFFSET_READING_SPEED,
                                          duration_gap=duration_gap_current_condition_training,
                                          amount_text=num_words_current_condition_training,
@@ -994,29 +978,32 @@ def run_pilots(name, time, id_participant):
 
     # Wait for the formal studies to be started manually.
     content_text_training_2_study = "This is the end of the training session. Can we proceed to the formal study?"
-    Util.create_waiting_canvas(content_texts=content_text_training_2_study)
+    Util.create_waiting_canvas(content_texts=content_text_training_2_study,
+                               key_or_button=pygame.KEYDOWN,
+                               key_pressed=pygame.K_SPACE)
 
-    ############################################## Session 3 : formal studies ###########################################################
+    ############################################## Session 2 : formal studies ###########################################################
     # Start the studies.
     # Get the number of conditions.
     num_conditions_studies = len(Config.CONDITIONS_STUDIES)
 
     # Get the latin square sequence.
-    sequences_latin_square = generate_latin_square(n=num_conditions_studies)
+    sequences_latin_square = Util.generate_latin_square(n=num_conditions_studies)
 
     # Get the seqeunce of pilot study for this particular parcitipant according to latin square.
     index_current_participant_in_sequences = int(id_participant % num_conditions_studies) - 1
     sequence_current_participant = sequences_latin_square[index_current_participant_in_sequences]
 
     # Went through all condition for participants.
-    for i in range(num_conditions_studies):
+    for i in range(num_conditions_studies):  # TODO: get these into a funciton.
         # Determine the pilot study condition according to the participant's id.
         index_current_participant_in_conditions = sequence_current_participant[i]
         duration_gap_current_condition_studies = Config.CONDITIONS_STUDIES[index_current_participant_in_conditions][
             "duration_gap"]
         mode_update_current_condition_studies = Config.CONDITIONS_STUDIES[index_current_participant_in_conditions][
             "mode_update"]
-        num_words_current_condition_studies = Config.CONDITIONS_STUDIES[index_current_participant_in_conditions]["number of words"]
+        num_words_current_condition_studies = Config.CONDITIONS_STUDIES[index_current_participant_in_conditions][
+            "number of words"]
 
         # Initiate.
         pygame.init()
@@ -1027,7 +1014,7 @@ def run_pilots(name, time, id_participant):
                                       trial_information="sequence_" + str(i + 1) + "_" +
                                                         str(mode_update_current_condition_studies) + "_" +
                                                         str(duration_gap_current_condition_studies),
-                                      wps_reading_speed=wps,
+                                      wps_reading_speed=Config.WPS_READING_SPEED_INITIAL,
                                       offset_reading_speed=Config.OFFSET_READING_SPEED,
                                       duration_gap=duration_gap_current_condition_studies,
                                       amount_text=num_words_current_condition_studies,

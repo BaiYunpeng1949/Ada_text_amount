@@ -1,6 +1,9 @@
 import pygame
 from nltk import tokenize
 
+import Config
+
+
 def read_from_file(path_text):
     # Read materials from a text file. While the texts are all stacked up in one line.
     with open(path_text) as f:
@@ -8,7 +11,13 @@ def read_from_file(path_text):
     return texts
 
 
-def create_waiting_canvas(content_texts):
+def generate_latin_square(n: int, start_el: int = 1):  # Create the latin-square sequence.
+    row = [i for i in range(1, n + 1)]
+    row = row[start_el - 1:] + row[:start_el - 1]
+    return [row[i:] + row[:i] for i in range(n)]
+
+
+def create_waiting_canvas(content_texts, key_or_button, key_pressed):
     """
     Create a waiting canvas/widget to wait for experimenter's operations to proceed.
     :param content_texts:
@@ -35,14 +44,17 @@ def create_waiting_canvas(content_texts):
     is_waiting = True
     while is_waiting:
         for event in pygame.event.get():
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
+            if event.type == pygame.KEYDOWN and key_or_button is pygame.KEYDOWN:
+                if event.key == key_pressed:
+                    is_waiting = False
+            elif event.type == pygame.MOUSEBUTTONDOWN and key_or_button is pygame.MOUSEBUTTONDOWN:
+                if event.button == Config.RIGHT_CLICK_RING_MOUSE:
                     is_waiting = False
 
     pygame.quit()
 
 
-def split_reading_texts(num_sentences, reading_material):
+def split_reading_texts(num_sentences, reading_material):  # Functions related to the text operations.
     """
     Split the reading texts into a certain amount of texts. Currently refers to the number of full sentences.
     :param num_sentences: The amount of texts. Indicating the number of information. Will add sentence processing later.

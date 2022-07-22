@@ -1,5 +1,8 @@
 # Avoid using string magic words. Declare global variables. Store configurations in a separate file.
 
+# Key press enumerators
+RIGHT_CLICK_RING_MOUSE = 3
+
 # GAP TASK TYPES.
 GAP_COUNT_TASK = "count task"
 GAP_MATH_TASK = "math task"
@@ -42,11 +45,6 @@ CONDITIOMS_TRAININGS = {
         "number of words": 3
     },
     2: {
-        "duration_gap": 2000,
-        "mode_update": MODE_MANUAL,
-        "number of words": 3
-    },
-    3: {
         "duration_gap": 2000,
         "mode_update": MODE_MANUAL,
         "number of words": 3
