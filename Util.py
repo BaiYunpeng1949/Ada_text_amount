@@ -69,6 +69,7 @@ def split_reading_texts(num_sentences, reading_material):  # Functions related t
     num_sentences_total = len(generated_full_sentences)
 
     # Allocate assigned number of texts into chunks.
+    len_chunks_designated = math.ceil(num_sentences_total / num_sentences)
     chunks = []
     counter_added_num_sentences = 0
     current_chunk = ""
@@ -87,7 +88,7 @@ def split_reading_texts(num_sentences, reading_material):  # Functions related t
 
         # The legitimacy of the usage of the whole reading texts.
         if index_pointer_sentences >= num_sentences_total:
-            if len(chunks) < math.ceil(num_sentences_total / num_sentences):     # The chunk has not been extended yet.
+            if len(chunks) < len_chunks_designated:     # The chunk has not been extended yet.
                 chunks.append(current_chunk)
             break
 
