@@ -12,7 +12,7 @@ RECT = "rectangle"
 TRIANG = "triangle"
 
 # Global marks
-BLANK_LINE = ""
+BLANK_LINE = "dudu"
 # Modes.
 MODE_ADAPTIVE = "adaptive"
 MODE_MANUAL = "manual"
@@ -34,7 +34,7 @@ CONDITIONS_DATA_COLLECTION = {
     2: {
         "duration_gap": 2000,
         "mode_update": MODE_MANUAL,
-        "number of words": 3
+        "number of words": 1
     }
 }
 
@@ -42,7 +42,7 @@ CONDITIOMS_TRAININGS = {
     1: {
         "duration_gap": 2000,
         "mode_update": MODE_MANUAL,
-        "number of words": 3
+        "number of words": 5
     },
     2: {
         "duration_gap": 2000,
@@ -54,7 +54,7 @@ CONDITIONS_STUDIES = {
     1: {
         "duration_gap": 5000,
         "mode_update": MODE_MANUAL,
-        "number of words": 3
+        "number of words": 1
     },
     2: {
         "duration_gap": 5000,
@@ -64,7 +64,7 @@ CONDITIONS_STUDIES = {
     3: {
         "duration_gap": 5000,
         "mode_update": MODE_MANUAL,
-        "number of words": 3
+        "number of words": 5
     },
     4: {
         "duration_gap": 5000,
@@ -74,12 +74,12 @@ CONDITIONS_STUDIES = {
     5: {
         "duration_gap": 5000,
         "mode_update": MODE_MANUAL,
-        "number of words": 3
+        "number of words": 5
     },
     6: {
         "duration_gap": 5000,
         "mode_update": MODE_MANUAL,
-        "number of words": 3
+        "number of words": 1
     }
 }
 
@@ -109,7 +109,7 @@ SOURCE_TEXTS_PATH_LIST_FORMAL_STUDIES = [
 # Runners (instances)' argument settings.
 COLOR_TEXTS = (73, 232, 56)     # The color of texts displayed: green.
 COLOR_BACKGROUND = "black"
-SIZE_TEXTS = 60     # The size of texts displayed.
+SIZE_TEXTS = 45     # The size of texts displayed.
 SIZE_GAP_TASK = 64  # The size of elements in secondary tasks.
 POS_TEXTS = (325, 50)        # The starting position of texts displayed: x_pixels and y_pixels.
 POS_GAP = (0, 0)            # The starting position of gap task displayed.

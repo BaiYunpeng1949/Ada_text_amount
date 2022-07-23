@@ -376,8 +376,6 @@ class Runner:
         self.texts_chunks, self.num_attention_shifts, self.log_actual_amounts_texts = Util.split_reading_texts(
             num_sentences=self.amount_text,
             reading_material=self.texts)
-        for chunk in self.texts_chunks:  # TODO: debug, delete
-            print(chunk)
 
         # Allocate time.
         self.allocate_time_adaptively()
@@ -601,7 +599,8 @@ class Runner:
         # Add some texts into the buffer to counter errors when pressing the esc key in the first gap task.
         if self.content_text_temp is Config.BLANK_LINE:
             # Display texts only when they were displayed.
-            self.content_text_temp = ["The experimenter stopped the trial in advance.", ""]
+            # self.content_text_temp = ["The experimenter stopped the trial in advance.", ""]
+            self.content_text_temp = "The experimenter stopped the trial in advance."
 
         # To be reminded that the displayed texts are stored in self.content_text_temp.
         # Determine the current texts to be displayed.

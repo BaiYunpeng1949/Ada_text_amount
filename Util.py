@@ -1,3 +1,5 @@
+import math
+
 import pygame
 from nltk import tokenize
 
@@ -73,7 +75,6 @@ def split_reading_texts(num_sentences, reading_material):  # Functions related t
     index_pointer_sentences = 0
     while True:
         current_chunk = current_chunk + generated_full_sentences[index_pointer_sentences] + " "
-
         # Update local variables.
         counter_added_num_sentences += 1
         index_pointer_sentences += 1
@@ -85,8 +86,8 @@ def split_reading_texts(num_sentences, reading_material):  # Functions related t
             current_chunk = ""
 
         # The legitimacy of the usage of the whole reading texts.
-        if index_pointer_sentences >= num_sentences_total - 1:
-            if counter_added_num_sentences < num_sentences:     # The chunk has not been extended yet.
+        if index_pointer_sentences >= num_sentences_total:
+            if len(chunks) < math.ceil(num_sentences_total / num_sentences):     # The chunk has not been extended yet.
                 chunks.append(current_chunk)
             break
 
