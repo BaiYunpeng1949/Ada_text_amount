@@ -898,9 +898,11 @@ class Runner:
                         f.write("    Time spent: " + str(self.log_time_elapsed_read_text_mode_rsvp[i]) + " ms" + "\n")
 
                 if self.mode_text_update is Config.MODE_MANUAL:
+                    f.write("\n")
                     f.write("The average elapsed time is: " +
-                            str(np.mean(self.log_time_elapsed_read_text_mode_manual)) + " ms" + "\n")
-                    f.write("The average reading speed is: " + str(self.get_average_wps_manual_mode()) + "words per second" + "\n")
+                            str(round(np.mean(self.log_time_elapsed_read_text_mode_manual) / 1000, 2)) + " ms" + "\n")
+                    f.write("The average reading speed is: " + str(round(self.get_average_wps_manual_mode(), 2)) + " words per second" + "\n")
+                    f.write("Task completion time is: " + str(round(np.sum(self.log_time_elapsed_read_text_mode_manual) / 1000, 2)) + " ms" + "\n")
 
 
 def run_pilots(name, time, id_participant):
@@ -967,7 +969,7 @@ def run_pilots(name, time, id_participant):
     sequence_current_participant = sequences_latin_square[index_current_participant_in_sequences]
 
     # Went through all condition for participants.
-    for i in range(num_conditions_studies):  # TODO: get these into a funciton.
+    for i in range(num_conditions_studies):  # TODO: get these into a function.
         # Determine the pilot study condition according to the participant's id.
         index_current_participant_in_conditions = sequence_current_participant[i]
         duration_gap_current_condition_studies = Config.CONDITIONS_STUDIES[index_current_participant_in_conditions][
