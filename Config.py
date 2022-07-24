@@ -47,39 +47,33 @@ CONDITIOMS_TRAININGS = {
     2: {
         "duration_gap": 2000,
         "mode_update": MODE_MANUAL,
-        "number of words": 3
+        "number of words": 5
     }
 }
 CONDITIONS_STUDIES = {
     1: {
         "duration_gap": 5000,
         "mode_update": MODE_MANUAL,
-        "number of words": 1
+        "number of words": 2,
+        "margin width": 325
     },
     2: {
         "duration_gap": 5000,
         "mode_update": MODE_MANUAL,
-        "number of words": 3
+        "number of words": 2,
+        "margin width": 50
     },
     3: {
         "duration_gap": 5000,
         "mode_update": MODE_MANUAL,
-        "number of words": 5
+        "number of words": 2,
+        "margin width": 50
     },
     4: {
         "duration_gap": 5000,
         "mode_update": MODE_MANUAL,
-        "number of words": 3
-    },
-    5: {
-        "duration_gap": 5000,
-        "mode_update": MODE_MANUAL,
-        "number of words": 5
-    },
-    6: {
-        "duration_gap": 5000,
-        "mode_update": MODE_MANUAL,
-        "number of words": 1
+        "number of words": 2,
+        "margin width": 325
     }
 }
 
@@ -98,12 +92,18 @@ SOURCE_TEXTS_PATH_LIST_TRAINING = [
 
 SOURCE_TEXTS_PATH_LIST_FORMAL_STUDIES = [
     # Text for formal studies.
-    "Reading Materials/Pilot version 6 July/Story03_372wrds_19sts_19.58wpst.txt",
-    "Reading Materials/Pilot version 6 July/Story05_351wrds_27sts_13wpst.txt",
-    "Reading Materials/Pilot version 6 July/Story06_355wrds_26sts_13.65wpst.txt",
-    "Reading Materials/Pilot version 6 July/Story07_367wrds_22sts_16.68wpst.txt",
-    "Reading Materials/Pilot version 6 July/Story10_347wrds_19sts_18.26wpst.txt",
-    "Reading Materials/Pilot version 6 July/Story12_348wds_20sts_17.4wpst.txt"
+    # "Reading Materials/Pilot version 6 July/Story12_348wds_20sts_17.4wpst.txt",
+    # "Reading Materials/Pilot version 6 July/Story03_372wrds_19sts_19.58wpst.txt",
+    # "Reading Materials/Pilot version 6 July/Story05_351wrds_27sts_13wpst.txt",
+    # "Reading Materials/Pilot version 6 July/Story06_355wrds_26sts_13.65wpst.txt",
+    # "Reading Materials/Pilot version 6 July/Story07_367wrds_22sts_16.68wpst.txt",
+    # "Reading Materials/Pilot version 6 July/Story10_347wrds_19sts_18.26wpst.txt",
+    # "Reading Materials/Pilot version 6 July/Story12_348wds_20sts_17.4wpst.txt"
+
+    "Reading Materials/Pilot version 6 July/Story19_375wrds_34sts_11.03wpst.txt",
+    "Reading Materials/Pilot version 6 July/Story20_349wrds_35sts_9.97wpst.txt",
+    "Reading Materials/Pilot version 6 July/Story13.txt",
+    "Reading Materials/Pilot version 6 July/Story14.txt"
 ]
 
 # Runners (instances)' argument settings.

@@ -978,6 +978,7 @@ def run_pilots(name, time, id_participant):
             "mode_update"]
         amount_texts_current_condition_studies = Config.CONDITIONS_STUDIES[index_current_participant_in_conditions][
             "number of words"]
+        margin_width_current_condition_studies = Config.CONDITIONS_STUDIES[index_current_participant_in_conditions]["margin width"]
 
         # Initiate.
         pygame.init()
@@ -999,7 +1000,7 @@ def run_pilots(name, time, id_participant):
                                       condition_exp=Config.CONDITION_POS_HOR,
                                       color_background=Config.COLOR_BACKGROUND, color_text=Config.COLOR_TEXTS,
                                       size_text=Config.SIZE_TEXTS, size_gap=Config.SIZE_GAP_TASK,
-                                      pos_text=Config.POS_TEXTS, pos_gap=Config.POS_GAP)
+                                      pos_text=(margin_width_current_condition_studies, Config.POS_TEXTS[1]), pos_gap=Config.POS_GAP)
 
         print("During the study.......Now is the condition: " + str(
             index_current_participant_in_conditions) + " .........")
