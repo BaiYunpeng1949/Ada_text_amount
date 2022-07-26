@@ -50,6 +50,7 @@ CONDITIOMS_TRAININGS = {
         "number of words": 5
     }
 }
+
 CONDITIONS_STUDIES = {
     1: {
         "duration_gap": 5000,

@@ -18,12 +18,17 @@ import datetime
 from socket import *
 import json
 
+"""
+To use this established data processing file, simply plug the pupil core onto a laptop/PC and run the "pupil capture.exe" on it.
+"""
+
+
 host = '255.255.255.255'
 port = 50000
 
 confidenceThreshold = .2
 windowLengthSeconds = 60
-maxSamplingRate = 120
+maxSamplingRate = 60    # Changed to 60Hz due to our hardware limitations.
 minSamplesPerWindow = maxSamplingRate * windowLengthSeconds
 wavelet = 'sym8'
 
@@ -34,7 +39,7 @@ class ProcessingThread(Thread):
     def __init__(self, pupilData, targetsocket):
         Thread.__init__(self)
         self.data = pupilData
-        self.targetsocket = targetsocket    # TODO: change this reading from socket version to reading from csv version.
+        self.targetsocket = targetsocket
 
     def run(self):
         global threadRunning
@@ -138,7 +143,7 @@ def createPupilConnection():
     sub = context.socket(zmq.SUB)
     sub.connect("tcp://{}:{}".format(addr, sub_port))
 
-    sub.setsockopt_string(zmq.SUBSCRIBE, 'pupil.')
+    sub.setsockopt_string(zmq.SUBSCRIBE, 'pupil.')  # See Pupil Lab website, don't need to change here. "Pupil Datum Format": https://docs.pupil-labs.com/developer/core/overview/.
 
     return sub
 
@@ -172,19 +177,19 @@ def cleanBlinks(data):
     i = 0
     minConfidence = .25
 
-    while (i < numSamples):
-        if (data[i].confidence < minConfidence and i < numSamples - 1):
+    while i < numSamples:
+        if data[i].confidence < minConfidence and i < numSamples - 1:
             runner = 1
             nextData = data[i + runner]
-            while (nextData.confidence < minConfidence):
+            while nextData.confidence < minConfidence:
                 runner = runner + 1
 
-                if (i + runner >= numSamples):
+                if i + runner >= numSamples:
                     break
 
                 nextData = data[i + runner]
 
-            if (runner >= minNumForBlinks):
+            if runner >= minNumForBlinks:
                 blinks.append((i, runner))
 
             i = i + runner
@@ -206,10 +211,10 @@ def cleanBlinks(data):
             decrementIndex = blinkIndex - j
             incrementIndex = blinkIndex + blinkLength + j
 
-            if (decrementIndex >= 0):
+            if decrementIndex >= 0:
                 blinkMarkers[decrementIndex] = 0
 
-            if (incrementIndex < numSamples):
+            if incrementIndex < numSamples:
                 blinkMarkers[incrementIndex] = 0
 
     newSamplesList = []
@@ -235,11 +240,11 @@ def processData(data, socket):
     currentIPA = ipa(cleanedData)
 
     valueString = ' ipa ' + str(currentIPA)
-    # print (str(datetime.datetime.now()) + '  ' + valueString + '; ' + str(len(cleanedData))  + ' / '+ str(len(data)) + ' samples')
-    socket.sendto(str.encode(valueString), (host, port))
+    print(str(datetime.datetime.now()) + '  ' + valueString + '; ' + str(len(cleanedData)) + ' / ' + str(len(data)) + ' samples')
+    socket.sendto(str.encode(valueString), (host, port))    # Send to their equipment.
 
 
-def receivePupilData(udp, pupilSocket):
+def receivePupilData(udp, pupilSocket):     # The "udp" is for "user datagram protocol".
     while True:
         try:
             topic = pupilSocket.recv_string()
@@ -254,11 +259,11 @@ def receivePupilData(udp, pupilSocket):
             currentPupilData.append(data)
 
             while len(currentPupilData) > minSamplesPerWindow:
-                currentPupilData.pop(0)
+                currentPupilData.pop(0)     # Remove the first element in the list.
 
             global threadRunning
 
-            if (len(currentPupilData) == minSamplesPerWindow and threadRunning is False):
+            if len(currentPupilData) == minSamplesPerWindow and threadRunning is False:     # Wait for reaching 1-minute's windows length; enough data points.
                 threadRunning = True
                 processingThread = ProcessingThread(list(currentPupilData), udp)
                 processingThread.start()
@@ -272,6 +277,6 @@ currentPupilData = list()
 
 print(datetime.datetime.now())
 socket = createSendSocket()
-pupilSocket = createPupilConnection()
+pupilSocket = createPupilConnection()   # Subscribe pupil data "Pupil Datum Format".
 
 receivePupilData(socket, pupilSocket)
