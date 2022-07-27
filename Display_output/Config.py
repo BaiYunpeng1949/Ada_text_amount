@@ -80,26 +80,26 @@ CONDITIONS_STUDIES = {
 
 SOURCE_TEXTS_PATH_LIST_DATA_COLLECTION = [
     # Text for testing on data-collection session.
-    "Reading Materials/Pilot version 1 July/Earth day_144.txt",
+    "Display_output/Reading Materials/Pilot version 1 July/Earth day_144.txt",
     # Text for formal data-collection session and training session.
-    "Reading Materials/Pilot version 6 July/Story02_366wrds_32sts_11.44wpst.txt",
+    "Display_output/Reading Materials/Pilot version 6 July/Story02_366wrds_32sts_11.44wpst.txt",
 ]
 
 SOURCE_TEXTS_PATH_LIST_TRAINING = [
     # Text for formal data-collection session and training session.
-    "Reading Materials/Pilot version 1 July/Earth day_144.txt",
-    # "Reading Materials/Pilot version 6 July/Story02_366wrds_32sts_11.44wpst.txt",
+    "Display_output/Reading Materials/Pilot version 1 July/Earth day_144.txt",
+    # "Display_output/Reading Materials/Pilot version 6 July/Story02_366wrds_32sts_11.44wpst.txt",
 ]
 
 SOURCE_TEXTS_PATH_LIST_FORMAL_STUDIES = [
     # Text for formal studies.
-    # "Reading Materials/Pilot version 6 July/Story12_348wds_20sts_17.4wpst.txt",
-    # "Reading Materials/Pilot version 6 July/Story03_372wrds_19sts_19.58wpst.txt",
-    # "Reading Materials/Pilot version 6 July/Story05_351wrds_27sts_13wpst.txt",
-    # "Reading Materials/Pilot version 6 July/Story06_355wrds_26sts_13.65wpst.txt",
-    # "Reading Materials/Pilot version 6 July/Story07_367wrds_22sts_16.68wpst.txt",
-    # "Reading Materials/Pilot version 6 July/Story10_347wrds_19sts_18.26wpst.txt",
-    # "Reading Materials/Pilot version 6 July/Story12_348wds_20sts_17.4wpst.txt"
+    # "Display_output/Reading Materials/Pilot version 6 July/Story12_348wds_20sts_17.4wpst.txt",
+    # "Display_output/Reading Materials/Pilot version 6 July/Story03_372wrds_19sts_19.58wpst.txt",
+    # "Display_output/Reading Materials/Pilot version 6 July/Story05_351wrds_27sts_13wpst.txt",
+    # "Display_output/Reading Materials/Pilot version 6 July/Story06_355wrds_26sts_13.65wpst.txt",
+    # "Display_output/Reading Materials/Pilot version 6 July/Story07_367wrds_22sts_16.68wpst.txt",
+    # "Display_output/Reading Materials/Pilot version 6 July/Story10_347wrds_19sts_18.26wpst.txt",
+    # "Display_output/Reading Materials/Pilot version 6 July/Story12_348wds_20sts_17.4wpst.txt"
 
     "Reading Materials/Pilot version 6 July/Story19_375wrds_34sts_11.03wpst.txt",
     "Reading Materials/Pilot version 6 July/Story20_349wrds_35sts_9.97wpst.txt",

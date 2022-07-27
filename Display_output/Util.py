@@ -3,7 +3,7 @@ import math
 import pygame
 from nltk import tokenize
 
-import Config
+from Display_output import Config
 
 
 def read_from_file(path_text):

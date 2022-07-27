@@ -265,7 +265,7 @@ def receivePupilData(udp, pupilSocket):     # The "udp" is for "user datagram pr
 
             if len(currentPupilData) == minSamplesPerWindow and threadRunning is False:     # Wait for reaching 1-minute's windows length; enough data points.
                 threadRunning = True
-                processingThread = ProcessingThread(list(currentPupilData), udp)
+                processingThread = ProcessingThread(list(currentPupilData), udp)    # Iteratively apply and start threads.
                 processingThread.start()
 
         except KeyboardInterrupt:

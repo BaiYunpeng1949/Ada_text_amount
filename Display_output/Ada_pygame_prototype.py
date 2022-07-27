@@ -7,8 +7,8 @@ import random
 import sys
 from nltk import tokenize
 
-import Config
-import Util
+from Display_output import Config
+from Display_output import Util
 
 
 class Runner:
