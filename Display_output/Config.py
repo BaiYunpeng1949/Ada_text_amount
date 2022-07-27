@@ -101,10 +101,10 @@ SOURCE_TEXTS_PATH_LIST_FORMAL_STUDIES = [
     # "Display_output/Reading Materials/Pilot version 6 July/Story10_347wrds_19sts_18.26wpst.txt",
     # "Display_output/Reading Materials/Pilot version 6 July/Story12_348wds_20sts_17.4wpst.txt"
 
-    "Reading Materials/Pilot version 6 July/Story19_375wrds_34sts_11.03wpst.txt",
-    "Reading Materials/Pilot version 6 July/Story20_349wrds_35sts_9.97wpst.txt",
-    "Reading Materials/Pilot version 6 July/Story13.txt",
-    "Reading Materials/Pilot version 6 July/Story14.txt"
+    "Display_output/Reading Materials/Pilot version 6 July/Story19_375wrds_34sts_11.03wpst.txt",
+    "Display_output/Reading Materials/Pilot version 6 July/Story20_349wrds_35sts_9.97wpst.txt",
+    "Display_output/Reading Materials/Pilot version 6 July/Story13.txt",
+    "Display_output/Reading Materials/Pilot version 6 July/Story14.txt"
 ]
 
 # Runners (instances)' argument settings.

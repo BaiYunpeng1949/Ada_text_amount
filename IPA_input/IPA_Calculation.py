@@ -272,6 +272,18 @@ def receivePupilData(udp, pupilSocket):     # The "udp" is for "user datagram pr
             break
 
 
+def run_IPA_collection():
+    global threadRunning, currentPupilData
+    threadRunning = False
+    currentPupilData = list()
+
+    print(datetime.datetime.now())
+    socket = createSendSocket()
+    pupilSocket = createPupilConnection()  # Subscribe pupil data "Pupil Datum Format".
+
+    receivePupilData(socket, pupilSocket)
+
+
 if __name__ == '__main__':
     threadRunning = False
     currentPupilData = list()
