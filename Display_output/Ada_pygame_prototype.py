@@ -1,5 +1,6 @@
 import math
 from threading import Thread
+from msgpack import loads
 
 import nltk
 import numpy as np
@@ -20,6 +21,7 @@ class Runner:
                  mode_update, condition_exp,
                  color_background, color_text, size_text, size_gap,
                  pos_text, pos_gap,
+                 socket_read_ipa,
                  title="AdaPrototype"
                  ):
         # Package setup for splitting sentences.
@@ -46,6 +48,7 @@ class Runner:
         self.size_gap = size_gap
         self.pos_text = pos_text  # Coordinators whose origins are from the top left corner.
         self.pos_gap = pos_gap
+        self.socket_read_ipa = socket_read_ipa
         self.title = title
 
         # Constant values
@@ -600,6 +603,11 @@ class Runner:
             # If the trial is stopped by Esc key. Or terminates normally. Display the white background to indicate participants to stop.
             self.surface.fill(self.color_stop_reminder_background)
 
+        # Read ipa data.    TODO: add an insurance when data is not good (e.g., not wearing pupil labs).
+        msg = self.socket_read_ipa.recvfrom(4096)
+        ipa = msg[0].decode()
+        print(ipa)
+
         # Add some texts into the buffer to counter errors when pressing the esc key in the first gap task.
         if self.content_text_temp is Config.BLANK_LINE:
             # Display texts only when they were displayed.
@@ -668,6 +676,10 @@ class Runner:
                 # Horizontally lay up the words.
                 self.surface.blit(word_surface, (x_text, y_text + offset_y_texts_dynamical))
                 x_text += word_width + space
+
+                # Display IPA data at the right corner position.
+                ipa_surface = self.font_text.render(ipa, 0, self.color_text)
+                self.surface.blit(ipa_surface, (1500, 1000))     # TODO: normalize this later. Store this in the file, smoothen the display.
             return x_text, y_text
 
         # Distinguish between different modes: adaptive and contextual adaptive.
@@ -910,6 +922,9 @@ class Runner:
 
 
 def run_pilots(name, time, id_participant):
+    # Build socket communication connection.
+    ipa_calculation_socket = Util.create_IPA_computing_connection()
+
     # Create a waiting canvas, then proceed to the training session.
     content_text_before_training = "To start reading, click [R]"
     Util.create_waiting_canvas(content_texts=content_text_before_training,
@@ -945,6 +960,7 @@ def run_pilots(name, time, id_participant):
                                          color_background=Config.COLOR_BACKGROUND, color_text=Config.COLOR_TEXTS,
                                          size_text=Config.SIZE_TEXTS, size_gap=Config.SIZE_GAP_TASK,
                                          pos_text=Config.POS_TEXTS, pos_gap=Config.POS_GAP,
+                                         socket_read_ipa=ipa_calculation_socket
                                          )
 
         print("During the trainging session.......Now is the training: " + str(
@@ -1006,6 +1022,7 @@ def run_pilots(name, time, id_participant):
                                       color_background=Config.COLOR_BACKGROUND, color_text=Config.COLOR_TEXTS,
                                       size_text=Config.SIZE_TEXTS, size_gap=Config.SIZE_GAP_TASK,
                                       pos_text=(margin_width_current_condition_studies, Config.POS_TEXTS[1]), pos_gap=Config.POS_GAP,
+                                      socket_read_ipa=ipa_calculation_socket
                                       )
 
         print("During the study.......Now is the condition: " + str(

@@ -24,8 +24,8 @@ To use this established data processing file, simply plug the pupil core onto a 
 """
 
 
-host = 'localhost'
-port = 50020
+host = '255.255.255.255'
+port = 50000    # Randomly choose a portal.
 
 confidenceThreshold = .2
 windowLengthSeconds = 60
@@ -160,7 +160,7 @@ def cleanup(old_data):
         currentData.timestamp = old_data[i].timestamp
         distanceToMean = abs(currentData.X - mean)
 
-        if (distanceToMean < stddev * 2):
+        if distanceToMean < stddev * 2:
             filtered.append(currentData)
             runner += 1
 
@@ -220,7 +220,7 @@ def cleanBlinks(data):
     newSamplesList = []
 
     for i in range(0, numSamples):
-        if (blinkMarkers[i] == 1):
+        if blinkMarkers[i] == 1:
             newSamplesList.append(data[i])
 
     return newSamplesList
@@ -229,7 +229,7 @@ def cleanBlinks(data):
 def fixTimestamp(data):
     runner = 0.0
     for i in range(len(data)):
-        data[i].timestamp = runner / 120.0
+        data[i].timestamp = runner / 60.0   # Changed this from 120 to 60
         runner += 1
 
 
@@ -240,8 +240,8 @@ def processData(data, socket):
     currentIPA = ipa(cleanedData)
 
     valueString = ' ipa ' + str(currentIPA)
-    print(str(datetime.datetime.now()) + '  ' + valueString + '; ' + str(len(cleanedData)) + ' / ' + str(len(data)) + ' samples')
-    socket.sendto(str.encode(valueString), (host, port))    # Send to their equipment.
+    # print(str(datetime.datetime.now()) + '  ' + valueString + '; ' + str(len(cleanedData)) + ' / ' + str(len(data)) + ' samples')
+    socket.sendto(str.encode(str(round(currentIPA, 3))), (host, port))    # Send to their equipment.
 
 
 def receivePupilData(udp, pupilSocket):     # The "udp" is for "user datagram protocol".

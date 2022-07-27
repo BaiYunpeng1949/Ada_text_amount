@@ -1,7 +1,8 @@
 import math
-
+import zmq
 import pygame
 from nltk import tokenize
+from socket import *
 
 from Display_output import Config
 
@@ -100,3 +101,16 @@ def split_reading_texts(num_sentences, reading_material):  # Functions related t
 
     num_chunks = len(chunks)    # Get the number of chunks.
     return chunks, num_chunks, num_words_chunks
+
+
+def create_IPA_computing_connection():
+    """
+    This function builds up the connection with local ipa calculation file.
+    :return:
+    """
+    s = socket(AF_INET, SOCK_DGRAM)
+    s.bind(('', Config.PORT_RANDOM))
+    # while(1):
+    #     m = s.recvfrom(4096)
+    #     print(m[0])
+    return s

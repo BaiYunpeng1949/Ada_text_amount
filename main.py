@@ -1,3 +1,4 @@
+import time
 from threading import Thread
 
 from Display_output import Ada_pygame_prototype
@@ -20,6 +21,9 @@ if __name__ == '__main__':
     # Initialize the IPA data calculation and reading thread.
     thread_ipa = IPAThread()
     thread_ipa.start()
+
+    time.sleep(20)  # Wait for 20s of initialization.
+    print("waiting is over")
 
     # Start the display.
     Ada_pygame_prototype.run_pilots(name='trial',

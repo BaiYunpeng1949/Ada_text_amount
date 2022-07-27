@@ -116,3 +116,7 @@ POS_TEXTS = (325, 50)        # The starting position of texts displayed: x_pixel
 POS_GAP = (0, 0)            # The starting position of gap task displayed.
 OFFSET_READING_SPEED = 0    # The offset of specific participant's reading speed.
 WPS_READING_SPEED_INITIAL = 19   # The reading speed initialization of a specific participant.
+
+# Socket configurations.
+IP_LOCAL_HOST = '127.0.0.1'
+PORT_RANDOM = 50000
