@@ -11,6 +11,7 @@ from msgpack import loads
 
 import time
 from threading import Thread
+from queue import Queue
 
 import keyboard
 import datetime
@@ -23,17 +24,16 @@ To use this established data processing file, simply plug the pupil core onto a 
 """
 
 
-host = '255.255.255.255'
-port = 50000
+host = 'localhost'
+port = 50020
 
 confidenceThreshold = .2
 windowLengthSeconds = 60
 maxSamplingRate = 60    # Changed to 60Hz due to our hardware limitations.
 minSamplesPerWindow = maxSamplingRate * windowLengthSeconds
 wavelet = 'sym8'
-
-
 # wavelet = 'sym16'
+
 
 class ProcessingThread(Thread):
     def __init__(self, pupilData, targetsocket):
