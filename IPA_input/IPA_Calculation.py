@@ -272,11 +272,12 @@ def receivePupilData(udp, pupilSocket):     # The "udp" is for "user datagram pr
             break
 
 
-threadRunning = False
-currentPupilData = list()
+if __name__ == '__main__':
+    threadRunning = False
+    currentPupilData = list()
 
-print(datetime.datetime.now())
-socket = createSendSocket()
-pupilSocket = createPupilConnection()   # Subscribe pupil data "Pupil Datum Format".
+    print(datetime.datetime.now())
+    socket = createSendSocket()
+    pupilSocket = createPupilConnection()   # Subscribe pupil data "Pupil Datum Format".
 
-receivePupilData(socket, pupilSocket)
+    receivePupilData(socket, pupilSocket)
