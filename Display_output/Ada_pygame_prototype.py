@@ -1,7 +1,7 @@
 import math
 from threading import Thread
 from msgpack import loads
-
+from socket import *
 import nltk
 import numpy as np
 import os
@@ -21,7 +21,7 @@ class Runner:
                  mode_update, condition_exp,
                  color_background, color_text, size_text, size_gap,
                  pos_text, pos_gap,
-                 socket_read_ipa,
+                 socket_read_ipa, is_ipa,
                  title="AdaPrototype"
                  ):
         # Package setup for splitting sentences.
@@ -49,6 +49,7 @@ class Runner:
         self.pos_text = pos_text  # Coordinators whose origins are from the top left corner.
         self.pos_gap = pos_gap
         self.socket_read_ipa = socket_read_ipa
+        self.is_ipa = is_ipa
         self.title = title
 
         # Constant values
@@ -93,11 +94,15 @@ class Runner:
         self.threshold_bottom_num_text_reserve_sentence = 3  # If the words are less than 3, then reserve this sentence.
         self.threshold_top_num_text_abandon_sentence = 5  # If the words are more than 5, then abandon this sentence.
 
+        # Cognitive objective measurements: ipa
+        self.ipas_in_one_chunk = []
+
         # Initialize logs.
         self.log_actual_amounts_texts = []
         self.log_time_elapsed_read_text_mode_manual = []  # Store participants' reading speed: how many time for a certain amount of words.
         self.log_time_elapsed_read_text_mode_rsvp = []  # Self update time chunk allocation.
         self.log_time_elapsed_waiting_next_trial = []
+        self.log_ipa_chunks = []
 
         # Parameters for subtask type 2: count task.
         self.timer_count_gap_task = 0
@@ -286,6 +291,11 @@ class Runner:
                             self.log_time_elapsed_read_text_mode_manual.append(
                                 self.timer_elapsed_read_text_mode_manual)
                             self.timer_elapsed_read_text_mode_manual = 0
+
+                            # Collect the ipas.
+                            mean_ipa_in_this_chunk = np.mean(np.array(self.ipas_in_one_chunk))
+                            self.log_ipa_chunks.append(mean_ipa_in_this_chunk)
+                            self.ipas_in_one_chunk.clear()
 
     def update_tasks(self):
         """
@@ -603,10 +613,13 @@ class Runner:
             # If the trial is stopped by Esc key. Or terminates normally. Display the white background to indicate participants to stop.
             self.surface.fill(self.color_stop_reminder_background)
 
-        # Read ipa data.    TODO: add an insurance when data is not good (e.g., not wearing pupil labs).
-        msg = self.socket_read_ipa.recvfrom(4096)
-        ipa = msg[0].decode()
-        print(ipa)
+        # Read ipa data and de-couple these.
+        if self.is_ipa:
+            msg = self.socket_read_ipa.recvfrom(4096)
+            ipa = msg[0].decode()
+        else:
+            ipa = str(0.0)
+        self.ipas_in_one_chunk.append(float(ipa))
 
         # Add some texts into the buffer to counter errors when pressing the esc key in the first gap task.
         if self.content_text_temp is Config.BLANK_LINE:
@@ -679,7 +692,7 @@ class Runner:
 
                 # Display IPA data at the right corner position.
                 ipa_surface = self.font_text.render(ipa, 0, self.color_text)
-                self.surface.blit(ipa_surface, (1500, 1000))     # TODO: normalize this later. Store this in the file, smoothen the display.
+                self.surface.blit(ipa_surface, (self.surface.get_width()-Config.MARGIN_BOT_RIGHT_WIDTH, self.surface.get_height()-Config.MARGIN_BOT_RIGHT_HEIGHT))
             return x_text, y_text
 
         # Distinguish between different modes: adaptive and contextual adaptive.
@@ -892,7 +905,7 @@ class Runner:
 
                 f.write("\n")
                 for i in range(len(self.texts_chunks)):
-                    f.write("The " + str(i + 1) + " attention shift: " + "\n")
+                    f.write("The " + str(i + 1) + " chunk: " + "\n")
                     if (self.mode_text_update is Config.MODE_ADAPTIVE) or (
                             self.mode_text_update is Config.MODE_CONTEXTUAL):
                         f.write("Amount of texts in this chunk: " + str(self.log_actual_amounts_texts[i]) +
@@ -906,8 +919,8 @@ class Runner:
                         if i < len(self.log_time_elapsed_read_text_mode_manual):
                             f.write("Amount of texts in this chunk: " + str(self.log_actual_amounts_texts[i]) +
                                     "    Time spent: " + str(
-                                self.log_time_elapsed_read_text_mode_manual[i]) + " ms" + "\n")
-                        else:
+                                self.log_time_elapsed_read_text_mode_manual[i]) + " ms" + "      IPA: " + str(round(self.log_ipa_chunks[i], 3)) + "\n")
+                        else:   # The trial was ended in advance, hence that reading time and ipa data collection was not completed.
                             f.write("Amount of texts in this chunk: " + str(self.log_actual_amounts_texts[i]) + "\n")
 
                     elif self.mode_text_update is Config.MODE_PRESENT_ALL:
@@ -918,11 +931,12 @@ class Runner:
                     f.write("The average elapsed time is: " +
                             str(round(np.mean(self.log_time_elapsed_read_text_mode_manual) / 1000, 2)) + " ms" + "\n")
                     f.write("The average reading speed is: " + str(round(self.get_average_wps_manual_mode(), 2)) + " words per second" + "\n")
+                    f.write("The average IPA in this trial is: " + str(round(np.mean(np.array(self.log_ipa_chunks)), 3)) + "\n")
                     f.write("Task completion time is: " + str(round(np.sum(self.log_time_elapsed_read_text_mode_manual) / 1000, 2)) + " ms" + "\n")
 
 
-def run_pilots(name, time, id_participant):
-    # Build socket communication connection.
+def run_pilots(name, time, id_participant, is_ipa):
+    # Build socket communication connection if the "pupil labs" eye tracker is connected.
     ipa_calculation_socket = Util.create_IPA_computing_connection()
 
     # Create a waiting canvas, then proceed to the training session.
@@ -960,7 +974,7 @@ def run_pilots(name, time, id_participant):
                                          color_background=Config.COLOR_BACKGROUND, color_text=Config.COLOR_TEXTS,
                                          size_text=Config.SIZE_TEXTS, size_gap=Config.SIZE_GAP_TASK,
                                          pos_text=Config.POS_TEXTS, pos_gap=Config.POS_GAP,
-                                         socket_read_ipa=ipa_calculation_socket
+                                         socket_read_ipa=ipa_calculation_socket, is_ipa=is_ipa
                                          )
 
         print("During the trainging session.......Now is the training: " + str(
@@ -1008,8 +1022,7 @@ def run_pilots(name, time, id_participant):
         runner_pilot_current = Runner(participant_name=name + "_" + str(id_participant),
                                       experiment_time=time,
                                       trial_information="sequence_" + str(i + 1) + "_" +
-                                                        str(mode_update_current_condition_studies) + "_" +
-                                                        str(duration_gap_current_condition_studies),
+                                                        str(mode_update_current_condition_studies),
                                       wps_reading_speed=Config.WPS_READING_SPEED_INITIAL,
                                       offset_reading_speed=Config.OFFSET_READING_SPEED,
                                       duration_gap=duration_gap_current_condition_studies,
@@ -1022,7 +1035,7 @@ def run_pilots(name, time, id_participant):
                                       color_background=Config.COLOR_BACKGROUND, color_text=Config.COLOR_TEXTS,
                                       size_text=Config.SIZE_TEXTS, size_gap=Config.SIZE_GAP_TASK,
                                       pos_text=(margin_width_current_condition_studies, Config.POS_TEXTS[1]), pos_gap=Config.POS_GAP,
-                                      socket_read_ipa=ipa_calculation_socket
+                                      socket_read_ipa=ipa_calculation_socket, is_ipa=is_ipa
                                       )
 
         print("During the study.......Now is the condition: " + str(

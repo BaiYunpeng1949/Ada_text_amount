@@ -116,7 +116,13 @@ POS_TEXTS = (325, 50)        # The starting position of texts displayed: x_pixel
 POS_GAP = (0, 0)            # The starting position of gap task displayed.
 OFFSET_READING_SPEED = 0    # The offset of specific participant's reading speed.
 WPS_READING_SPEED_INITIAL = 19   # The reading speed initialization of a specific participant.
+MARGIN_BOT_RIGHT_WIDTH = 150     # The horizontal margin of ipa data displayed on the right bottom corner.
+MARGIN_BOT_RIGHT_HEIGHT = 150    # The vertical margin of ipa data displayed on the right bottom corner.
 
 # Socket configurations.
 IP_LOCAL_HOST = '127.0.0.1'
 PORT_RANDOM = 50000
+
+# IPA arguments.
+IS_3D_METHOD = False    # The 3D model's pupil diameter's data show less difference.
+IS_2_PUPILS = False     # Whether to split 2 pupil's data apart and average or not. Still, not much difference.

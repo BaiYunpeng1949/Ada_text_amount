@@ -34,6 +34,15 @@ minSamplesPerWindow = maxSamplingRate * windowLengthSeconds
 wavelet = 'sym8'
 # wavelet = 'sym16'
 
+MODE_2D = '2d c++'
+MODE_3D = 'pye3d 0.3.0 real-time'
+INDEX_EYE_0 = 0
+INDEX_EYE_1 = 1
+
+global is_3D, is_2_pupils
+is_3D = False
+is_2_pupils = False
+
 
 class ProcessingThread(Thread):
     def __init__(self, pupilData, targetsocket):
@@ -44,6 +53,19 @@ class ProcessingThread(Thread):
     def run(self):
         global threadRunning
         processData(self.data, self.targetsocket)
+        threadRunning = False
+
+
+class ProcessingThread2Pupils(Thread):
+    def __init__(self, pupilData, pupilData1, targetsocket):
+        Thread.__init__(self)
+        self.data = pupilData
+        self.data_1 = pupilData1
+        self.targetsocket = targetsocket
+
+    def run(self):
+        global threadRunning
+        processData1(self.data, self.data_1, self.targetsocket)
         threadRunning = False
 
 
@@ -244,6 +266,21 @@ def processData(data, socket):
     socket.sendto(str.encode(str(round(currentIPA, 3))), (host, port))    # Send to their equipment.
 
 
+def processData1(data, data_1, socket):
+    blinkedRemoved = cleanBlinks(data)
+    cleanedData = cleanup(blinkedRemoved)
+    fixTimestamp(cleanedData)
+    currentIPA = ipa(cleanedData)
+
+    blinkedRemoved1 = cleanBlinks(data_1)
+    cleanedData1 = cleanup(blinkedRemoved1)
+    fixTimestamp(cleanedData1)
+    currentIPA1 = ipa(cleanedData1)
+
+    averagedCurrentIPA = 0.5 * (currentIPA1 + currentIPA1)
+    socket.sendto(str.encode(str(round(averagedCurrentIPA, 3))), (host, port))
+
+
 def receivePupilData(udp, pupilSocket):     # The "udp" is for "user datagram protocol".
     while True:
         try:
@@ -252,30 +289,93 @@ def receivePupilData(udp, pupilSocket):     # The "udp" is for "user datagram pr
             msg = loads(msg, encoding='utf-8')
             # print("\n{}: {}".format(topic, msg))
 
-            data = PupilData(msg['diameter'])
-            data.timestamp = msg['timestamp']
-            data.confidence = msg['confidence']
+            method = msg['method']
+            id_eye = msg['id']
 
-            currentPupilData.append(data)
+            # Check whether splitting 2 pupil data.
+            global is_2_pupils
+            if is_2_pupils is False:    # Default: don't split 2 pupils' data.
+                # Check whether apply the 3D mode.
+                global is_3D
+                if is_3D is False:
+                    data = PupilData(msg['diameter'])  # Collect the 2-D pixel data.
+                    data.timestamp = msg['timestamp']
+                    data.confidence = msg['confidence']
 
-            while len(currentPupilData) > minSamplesPerWindow:
-                currentPupilData.pop(0)     # Remove the first element in the list.
+                    currentPupilData.append(data)
+                elif is_3D is True:
+                    if method == MODE_3D:
+                        data = PupilData(msg['diameter_3d'])    # Calculate the 3-D mm model data.  Sometimes lacks this data.
+                        data.timestamp = msg['timestamp']
+                        data.confidence = msg['confidence']
 
-            global threadRunning
+                        currentPupilData.append(data)
 
-            if len(currentPupilData) == minSamplesPerWindow and threadRunning is False:     # Wait for reaching 1-minute's windows length; enough data points.
-                threadRunning = True
-                processingThread = ProcessingThread(list(currentPupilData), udp)    # Iteratively apply and start threads.
-                processingThread.start()
+                # currentPupilData.append(data)
+
+                # Calculate and send out ipa data.
+                while len(currentPupilData) > minSamplesPerWindow:
+                    currentPupilData.pop(0)     # Remove the first element in the list.
+
+                global threadRunning
+
+                if len(currentPupilData) == minSamplesPerWindow and threadRunning is False:     # Wait for reaching 1-minute's windows length; enough data points.
+                    threadRunning = True
+                    processingThread = ProcessingThread(list(currentPupilData), udp)    # Iteratively apply and start threads.
+                    processingThread.start()
+
+            elif is_2_pupils:   # Split 2 pupils and average corresponding ipa data.
+                # Check whether apply the 3D mode.
+                if is_3D is False:
+                    if id_eye == INDEX_EYE_0:
+                        data_0 = PupilData(msg['diameter'])  # Collect the 2-D pixel data.
+                        data_0.timestamp = msg['timestamp']
+                        data_0.confidence = msg['confidence']
+
+                        currentPupilData.append(data_0)
+                    elif id_eye == INDEX_EYE_1:
+                        data_1 = PupilData(msg['diameter'])  # Collect the 2-D pixel data.
+                        data_1.timestamp = msg['timestamp']
+                        data_1.confidence = msg['confidence']
+
+                        currentPupilData1.append(data_1)
+                elif is_3D:
+                    if method == MODE_3D and id_eye == INDEX_EYE_0:
+                        data = PupilData(msg['diameter_3d'])    # Calculate the 3-D mm model data.  Sometimes lacks this data.
+                        data.timestamp = msg['timestamp']
+                        data.confidence = msg['confidence']
+
+                        currentPupilData.append(data)
+                    elif method == MODE_3D and id_eye == INDEX_EYE_1:
+                        data_1 = PupilData(
+                            msg['diameter_3d'])  # Calculate the 3-D mm model data.  Sometimes lacks this data.
+                        data_1.timestamp = msg['timestamp']
+                        data_1.confidence = msg['confidence']
+
+                        currentPupilData1.append(data_1)
+
+                # Calculate and send out the ipa data.
+                while len(currentPupilData) > minSamplesPerWindow:
+                    currentPupilData.pop(0)     # Remove the first element in the list.
+                while len(currentPupilData1) > minSamplesPerWindow:
+                    currentPupilData1.pop(0)  # Remove the first element in the list.
+
+                if len(currentPupilData) == minSamplesPerWindow and len(currentPupilData1) == minSamplesPerWindow and threadRunning is False:     # Wait for reaching 1-minute's windows length; enough data points.
+                    threadRunning = True
+                    processingThread = ProcessingThread2Pupils(list(currentPupilData), list(currentPupilData1), udp)    # Iteratively apply and start threads. TODO: make a new thread cope 2 pupils.
+                    processingThread.start()
 
         except KeyboardInterrupt:
             break
 
 
-def run_IPA_collection():
-    global threadRunning, currentPupilData
+def run_IPA_collection(is_3D_method, is_averaging_2_pupils):
+    global threadRunning, currentPupilData, currentPupilData1, is_3D, is_2_pupils
     threadRunning = False
     currentPupilData = list()
+    currentPupilData1 = list()     # Added to apply 2 pupil analysis.
+    is_3D = is_3D_method
+    is_2_pupils = is_averaging_2_pupils
 
     print(datetime.datetime.now())
     socket = createSendSocket()

@@ -1,7 +1,7 @@
 import time
 from threading import Thread
 
-from Display_output import Ada_pygame_prototype
+from Display_output import Ada_pygame_prototype, Config
 from IPA_input import IPA_Calculation
 
 
@@ -13,21 +13,20 @@ class IPAThread(Thread):
         Thread.__init__(self)
 
     def run(self):
-        IPA_Calculation.run_IPA_collection()
+        IPA_Calculation.run_IPA_collection(is_3D_method=Config.IS_3D_METHOD,
+                                           is_averaging_2_pupils=Config.IS_2_PUPILS)
 
 
 if __name__ == '__main__':
-    # Start the eye gazer, set everything up:
+    # Start the eye gazer, set everything up: TODO: hash this ipa reading thread when the "pupil labs" eye tracker is not connected to the current laptop.
     # Initialize the IPA data calculation and reading thread.
     thread_ipa = IPAThread()
     thread_ipa.start()
 
-    time.sleep(20)  # Wait for 20s of initialization.
-    print("waiting is over")
-
     # Start the display.
     Ada_pygame_prototype.run_pilots(name='trial',
-                                    time='27 July 2022',
-                                    id_participant=2
+                                    time='28 July 2022',
+                                    id_participant=3,
+                                    is_ipa=True
                                     )
 

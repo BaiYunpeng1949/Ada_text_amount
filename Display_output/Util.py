@@ -105,12 +105,9 @@ def split_reading_texts(num_sentences, reading_material):  # Functions related t
 
 def create_IPA_computing_connection():
     """
-    This function builds up the connection with local ipa calculation file.
+    This function builds up the connection socket with local ipa calculation file.
     :return:
     """
     s = socket(AF_INET, SOCK_DGRAM)
     s.bind(('', Config.PORT_RANDOM))
-    # while(1):
-    #     m = s.recvfrom(4096)
-    #     print(m[0])
     return s
