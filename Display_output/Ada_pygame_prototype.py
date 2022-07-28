@@ -21,7 +21,7 @@ class Runner:
                  mode_update, condition_exp,
                  color_background, color_text, size_text, size_gap,
                  pos_text, pos_gap,
-                 socket_read_ipa, is_ipa,
+                 socket_read_ipa, is_lhipa,
                  title="AdaPrototype"
                  ):
         # Package setup for splitting sentences.
@@ -49,7 +49,7 @@ class Runner:
         self.pos_text = pos_text  # Coordinators whose origins are from the top left corner.
         self.pos_gap = pos_gap
         self.socket_read_ipa = socket_read_ipa
-        self.is_ipa = is_ipa
+        self.is_lhipa = is_lhipa
         self.title = title
 
         # Constant values
@@ -614,7 +614,7 @@ class Runner:
             self.surface.fill(self.color_stop_reminder_background)
 
         # Read ipa data and de-couple these.
-        if self.is_ipa:
+        if self.is_lhipa:
             msg = self.socket_read_ipa.recvfrom(4096)
             ipa = msg[0].decode()
         else:
@@ -935,7 +935,7 @@ class Runner:
                     f.write("Task completion time is: " + str(round(np.sum(self.log_time_elapsed_read_text_mode_manual) / 1000, 2)) + " ms" + "\n")
 
 
-def run_pilots(name, time, id_participant, is_ipa):
+def run_pilots(name, time, id_participant, is_lhipa):
     # Build socket communication connection if the "pupil labs" eye tracker is connected.
     ipa_calculation_socket = Util.create_IPA_computing_connection()
 
@@ -974,7 +974,7 @@ def run_pilots(name, time, id_participant, is_ipa):
                                          color_background=Config.COLOR_BACKGROUND, color_text=Config.COLOR_TEXTS,
                                          size_text=Config.SIZE_TEXTS, size_gap=Config.SIZE_GAP_TASK,
                                          pos_text=Config.POS_TEXTS, pos_gap=Config.POS_GAP,
-                                         socket_read_ipa=ipa_calculation_socket, is_ipa=is_ipa
+                                         socket_read_ipa=ipa_calculation_socket, is_lhipa=is_lhipa
                                          )
 
         print("During the trainging session.......Now is the training: " + str(
@@ -1035,7 +1035,7 @@ def run_pilots(name, time, id_participant, is_ipa):
                                       color_background=Config.COLOR_BACKGROUND, color_text=Config.COLOR_TEXTS,
                                       size_text=Config.SIZE_TEXTS, size_gap=Config.SIZE_GAP_TASK,
                                       pos_text=(margin_width_current_condition_studies, Config.POS_TEXTS[1]), pos_gap=Config.POS_GAP,
-                                      socket_read_ipa=ipa_calculation_socket, is_ipa=is_ipa
+                                      socket_read_ipa=ipa_calculation_socket, is_lhipa=is_lhipa
                                       )
 
         print("During the study.......Now is the condition: " + str(

@@ -31,8 +31,8 @@ confidenceThreshold = .2
 windowLengthSeconds = 60
 maxSamplingRate = 60    # Changed to 60Hz due to our hardware limitations.
 minSamplesPerWindow = maxSamplingRate * windowLengthSeconds
-wavelet = 'sym8'
-# wavelet = 'sym16'
+# wavelet = 'sym8'
+wavelet = 'sym16'
 
 MODE_2D = '2d c++'
 MODE_3D = 'pye3d 0.3.0 real-time'
@@ -139,6 +139,53 @@ def modmax(d):
             t[i] = 0.0
 
     return t
+
+
+def lhipa(d):
+    """
+    Calculate the LHIPA from https://dl-acm-org.libproxy1.nus.edu.sg/doi/pdf/10.1145/3313831.3376394.
+    :param d:
+    :return:
+    """
+    # find max decomposition level
+    w = pywt.Wavelet(wavelet)
+    maxlevel = pywt.dwt_max_level(len(d), filter_len=w.dec_len)
+
+    # set high and low frequency band indeces
+    hif, lof = 1, int(maxlevel / 2)
+
+    # get detail coefficients of pupil diameter signal d
+    cD_H = pywt.downcoef('d', d, wavelet, 'per', level=hif)
+    cD_L = pywt.downcoef('d', d, wavelet, 'per', level=lof)
+
+    # normalize by 1/ 2j
+    cD_H[:] = [x / math.sqrt(2 ** hif) for x in cD_H]
+    cD_L[:] = [x / math.sqrt(2 ** lof) for x in cD_L]
+
+    # obtain the LH:HF ratio
+    cD_LH = cD_L
+    for i in range(len(cD_L)):
+        cD_LH[i] = cD_L[i] / cD_H[((2 ** lof) // (2 ** hif)) * i]   # Used a '//' instead of '/' to make sure the index is an integer.
+
+    # detect modulus maxima , see Duchowski et al. [15]
+    cD_LHm = modmax(cD_LH)
+
+    # threshold using universal threshold λuniv = σˆ (2logn)
+    # where σˆ is the standard deviation of the noise
+    lambda_univ = np.std(cD_LHm) * math.sqrt(2.0*np.log2(len(cD_LHm)))
+    cD_LHt = pywt.threshold(cD_LHm, lambda_univ, mode="less")
+
+    # get signal duration (in seconds)
+    # tt = d[-1].timestamp() - d[0].timestamp()
+    tt = d[-1].timestamp - d[0].timestamp
+
+    # compute LHIPA
+    ctr = 0
+    for i in range(len(cD_LHt)):
+        if math.fabs(cD_LHt[i]) > 0:
+            ctr += 1
+    LHIPA = float(ctr) / tt
+    return LHIPA
 
 
 def createSendSocket():
@@ -259,7 +306,7 @@ def processData(data, socket):
     blinkedRemoved = cleanBlinks(data)
     cleanedData = cleanup(blinkedRemoved)
     fixTimestamp(cleanedData)
-    currentIPA = ipa(cleanedData)
+    currentIPA = lhipa(cleanedData)
 
     valueString = ' ipa ' + str(currentIPA)
     # print(str(datetime.datetime.now()) + '  ' + valueString + '; ' + str(len(cleanedData)) + ' / ' + str(len(data)) + ' samples')
@@ -270,12 +317,12 @@ def processData1(data, data_1, socket):
     blinkedRemoved = cleanBlinks(data)
     cleanedData = cleanup(blinkedRemoved)
     fixTimestamp(cleanedData)
-    currentIPA = ipa(cleanedData)
+    currentIPA = lhipa(cleanedData)
 
     blinkedRemoved1 = cleanBlinks(data_1)
     cleanedData1 = cleanup(blinkedRemoved1)
     fixTimestamp(cleanedData1)
-    currentIPA1 = ipa(cleanedData1)
+    currentIPA1 = lhipa(cleanedData1)
 
     averagedCurrentIPA = 0.5 * (currentIPA1 + currentIPA1)
     socket.sendto(str.encode(str(round(averagedCurrentIPA, 3))), (host, port))
