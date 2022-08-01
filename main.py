@@ -25,7 +25,7 @@ if __name__ == '__main__':
 
     # Start the display.
     Ada_pygame_prototype.run_pilots(name='trial',
-                                    time='31 July 2022',
+                                    time='1 August 2022',
                                     id_participant=1,
                                     is_lhipa=True
                                     )
