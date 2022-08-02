@@ -55,26 +55,26 @@ CONDITIONS_STUDIES = {
     1: {
         "duration_gap": 5000,
         "mode_update": MODE_MANUAL,
-        "number of words": 2,
-        "margin width": 50
+        "number of words": 1,
+        "margin width": 75
     },
     2: {
         "duration_gap": 5000,
         "mode_update": MODE_MANUAL,
-        "number of words": 2,
-        "margin width": 50
+        "number of words": 1,
+        "margin width": 75
     },
     3: {
         "duration_gap": 5000,
         "mode_update": MODE_MANUAL,
-        "number of words": 2,
-        "margin width": 50
+        "number of words": 1,
+        "margin width": 75
     },
     4: {
         "duration_gap": 5000,
         "mode_update": MODE_MANUAL,
-        "number of words": 2,
-        "margin width": 50
+        "number of words": 1,
+        "margin width": 75
     }
 }
 
@@ -106,18 +106,18 @@ SOURCE_TEXTS_PATH_LIST_FORMAL_STUDIES = [
     # "Display_output/Reading Materials/Pilot version 6 July/Story13.txt",
     # "Display_output/Reading Materials/Pilot version 6 July/Story14.txt"
 
-    "Display_output/Reading Materials/Pilot version 31 July/L3S16_FS93_239wrds.txt",
-    "Display_output/Reading Materials/Pilot version 31 July/L6S16_FS80_339wrds.txt",
-    "Display_output/Reading Materials/Pilot version 31 July/L7S16_FS70_341wrds.txt",
-    "Display_output/Reading Materials/Pilot version 31 July/L13S9_FS48_504wrds.txt"
+    "Display_output/Reading Materials/Pilot version 31 July/L4S1_FS88_299wrds.txt",
+    "Display_output/Reading Materials/Pilot version 31 July/L4S1_FS88_299wrds.txt",
+    "Display_output/Reading Materials/Pilot version 31 July/L13S15_FS49_511wrds.txt",
+    "Display_output/Reading Materials/Pilot version 31 July/L13S13_FS45_525wrds.txt"
 ]
 
 # Runners (instances)' argument settings.
 COLOR_TEXTS = (73, 232, 56)     # The color of texts displayed: green.
 COLOR_BACKGROUND = "black"
-SIZE_TEXTS = 45     # The size of texts displayed.
+SIZE_TEXTS = 55     # The size of texts displayed.
 SIZE_GAP_TASK = 64  # The size of elements in secondary tasks.
-POS_TEXTS = (325, 50)        # The starting position of texts displayed: x_pixels and y_pixels.
+POS_TEXTS = (75, 425)        # The starting position of texts displayed: x_pixels and y_pixels.
 POS_GAP = (0, 0)            # The starting position of gap task displayed.
 OFFSET_READING_SPEED = 0    # The offset of specific participant's reading speed.
 WPS_READING_SPEED_INITIAL = 19   # The reading speed initialization of a specific participant.

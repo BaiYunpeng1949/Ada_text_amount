@@ -991,6 +991,12 @@ def run_pilots(name, time, id_participant, is_lhipa):
                                key_or_button=pygame.KEYDOWN,
                                key_pressed=pygame.K_SPACE)
 
+    # Create a waiting canvas, then proceed to the training session.
+    content_text_before_training = "To start reading, click [R]"
+    Util.create_waiting_canvas(content_texts=content_text_before_training,
+                               key_or_button=pygame.MOUSEBUTTONDOWN,
+                               key_pressed=Config.RIGHT_CLICK_RING_MOUSE)
+
     ############################################## Session 2 : formal studies ###########################################################
     # Start the studies.
     # Get the number of conditions.
