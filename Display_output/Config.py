@@ -106,10 +106,10 @@ SOURCE_TEXTS_PATH_LIST_FORMAL_STUDIES = [
     # "Display_output/Reading Materials/Pilot version 6 July/Story13.txt",
     # "Display_output/Reading Materials/Pilot version 6 July/Story14.txt"
 
-    "Display_output/Reading Materials/Pilot version 31 July/L4S1_FS88_299wrds.txt",
-    "Display_output/Reading Materials/Pilot version 31 July/L4S1_FS88_299wrds.txt",
-    "Display_output/Reading Materials/Pilot version 31 July/L13S15_FS49_511wrds.txt",
-    "Display_output/Reading Materials/Pilot version 31 July/L13S13_FS45_525wrds.txt"
+    "Display_output/Reading Materials/Pilot version 31 July/L2S6_FS85_236wrds.txt",
+    "Display_output/Reading Materials/Pilot version 31 July/L2S4_FS85_248wrds.txt",
+    "Display_output/Reading Materials/Pilot version 31 July/L13S10_FS30_527wrds.txt",
+    "Display_output/Reading Materials/Pilot version 31 July/L13S11_FS39_524wrds.txt"
 ]
 
 # Runners (instances)' argument settings.
@@ -122,7 +122,7 @@ POS_GAP = (0, 0)            # The starting position of gap task displayed.
 OFFSET_READING_SPEED = 0    # The offset of specific participant's reading speed.
 WPS_READING_SPEED_INITIAL = 19   # The reading speed initialization of a specific participant.
 MARGIN_BOT_RIGHT_WIDTH = 150     # The horizontal margin of ipa data displayed on the right bottom corner.
-MARGIN_BOT_RIGHT_HEIGHT = 150    # The vertical margin of ipa data displayed on the right bottom corner.
+MARGIN_BOT_RIGHT_HEIGHT = 60    # The vertical margin of ipa data displayed on the right bottom corner.
 
 # Socket configurations.
 IP_LOCAL_HOST = '127.0.0.1'
