@@ -28,8 +28,8 @@ if __name__ == '__main__':
     # thread_ipa.start()
 
     # Start the display.
-    Ada_pygame_prototype.run_pilots(name='Bai1',
-                                    time='4 August 2022',
+    Ada_pygame_prototype.run_pilots(name='Demo',
+                                    time='20 August 2022',
                                     id_participant=1,
                                     is_lhipa=is_eye_gazer_started
                                     )
