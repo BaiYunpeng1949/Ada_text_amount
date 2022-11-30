@@ -661,7 +661,7 @@ class Runner:
         # Auxiliary tool for rendering texts.
         def render_words(texts_display, x_text, y_text, opacity):
             words = texts_display.split(' ')
-            space = self.font_text.size(' ')[0]  # TODO change back later
+            space = self.font_text.size(' ')[0]
 
             # Determine the current page/chunk position.
             # Some position related parameters update.
