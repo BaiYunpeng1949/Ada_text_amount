@@ -56,12 +56,12 @@ CONDITIONS_STUDIES = {
         "duration_gap": 5000,
         "mode_update": MODE_MANUAL,
         "number of words": 1,
-        "margin width": 75
+        "margin width": 200
     },
     2: {
         "duration_gap": 5000,
         "mode_update": MODE_MANUAL,
-        "number of words": 1,
+        "number of words": 5,
         "margin width": 75
     },
     3: {

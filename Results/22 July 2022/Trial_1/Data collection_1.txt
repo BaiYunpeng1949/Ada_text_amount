@@ -1,0 +1,43 @@
+Participant Information: 
+Participant Name: Trial_1
+Experiment Time: 22 July 2022
+Trial Number / Condition: Data collection_1
+Text source path: Reading Materials/Pilot version 1 July/Earth day_144.txt
+
+Configuration: 
+Duration of gap task: 2000 ms
+Duration of text reading: 0 ms
+Amount of text in a chunk: 3 words
+Text read: Reading Materials/Pilot version 1 July/Earth day_144.txt
+The type of task type: count task
+The number of attention shifts: 3
+The mode of text content update: manual
+The color of OHMD background: black
+The color of OHMD texts: (73, 232, 56)
+The size of texts: 60 pixels
+The size of gap tasks: 64 pixels
+The position of texts: (325, 50)
+The position of gap tasks: (0, 0)
+
+Logs: 
+The 1 text chunk: 
+Gap task results: ['circle: 0 ', 'triangle: 1 ', 'rectangle: 3 ']
+Time elapsed while waiting before the new reading tiral: 965 ms.
+The total time spent on the non-reading trial: 2965 ms.
+The 2 text chunk: 
+Gap task results: ['circle: 2 ', 'triangle: 0 ', 'rectangle: 2 ']
+Time elapsed while waiting before the new reading tiral: 1287 ms.
+The total time spent on the non-reading trial: 3287 ms.
+The 3 text chunk: 
+Gap task results: ['circle: 0 ', 'triangle: 1 ', 'rectangle: 3 ']
+Time elapsed while waiting before the new reading tiral: 1204 ms.
+The total time spent on the non-reading trial: 3204 ms.
+
+The 1 attention shift: 
+Amount of texts in this chunk: 0    Time spent: 5849 ms
+The 2 attention shift: 
+Amount of texts in this chunk: 0    Time spent: 4699 ms
+The 3 attention shift: 
+Amount of texts in this chunk: 35    Time spent: 25858 ms
+The average elapsed time is: 12135.333333333334 ms
+The average reading speed is: 0.4511820970943873words per second

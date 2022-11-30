@@ -1,0 +1,36 @@
+Participant Information: 
+Participant Name: Zoe_2
+Experiment Time: 1 August 2022
+Trial Number / Condition: training_2
+Text source path: Display_output/Reading Materials/Pilot version 1 July/Earth day_144.txt
+
+Configuration: 
+Duration of gap task: 2000 ms
+Duration of text reading: 4000 ms
+Amount of text in a chunk: 5 words
+Text read: Display_output/Reading Materials/Pilot version 1 July/Earth day_144.txt
+The type of task type: count task
+The number of attention shifts: 2
+The mode of text content update: manual
+The color of OHMD background: black
+The color of OHMD texts: (73, 232, 56)
+The size of texts: 45 pixels
+The size of gap tasks: 64 pixels
+The position of texts: (325, 50)
+The position of gap tasks: (0, 0)
+
+Logs: 
+The 1 text chunk: 
+Gap task results: ['circle: 1 ', 'triangle: 1 ', 'rectangle: 2 ']
+The 2 text chunk: 
+Gap task results: ['circle: 1 ', 'triangle: 1 ', 'rectangle: 2 ']
+
+The 1 chunk: 
+Amount of texts in this chunk: 62
+The 2 chunk: 
+Amount of texts in this chunk: 83
+
+The average elapsed time is: nan ms
+The average reading speed is: 0 words per second
+The average IPA in this trial is: nan
+Task completion time is: 0.0 ms

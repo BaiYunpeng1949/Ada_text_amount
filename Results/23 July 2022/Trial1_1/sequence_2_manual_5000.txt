@@ -1,0 +1,57 @@
+Participant Information: 
+Participant Name: Trial1_1
+Experiment Time: 23 July 2022
+Trial Number / Condition: sequence_2_manual_5000
+Text source path: Reading Materials/Pilot version 6 July/Story05_351wrds_27sts_13wpst.txt
+
+Configuration: 
+Duration of gap task: 5000 ms
+Duration of text reading: 3000 ms
+Amount of text in a chunk: 3 words
+Text read: Reading Materials/Pilot version 6 July/Story05_351wrds_27sts_13wpst.txt
+The type of task type: count task
+The number of attention shifts: 8
+The mode of text content update: manual
+The color of OHMD background: black
+The color of OHMD texts: (73, 232, 56)
+The size of texts: 45 pixels
+The size of gap tasks: 64 pixels
+The position of texts: (325, 50)
+The position of gap tasks: (0, 0)
+
+Logs: 
+The 1 text chunk: 
+Gap task results: ['circle: 3 ', 'triangle: 4 ', 'rectangle: 3 ']
+The 2 text chunk: 
+Gap task results: ['circle: 6 ', 'triangle: 2 ', 'rectangle: 2 ']
+The 3 text chunk: 
+Gap task results: ['circle: 1 ', 'triangle: 6 ', 'rectangle: 3 ']
+The 4 text chunk: 
+Gap task results: ['circle: 5 ', 'triangle: 4 ', 'rectangle: 1 ']
+The 5 text chunk: 
+Gap task results: ['circle: 2 ', 'triangle: 5 ', 'rectangle: 3 ']
+The 6 text chunk: 
+Gap task results: ['circle: 1 ', 'triangle: 5 ', 'rectangle: 4 ']
+The 7 text chunk: 
+Gap task results: ['circle: 1 ', 'triangle: 6 ', 'rectangle: 3 ']
+The 8 text chunk: 
+Gap task results: ['circle: 3 ', 'triangle: 2 ', 'rectangle: 5 ']
+
+The 1 attention shift: 
+Amount of texts in this chunk: 41    Time spent: 18560 ms
+The 2 attention shift: 
+Amount of texts in this chunk: 42    Time spent: 23731 ms
+The 3 attention shift: 
+Amount of texts in this chunk: 51    Time spent: 20560 ms
+The 4 attention shift: 
+Amount of texts in this chunk: 35    Time spent: 16525 ms
+The 5 attention shift: 
+Amount of texts in this chunk: 41    Time spent: 21530 ms
+The 6 attention shift: 
+Amount of texts in this chunk: 52    Time spent: 34414 ms
+The 7 attention shift: 
+Amount of texts in this chunk: 41    Time spent: 26504 ms
+The 8 attention shift: 
+Amount of texts in this chunk: 48    Time spent: 148 ms
+The average elapsed time is: 20246.5 ms
+The average reading speed is: 42.23300369611057words per second

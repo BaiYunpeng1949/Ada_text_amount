@@ -1,0 +1,43 @@
+Participant Information: 
+Participant Name: Trial1_1
+Experiment Time: 24 July 2022
+Trial Number / Condition: sequence_5_manual_5000
+Text source path: Reading Materials/Pilot version 6 July/Story10_347wrds_19sts_18.26wpst.txt
+
+Configuration: 
+Duration of gap task: 5000 ms
+Duration of text reading: 5000 ms
+Amount of text in a chunk: 5 words
+Text read: Reading Materials/Pilot version 6 July/Story10_347wrds_19sts_18.26wpst.txt
+The type of task type: count task
+The number of attention shifts: 4
+The mode of text content update: manual
+The color of OHMD background: black
+The color of OHMD texts: (73, 232, 56)
+The size of texts: 45 pixels
+The size of gap tasks: 64 pixels
+The position of texts: (325, 50)
+The position of gap tasks: (0, 0)
+
+Logs: 
+The 1 text chunk: 
+Gap task results: ['circle: 5 ', 'triangle: 3 ', 'rectangle: 2 ']
+The 2 text chunk: 
+Gap task results: ['circle: 2 ', 'triangle: 0 ', 'rectangle: 8 ']
+The 3 text chunk: 
+Gap task results: ['circle: 0 ', 'triangle: 5 ', 'rectangle: 5 ']
+The 4 text chunk: 
+Gap task results: ['circle: 3 ', 'triangle: 2 ', 'rectangle: 5 ']
+
+The 1 attention shift: 
+Amount of texts in this chunk: 90    Time spent: 43756 ms
+The 2 attention shift: 
+Amount of texts in this chunk: 85    Time spent: 41237 ms
+The 3 attention shift: 
+Amount of texts in this chunk: 89    Time spent: 52417 ms
+The 4 attention shift: 
+Amount of texts in this chunk: 83    Time spent: 42631 ms
+
+The average elapsed time is: 45.01 ms
+The average reading speed is: 1.94 words per second
+Task completion time is: 180.04 ms

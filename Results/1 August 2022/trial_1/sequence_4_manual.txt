@@ -1,0 +1,56 @@
+Participant Information: 
+Participant Name: trial_1
+Experiment Time: 1 August 2022
+Trial Number / Condition: sequence_4_manual
+Text source path: Display_output/Reading Materials/Pilot version 31 July/L13S9_FS48_504wrds.txt
+
+Configuration: 
+Duration of gap task: 5000 ms
+Duration of text reading: 4000 ms
+Amount of text in a chunk: 2 words
+Text read: Display_output/Reading Materials/Pilot version 31 July/L13S9_FS48_504wrds.txt
+The type of task type: count task
+The number of attention shifts: 7
+The mode of text content update: manual
+The color of OHMD background: black
+The color of OHMD texts: (73, 232, 56)
+The size of texts: 45 pixels
+The size of gap tasks: 64 pixels
+The position of texts: (50, 50)
+The position of gap tasks: (0, 0)
+
+Logs: 
+The 1 text chunk: 
+Gap task results: ['circle: 2 ', 'triangle: 3 ', 'rectangle: 5 ']
+The 2 text chunk: 
+Gap task results: ['circle: 3 ', 'triangle: 4 ', 'rectangle: 3 ']
+The 3 text chunk: 
+Gap task results: ['circle: 1 ', 'triangle: 7 ', 'rectangle: 2 ']
+The 4 text chunk: 
+Gap task results: ['circle: 3 ', 'triangle: 0 ', 'rectangle: 7 ']
+The 5 text chunk: 
+Gap task results: ['circle: 3 ', 'triangle: 2 ', 'rectangle: 5 ']
+The 6 text chunk: 
+Gap task results: ['circle: 5 ', 'triangle: 1 ', 'rectangle: 4 ']
+The 7 text chunk: 
+Gap task results: ['circle: 0 ', 'triangle: 5 ', 'rectangle: 5 ']
+
+The 1 chunk: 
+Amount of texts in this chunk: 67    Time spent: 29593 ms      IPA: 3.414
+The 2 chunk: 
+Amount of texts in this chunk: 57    Time spent: 16155 ms      IPA: 2.397
+The 3 chunk: 
+Amount of texts in this chunk: 45    Time spent: 6494 ms      IPA: 2.445
+The 4 chunk: 
+Amount of texts in this chunk: 86    Time spent: 12391 ms      IPA: 2.396
+The 5 chunk: 
+Amount of texts in this chunk: 71    Time spent: 13841 ms      IPA: 2.41
+The 6 chunk: 
+Amount of texts in this chunk: 102    Time spent: 15334 ms      IPA: 2.4
+The 7 chunk: 
+Amount of texts in this chunk: 63    Time spent: 8800 ms      IPA: 2.418
+
+The average elapsed time is: 14.66 ms
+The average reading speed is: 5.51 words per second
+The average IPA in this trial is: 2.554
+Task completion time is: 102.61 ms

@@ -1,0 +1,71 @@
+Participant Information: 
+Participant Name: Trial2_1
+Experiment Time: 19 July 2022
+Trial Number / Condition: sequence_1_present all_5000
+Text source path: Reading Materials/Pilot version 6 July/Story03_372wrds_19sts_19.58wpst.txt
+
+Configuration: 
+Duration of gap task: 5000 ms
+Duration of text reading: 22000 ms
+Amount of text in a chunk: 35 words
+Text read: Reading Materials/Pilot version 6 July/Story03_372wrds_19sts_19.58wpst.txt
+The type of task type: count task
+The number of attention shifts: 8
+The mode of text content update: present all
+The color of OHMD background: black
+The color of OHMD texts: (73, 232, 56)
+The size of texts: 60 pixels
+The size of gap tasks: 64 pixels
+The position of texts: (325, 50)
+The position of gap tasks: (0, 0)
+
+Logs: 
+The 1 text chunk: 
+Gap task results: ['circle: 4 ', 'triangle: 4 ', 'rectangle: 2 ']
+Time elapsed while waiting before the new reading tiral: 18209 ms.
+The total time spent on the non-reading trial: 23209 ms.
+The 2 text chunk: 
+Gap task results: ['circle: 5 ', 'triangle: 2 ', 'rectangle: 3 ']
+Time elapsed while waiting before the new reading tiral: 1114 ms.
+The total time spent on the non-reading trial: 6114 ms.
+The 3 text chunk: 
+Gap task results: ['circle: 3 ', 'triangle: 4 ', 'rectangle: 3 ']
+Time elapsed while waiting before the new reading tiral: 2050 ms.
+The total time spent on the non-reading trial: 7050 ms.
+The 4 text chunk: 
+Gap task results: ['circle: 7 ', 'triangle: 0 ', 'rectangle: 3 ']
+Time elapsed while waiting before the new reading tiral: 1194 ms.
+The total time spent on the non-reading trial: 6194 ms.
+The 5 text chunk: 
+Gap task results: ['circle: 2 ', 'triangle: 5 ', 'rectangle: 3 ']
+Time elapsed while waiting before the new reading tiral: 1260 ms.
+The total time spent on the non-reading trial: 6260 ms.
+The 6 text chunk: 
+Gap task results: ['circle: 5 ', 'triangle: 2 ', 'rectangle: 3 ']
+Time elapsed while waiting before the new reading tiral: 2534 ms.
+The total time spent on the non-reading trial: 7534 ms.
+The 7 text chunk: 
+Gap task results: ['circle: 4 ', 'triangle: 5 ', 'rectangle: 1 ']
+Time elapsed while waiting before the new reading tiral: 1583 ms.
+The total time spent on the non-reading trial: 6583 ms.
+The 8 text chunk: 
+Gap task results: ['circle: 3 ', 'triangle: 1 ', 'rectangle: 6 ']
+Time elapsed while waiting before the new reading tiral: 2142 ms.
+The total time spent on the non-reading trial: 7142 ms.
+
+The 1 attention shift: 
+    Time spent: 19000 ms
+The 2 attention shift: 
+    Time spent: 19000 ms
+The 3 attention shift: 
+    Time spent: 22000 ms
+The 4 attention shift: 
+    Time spent: 28000 ms
+The 5 attention shift: 
+    Time spent: 20000 ms
+The 6 attention shift: 
+    Time spent: 22000 ms
+The 7 attention shift: 
+    Time spent: 26000 ms
+The 8 attention shift: 
+    Time spent: 22000 ms

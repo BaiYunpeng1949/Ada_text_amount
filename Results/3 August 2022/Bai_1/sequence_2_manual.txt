@@ -1,0 +1,136 @@
+Participant Information: 
+Participant Name: Bai_1
+Experiment Time: 3 August 2022
+Trial Number / Condition: sequence_2_manual
+Text source path: Display_output/Reading Materials/Pilot version 31 July/L2S4_FS85_248wrds.txt
+
+Configuration: 
+Duration of gap task: 5000 ms
+Duration of text reading: 1000 ms
+Amount of text in a chunk: 1 words
+Text read: Display_output/Reading Materials/Pilot version 31 July/L2S4_FS85_248wrds.txt
+The type of task type: count task
+The number of attention shifts: 27
+The mode of text content update: manual
+The color of OHMD background: black
+The color of OHMD texts: (73, 232, 56)
+The size of texts: 55 pixels
+The size of gap tasks: 64 pixels
+The position of texts: (75, 425)
+The position of gap tasks: (0, 0)
+
+Logs: 
+The 1 text chunk: 
+Gap task results: ['circle: 2 ', 'triangle: 1 ', 'rectangle: 7 ']
+The 2 text chunk: 
+Gap task results: ['circle: 4 ', 'triangle: 4 ', 'rectangle: 2 ']
+The 3 text chunk: 
+Gap task results: ['circle: 4 ', 'triangle: 4 ', 'rectangle: 2 ']
+The 4 text chunk: 
+Gap task results: ['circle: 3 ', 'triangle: 3 ', 'rectangle: 4 ']
+The 5 text chunk: 
+Gap task results: ['circle: 2 ', 'triangle: 3 ', 'rectangle: 5 ']
+The 6 text chunk: 
+Gap task results: ['circle: 2 ', 'triangle: 5 ', 'rectangle: 3 ']
+The 7 text chunk: 
+Gap task results: ['circle: 2 ', 'triangle: 3 ', 'rectangle: 5 ']
+The 8 text chunk: 
+Gap task results: ['circle: 4 ', 'triangle: 3 ', 'rectangle: 3 ']
+The 9 text chunk: 
+Gap task results: ['circle: 6 ', 'triangle: 1 ', 'rectangle: 3 ']
+The 10 text chunk: 
+Gap task results: ['circle: 0 ', 'triangle: 4 ', 'rectangle: 6 ']
+The 11 text chunk: 
+Gap task results: ['circle: 3 ', 'triangle: 4 ', 'rectangle: 3 ']
+The 12 text chunk: 
+Gap task results: ['circle: 3 ', 'triangle: 3 ', 'rectangle: 4 ']
+The 13 text chunk: 
+Gap task results: ['circle: 3 ', 'triangle: 4 ', 'rectangle: 3 ']
+The 14 text chunk: 
+Gap task results: ['circle: 4 ', 'triangle: 0 ', 'rectangle: 6 ']
+The 15 text chunk: 
+Gap task results: ['circle: 5 ', 'triangle: 2 ', 'rectangle: 3 ']
+The 16 text chunk: 
+Gap task results: ['circle: 5 ', 'triangle: 4 ', 'rectangle: 1 ']
+The 17 text chunk: 
+Gap task results: ['circle: 4 ', 'triangle: 0 ', 'rectangle: 6 ']
+The 18 text chunk: 
+Gap task results: ['circle: 6 ', 'triangle: 4 ', 'rectangle: 0 ']
+The 19 text chunk: 
+Gap task results: ['circle: 7 ', 'triangle: 2 ', 'rectangle: 1 ']
+The 20 text chunk: 
+Gap task results: ['circle: 2 ', 'triangle: 3 ', 'rectangle: 5 ']
+The 21 text chunk: 
+Gap task results: ['circle: 5 ', 'triangle: 5 ', 'rectangle: 0 ']
+The 22 text chunk: 
+Gap task results: ['circle: 2 ', 'triangle: 3 ', 'rectangle: 5 ']
+The 23 text chunk: 
+Gap task results: ['circle: 4 ', 'triangle: 3 ', 'rectangle: 3 ']
+The 24 text chunk: 
+Gap task results: ['circle: 5 ', 'triangle: 4 ', 'rectangle: 1 ']
+The 25 text chunk: 
+Gap task results: ['circle: 5 ', 'triangle: 3 ', 'rectangle: 2 ']
+The 26 text chunk: 
+Gap task results: ['circle: 4 ', 'triangle: 2 ', 'rectangle: 4 ']
+The 27 text chunk: 
+Gap task results: ['circle: 2 ', 'triangle: 4 ', 'rectangle: 4 ']
+
+The 1 chunk: 
+Amount of texts in this chunk: 8    Time spent: 2128 ms      IPA: 2.764
+The 2 chunk: 
+Amount of texts in this chunk: 11    Time spent: 3032 ms      IPA: 2.442
+The 3 chunk: 
+Amount of texts in this chunk: 14    Time spent: 4898 ms      IPA: 3.102
+The 4 chunk: 
+Amount of texts in this chunk: 4    Time spent: 2520 ms      IPA: 4.961
+The 5 chunk: 
+Amount of texts in this chunk: 10    Time spent: 5549 ms      IPA: 4.847
+The 6 chunk: 
+Amount of texts in this chunk: 10    Time spent: 2188 ms      IPA: 4.722
+The 7 chunk: 
+Amount of texts in this chunk: 5    Time spent: 1685 ms      IPA: 4.472
+The 8 chunk: 
+Amount of texts in this chunk: 6    Time spent: 1733 ms      IPA: 4.71
+The 9 chunk: 
+Amount of texts in this chunk: 14    Time spent: 4061 ms      IPA: 4.72
+The 10 chunk: 
+Amount of texts in this chunk: 5    Time spent: 1917 ms      IPA: 4.588
+The 11 chunk: 
+Amount of texts in this chunk: 9    Time spent: 2670 ms      IPA: 4.606
+The 12 chunk: 
+Amount of texts in this chunk: 6    Time spent: 3425 ms      IPA: 4.747
+The 13 chunk: 
+Amount of texts in this chunk: 13    Time spent: 4577 ms      IPA: 4.741
+The 14 chunk: 
+Amount of texts in this chunk: 8    Time spent: 2867 ms      IPA: 4.734
+The 15 chunk: 
+Amount of texts in this chunk: 15    Time spent: 4937 ms      IPA: 4.562
+The 16 chunk: 
+Amount of texts in this chunk: 8    Time spent: 1922 ms      IPA: 4.698
+The 17 chunk: 
+Amount of texts in this chunk: 6    Time spent: 2308 ms      IPA: 4.498
+The 18 chunk: 
+Amount of texts in this chunk: 9    Time spent: 4014 ms      IPA: 4.731
+The 19 chunk: 
+Amount of texts in this chunk: 6    Time spent: 2620 ms      IPA: 4.958
+The 20 chunk: 
+Amount of texts in this chunk: 11    Time spent: 4391 ms      IPA: 5.103
+The 21 chunk: 
+Amount of texts in this chunk: 7    Time spent: 2754 ms      IPA: 5.018
+The 22 chunk: 
+Amount of texts in this chunk: 8    Time spent: 2539 ms      IPA: 4.786
+The 23 chunk: 
+Amount of texts in this chunk: 9    Time spent: 2075 ms      IPA: 4.321
+The 24 chunk: 
+Amount of texts in this chunk: 5    Time spent: 1458 ms      IPA: 0.0
+The 25 chunk: 
+Amount of texts in this chunk: 11    Time spent: 2786 ms      IPA: 0.0
+The 26 chunk: 
+Amount of texts in this chunk: 10    Time spent: 3262 ms      IPA: 1.18
+The 27 chunk: 
+Amount of texts in this chunk: 11    Time spent: 3436 ms      IPA: 4.683
+
+The average elapsed time is: 3.03 ms
+The average reading speed is: 3.04 words per second
+The average IPA in this trial is: 4.026
+Task completion time is: 81.75 ms

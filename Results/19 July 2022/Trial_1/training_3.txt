@@ -1,0 +1,76 @@
+Participant Information: 
+Participant Name: Trial_1
+Experiment Time: 19 July 2022
+Trial Number / Condition: training_3
+Text source path: Reading Materials/Pilot version 6 July/Story02_366wrds_32sts_11.44wpst.txt
+
+Configuration: 
+Duration of gap task: 2000 ms
+Duration of text reading: 19000 ms
+Amount of text in a chunk: 35 words
+Text read: Reading Materials/Pilot version 6 July/Story02_366wrds_32sts_11.44wpst.txt
+The type of task type: count task
+The number of attention shifts: 9
+The mode of text content update: contextual adaptive
+The color of OHMD background: black
+The color of OHMD texts: (73, 232, 56)
+The size of texts: 60 pixels
+The size of gap tasks: 64 pixels
+The position of texts: (50, 50)
+The position of gap tasks: (0, 0)
+
+Logs: 
+The 1 text chunk: 
+Gap task results: ['circle: 2 ', 'triangle: 1 ', 'rectangle: 1 ']
+Time elapsed while waiting before the new reading tiral: 2867 ms.
+The total time spent on the non-reading trial: 4867 ms.
+The 2 text chunk: 
+Gap task results: ['circle: 1 ', 'triangle: 2 ', 'rectangle: 1 ']
+Time elapsed while waiting before the new reading tiral: 1043 ms.
+The total time spent on the non-reading trial: 3043 ms.
+The 3 text chunk: 
+Gap task results: ['circle: 3 ', 'triangle: 0 ', 'rectangle: 1 ']
+Time elapsed while waiting before the new reading tiral: 1178 ms.
+The total time spent on the non-reading trial: 3178 ms.
+The 4 text chunk: 
+Gap task results: ['circle: 2 ', 'triangle: 0 ', 'rectangle: 2 ']
+Time elapsed while waiting before the new reading tiral: 4723 ms.
+The total time spent on the non-reading trial: 6723 ms.
+The 5 text chunk: 
+Gap task results: ['circle: 2 ', 'triangle: 1 ', 'rectangle: 1 ']
+The 6 text chunk: 
+Gap task results: ['circle: 1 ', 'triangle: 1 ', 'rectangle: 2 ']
+The 7 text chunk: 
+Gap task results: ['circle: 0 ', 'triangle: 2 ', 'rectangle: 2 ']
+The 8 text chunk: 
+Gap task results: ['circle: 3 ', 'triangle: 1 ', 'rectangle: 0 ']
+The 9 text chunk: 
+Gap task results: ['circle: 2 ', 'triangle: 1 ', 'rectangle: 1 ']
+
+The 1 attention shift: 
+Amount of texts in this chunk: 40    Time spent: 18000 ms
+Golf was a sport supposedly created from the Dutch game of "kolf." However, the first proven reference to it came in 1457, when the Scottish Parliament frowned on its popularity. After all, it took young men away from archery practice. Initially, golf was played on grounds near the sea. 
+The 2 attention shift: 
+Amount of texts in this chunk: 38    Time spent: 17000 ms
+After all, it took young men away from archery practice. Initially, golf was played on grounds near the sea. These grounds were filled with crisp turf and natural hazards, such as water and sand. It was only later that the game moved to downs, moorlands, and parkland courses. The U.S. got their golf balls and sticks from Scotland. 
+The 3 attention shift: 
+Amount of texts in this chunk: 40    Time spent: 18000 ms
+It was only later that the game moved to downs, moorlands, and parkland courses. The U.S. got their golf balls and sticks from Scotland. They shipped them down to Charleston, South Carolina in the mid-18th century. It was not until the late 1880s that the country built its first permanent courses in "country clubs." These clubs were mainly built for rich White males. 
+The 4 attention shift: 
+Amount of texts in this chunk: 41    Time spent: 19000 ms
+It was not until the late 1880s that the country built its first permanent courses in "country clubs." These clubs were mainly built for rich White males. There were no public courses for many years. And, with the invention of a new, cheap, golf ball, the British grabbed hold of the game to make it popular in England, too. The golf tee holds the ball as the player swings his stick. 
+The 5 attention shift: 
+Amount of texts in this chunk: 43    Time spent: 20000 ms
+And, with the invention of a new, cheap, golf ball, the British grabbed hold of the game to make it popular in England, too. The golf tee holds the ball as the player swings his stick. It was invented by George F. Grant in Boston. He filed a patent on the wooden tee on December 12, 1899. It had a tapering base and a flexible, concave shoulder. The practice of building 18-hole courses came from changes to the Old Course at St. Andrews, Scotland, around 1848. 
+The 6 attention shift: 
+Amount of texts in this chunk: 43    Time spent: 20000 ms
+It had a tapering base and a flexible, concave shoulder. The practice of building 18-hole courses came from changes to the Old Course at St. Andrews, Scotland, around 1848. They originally played the nine holes of the Old Course in both directions. This meant they went up then back down the same field. It made for a lot of physical activity. 
+The 7 attention shift: 
+Amount of texts in this chunk: 38    Time spent: 17000 ms
+This meant they went up then back down the same field. It made for a lot of physical activity. The first thought to correct the problem was to extend the course and bring it around to the starting point. That way the players would end up where they began. This was met with a great uproar, however. 
+The 8 attention shift: 
+Amount of texts in this chunk: 45    Time spent: 20000 ms
+That way the players would end up where they began. This was met with a great uproar, however. As a result, officials added the additional greens, increasing the width of the course to accommodate the "back nine." When King George V saw what they had done, he had an 18-hole course built at Richmond Palace. The object was to provide the people who couldn't afford the private clubs with a course they could use. 
+The 9 attention shift: 
+Amount of texts in this chunk: 38    Time spent: 17000 ms
+When King George V saw what they had done, he had an 18-hole course built at Richmond Palace. The object was to provide the people who couldn't afford the private clubs with a course they could use. The Old Course at St. Andrews is still regarded, though, as one of the greatest courses in the world. 
